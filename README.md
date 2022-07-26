@@ -21,7 +21,7 @@ Most entries on this list were taken directly from Keith Schwarz's
 | &#9744; | Quicksort                            | *TODO*                             | An implementation of the [quicksort](https://en.wikipedia.org/wiki/Quicksort) algorithm. |
 | &#9744; | Heapsort                             | *TODO*                             | An implementation of the [heapsort](https://en.wikipedia.org/wiki/Heapsort) algorithm. |
 | &#9744; | Timsort                              | *TODO*                             | An implementation of the [Timsort](https://en.wikipedia.org/wiki/Timsort) algorithm. |
-| &#9745; | MJRTY                                | [mrjty.rs](src/mrjty.rs)           | A fast, linear-time algorithm for finding the [majority element](http://www.cs.utexas.edu/~moore/best-ideas/mjrty/) of a data set. |
+| &#9745; | MJRTY                                | [src/mjrty.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/mjrty.rs) | A fast, linear-time algorithm for finding the [majority element](http://www.cs.utexas.edu/~moore/best-ideas/mjrty/) of a data set. |
 | &#9744; | Extendible Array                     | *TODO*                             | A dynamic array implementation with O(1) worst-case lookup and append. |
 | &#9744; | Hashed Array Tree                    | *TODO*                             | An implementation of a dynamic array backed by a [hashed array tree](https://en.wikipedia.org/wiki/Hashed_array_tree). |
 | &#9744; | Fibonacci Heap                       | *TODO*                             | An implementation of a priority queue backed by a [Fibonacci heap](http://en.wikipedia.org/wiki/Fibonacci_heap). |
