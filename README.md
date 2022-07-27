@@ -4,7 +4,7 @@ Most entries on this list were taken directly from Keith Schwarz's
 
 |         | Name                                 | File                               | Description |
 | ------- | ------------------------------------ | ---------------------------------- | ----------- |
-| &#9989; | Binomial Heap                        | [src/mjrty.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/heap.rs) | An implementation of a [binomial heap](http://en.wikipedia.org/wiki/Binomial_heap) data structure for use as a priority queue. |
+| &#9989; | Binomial Heap                        | [src/heap.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/heap.rs) | An implementation of a [binomial heap](http://en.wikipedia.org/wiki/Binomial_heap) data structure for use as a priority queue. |
 | &#10060; | Topological Sort                     | *TODO*                             | An algorithm for finding a [topological ordering](http://en.wikipedia.org/wiki/Topological_sorting) of a [DAG](https://en.wikipedia.org/wiki/Directed_acyclic_graph). |
 | &#10060; | Deflate                              | *TODO*                             | An implementation of the [Deflate](https://en.wikipedia.org/wiki/Deflate) algorithm |
 | &#10060; | **Graph**                            | *TODO*                             | An implementation of an undirected [graph](https://en.wikipedia.org/wiki/Graph_(abstract_data_type)). |
