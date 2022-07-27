@@ -1,10 +1,22 @@
-//! An implementation of the MJRTY algorithm described by Boyer and Moore
-//! in "MJRTY - A Fast Majority Vote Algorithm."
-//!
-//! https://www.cs.utexas.edu/~moore/best-ideas/mjrty/index.html
-
 use std::cmp::Eq;
 
+/// Returns the majority element of an iterator, if one exists.
+///
+/// This is an implementation of the MJRTY algorithm described by Boyer and Moore in
+/// ["MJRTY - A Fast Majority Vote Algorithm."](https://www.cs.utexas.edu/~moore/best-ideas/mjrty/index.html)
+///
+/// # Example
+/// ```
+/// use rust_dsa::majority_element;
+///
+/// let ints = vec![1, 2, 1, 3, 1, 4, 3, 2, 1, 1, 1];
+/// let winner = majority_element(ints.into_iter());
+/// assert_eq!(winner, Some(1));
+///
+/// let strs = vec!["a", "c", "b", "a"];
+/// let winner = majority_element(strs.into_iter());
+/// assert_eq!(winner, None);
+/// ```
 #[allow(dead_code)]
 pub fn majority_element<I>(elements: I) -> Option<I::Item>
 where
@@ -53,36 +65,4 @@ where
         }
     }
     None
-}
-
-#[cfg(test)]
-mod test {
-    use super::majority_element;
-
-    #[test]
-    fn ints() {
-        let ints = vec![1, 2, 1, 3, 1, 4, 3, 2, 1, 1, 1];
-        let winner = majority_element(ints.iter());
-        assert_eq!(winner, Some(&1));
-    }
-
-    #[test]
-    fn no_winner() {
-        let strings = vec![
-            "a".to_string(),
-            "b".to_string(),
-            "c".to_string(),
-            "a".to_string(),
-            "c".to_string(),
-        ];
-        let winner = majority_element(strings.iter());
-        assert_eq!(winner, None);
-    }
-
-    #[test]
-    fn tie() {
-        let bools = vec![true, true, false, true, false, false];
-        let winner = majority_element(bools.iter());
-        assert_eq!(winner, None);
-    }
 }
