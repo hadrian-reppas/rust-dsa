@@ -4,12 +4,12 @@ Most entries on this list were taken directly from Keith Schwarz's
 
 |         | Name                                 | File                               | Description |
 | ------- | ------------------------------------ | ---------------------------------- | ----------- |
-| &#9989; | Binomial Heap                        | *TODO*                             | An implementation of a [binomial heap](http://en.wikipedia.org/wiki/Binomial_heap) data structure for use as a priority queue. |
+| &#9989; | Binomial Heap                        | [src/mjrty.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/heap.rs) | An implementation of a [binomial heap](http://en.wikipedia.org/wiki/Binomial_heap) data structure for use as a priority queue. |
 | &#10060; | Topological Sort                     | *TODO*                             | An algorithm for finding a [topological ordering](http://en.wikipedia.org/wiki/Topological_sorting) of a [DAG](https://en.wikipedia.org/wiki/Directed_acyclic_graph). |
 | &#10060; | Deflate                              | *TODO*                             | An implementation of the [Deflate](https://en.wikipedia.org/wiki/Deflate) algorithm |
-| &#10060; | Graph                                | *TODO*                             | An implementation of an undirected [graph](https://en.wikipedia.org/wiki/Graph_(abstract_data_type)). |
-| &#10060; | Directed Graph                       | *TODO*                             | An implementation of a [directed graph](https://en.wikipedia.org/wiki/Directed_graph). |
-| &#10060; | Weighted Dircted Graph               | *TODO*                             | An implementation of a [directed graph](https://en.wikipedia.org/wiki/Graph_(abstract_data_type)) with weights. |
+| &#10060; | **Graph**                            | *TODO*                             | An implementation of an undirected [graph](https://en.wikipedia.org/wiki/Graph_(abstract_data_type)). |
+| &#10060; | **Directed Graph**                   | *TODO*                             | An implementation of a [directed graph](https://en.wikipedia.org/wiki/Directed_graph). |
+| &#10060; | **Weighted Dircted Graph**           | *TODO*                             | An implementation of a [directed graph](https://en.wikipedia.org/wiki/Graph_(abstract_data_type)) with weights. |
 | &#10060; | Bounded Priority Queue               | *TODO*                             | An implementation of a [priority queue](http://en.wikipedia.org/wiki/Priority_queue) with a fixed upper limit to its size. |
 | &#10060; | VList                                | *TODO*                             | A dynamic array implementation backed by a [VList](https://rosettacode.org/wiki/VList). |
 | &#10060; | Interval Heap                        | *TODO*                             | An implementation of a [double-ended priority queue](http://en.wikipedia.org/wiki/Double-ended_priority_queue) using an [interval heap](http://www.mhhe.com/engcs/compsci/sahni/enrich/c9/interval.pdf). |
