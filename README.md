@@ -36,12 +36,11 @@ Most entries on this list were taken directly from Keith Schwarz's
 | &#10060; | **Graham Scan**                      | *TODO*                             | An implementation of the [Graham scan](https://en.wikipedia.org/wiki/Graham_scan) for finding convex hulls in 2D space. |
 | &#10060; | Johnson's Algorithm                  | *TODO*                             | An implementation of [Johnson's algorithm](https://en.wikipedia.org/wiki/Johnson's_algorithm) for all-pairs shortest paths. |
 | &#10060; | Deflate                              | *TODO*                             | An implementation of the [Deflate](https://en.wikipedia.org/wiki/Deflate) algorithm |
-| &#10060; | Ring Buffer-Backed Queue             | *TODO*                             | An implementation of a FIFO queue using a [ring buffer](http://en.wikipedia.org/wiki/Circular_buffer). |
+| &#9989;  | Ring Buffer-Backed Deque             | [src/deque.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/deque.rs) | An implementation of a [deque](https://en.wikipedia.org/wiki/Double-ended_queue) using a [ring buffer](http://en.wikipedia.org/wiki/Circular_buffer). |
 | &#10060; | Rabin-Karp Algorithm                 | *TODO*                             | An implementation of the [Rabin-Karp algorithm](http://en.wikipedia.org/wiki/Rabin%E2%80%93Karp_string_search_algorithm) for string matching. |
 | &#10060; | **Min-Queue**                        | *TODO*                             | An implementation of a [FIFO queue](http://en.wikipedia.org/wiki/Queue_(data_structure)) that supports O(1) push, pop, and find-minimum. |
 | &#10060; | Suffix Automaton                     | *TODO*                             | An implementation of a [Suffix automaton](https://en.wikipedia.org/wiki/Suffix_automaton). |
 | &#10060; | Aho–Corasick Algorithm               | *TODO*                             | An implementation of the [Aho–Corasick algorithm](https://en.wikipedia.org/wiki/Aho%E2%80%93Corasick_algorithm) for string-searching. |
-| &#10060; | **Array Deque**                      | *TODO*                             | An implementation of a [deque](https://en.wikipedia.org/wiki/Double-ended_queue) backed by an array. |
 | &#10060; | Soft Heap                            | *TODO*                             | A [soft heap](https://en.wikipedia.org/wiki/Soft_heap) implementation. |
 | &#10060; | Link/Cut tree                        | *TODO*                             | A [link/cut tree](https://en.wikipedia.org/wiki/Link/cut_tree) implementation. |
 | &#10060; | Rope                                 | *TODO*                             | An implementation of a [rope](https://en.wikipedia.org/wiki/Rope_(data_structure)) for efficient string manipulation. |

@@ -38,18 +38,18 @@ use std::convert::From;
 ///
 /// # Runtime complexity
 ///
-/// | Operation            | Runtime      |
-/// | -------------------- | ------------ |
-/// | [BinaryHeap::insert] | *O*(log *n*) |
-/// | [BinaryHeap::peek]   | *O*(1)       |
-/// | [BinaryHeap::pop]    | *O*(log *n*) |
-/// | [BinaryHeap::from]   | *O*(*n*)     |
+/// | Operation            | Runtime Complexity |
+/// | -------------------- | ------------------ |
+/// | [BinaryHeap::insert] | *O*(log *n*)       |
+/// | [BinaryHeap::peek]   | *O*(1)             |
+/// | [BinaryHeap::pop]    | *O*(log *n*)       |
+/// | [BinaryHeap::from]   | *O*(*n*)           |
 pub struct BinaryHeap<T> {
     items: Vec<T>,
 }
 
 impl<T> BinaryHeap<T> {
-    /// Creates en empty heap.
+    /// Creates an empty heap.
     pub fn new() -> Self {
         BinaryHeap { items: Vec::new() }
     }
@@ -135,7 +135,7 @@ impl<T> BinaryHeap<T> {
         self.items.len()
     }
 
-    /// Checks if the binary heap is empty.
+    /// Returns `true` if the binary heap is empty.
     ///
     /// # Example
     /// ```
