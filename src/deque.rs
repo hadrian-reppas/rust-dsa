@@ -33,6 +33,14 @@ const MIN_CAPACITY: usize = 10;
 /// for (a, b) in deque_a.into_iter().zip(deque_b) {
 ///     assert_eq!(a, b);
 /// }
+///
+/// let mut deque = Deque::from([1, 2, 3, 4, 5]);
+/// for i in 0..1_000_000 {
+///     deque.pop_front();
+///     deque.push_back(i);
+/// }
+/// // After pushing and poping a million elements, the capacity remains at 5
+/// assert_eq!(deque.capacity(), 5);
 /// ```
 ///
 /// # Runtime complexity
@@ -280,6 +288,9 @@ impl<T> Deque<T> {
         let mut drained_elements: Vec<_> = elements.drain(range).collect();
         drained_elements.reverse();
 
+        // to prevent `drop()` from dropping anything
+        self.len = 0;
+
         *self = elements.into_iter().collect();
 
         Drain {
@@ -432,6 +443,18 @@ impl<T> Iterator for IntoIter<T> {
     type Item = T;
     fn next(&mut self) -> Option<Self::Item> {
         self.deque.pop_front()
+    }
+}
+
+impl<T> Drop for Deque<T> {
+    fn drop(&mut self) {
+        let mut i = self.front;
+        for _ in 0..self.len() {
+            unsafe {
+                self.buffer[i].assume_init_drop();
+            }
+            i = self.increment(i);
+        }
     }
 }
 
