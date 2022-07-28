@@ -2,13 +2,13 @@ Most entries on this list were taken directly from Keith Schwarz's
 [Archive of Interesting Code](https://keithschwarz.com/interesting/) and
 [TODO list](https://keithschwarz.com/interesting/todo.html).
 
-|         | Name                                 | File                               | Description |
-| ------- | ------------------------------------ | ---------------------------------- | ----------- |
-| &#9989; | Binomial Heap                        | [src/heap.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/heap.rs) | An implementation of a [binomial heap](http://en.wikipedia.org/wiki/Binomial_heap) data structure for use as a priority queue. |
+|          | Name                                 | File                               | Description |
+| -------- | ------------------------------------ | ---------------------------------- | ----------- |
+| &#9989;  | Binomial Heap                        | [src/heap.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/heap.rs) | An implementation of a [binomial heap](http://en.wikipedia.org/wiki/Binomial_heap) for use as a priority queue. |
 | &#10060; | Topological Sort                     | *TODO*                             | An algorithm for finding a [topological ordering](http://en.wikipedia.org/wiki/Topological_sorting) of a [DAG](https://en.wikipedia.org/wiki/Directed_acyclic_graph). |
 | &#10060; | Deflate                              | *TODO*                             | An implementation of the [Deflate](https://en.wikipedia.org/wiki/Deflate) algorithm |
 | &#10060; | **Graph**                            | *TODO*                             | An implementation of an undirected [graph](https://en.wikipedia.org/wiki/Graph_(abstract_data_type)). |
-| &#10060; | **Directed Graph**                   | *TODO*                             | An implementation of a [directed graph](https://en.wikipedia.org/wiki/Directed_graph). |
+| &#9989;  | Directed Graph                       | [src/digraph.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/digraph.rs) | An implementation of a [directed graph](https://en.wikipedia.org/wiki/Directed_graph). |
 | &#10060; | **Weighted Dircted Graph**           | *TODO*                             | An implementation of a [directed graph](https://en.wikipedia.org/wiki/Graph_(abstract_data_type)) with weights. |
 | &#10060; | Bounded Priority Queue               | *TODO*                             | An implementation of a [priority queue](http://en.wikipedia.org/wiki/Priority_queue) with a fixed upper limit to its size. |
 | &#10060; | VList                                | *TODO*                             | A dynamic array implementation backed by a [VList](https://rosettacode.org/wiki/VList). |
@@ -21,7 +21,7 @@ Most entries on this list were taken directly from Keith Schwarz's
 | &#10060; | Quicksort                            | *TODO*                             | An implementation of the [quicksort](https://en.wikipedia.org/wiki/Quicksort) algorithm. |
 | &#10060; | Heapsort                             | *TODO*                             | An implementation of the [heapsort](https://en.wikipedia.org/wiki/Heapsort) algorithm. |
 | &#10060; | Timsort                              | *TODO*                             | An implementation of the [Timsort](https://en.wikipedia.org/wiki/Timsort) algorithm. |
-| &#9989; | MJRTY                                | [src/mjrty.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/mjrty.rs) | A fast, linear-time algorithm for finding the [majority element](http://www.cs.utexas.edu/~moore/best-ideas/mjrty/) of a data set. |
+| &#9989;  | MJRTY                                | [src/mjrty.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/mjrty.rs) | A fast, linear-time algorithm for finding the [majority element](http://www.cs.utexas.edu/~moore/best-ideas/mjrty/) of a data set. |
 | &#10060; | Extendible Array                     | *TODO*                             | A dynamic array implementation with O(1) worst-case lookup and append. |
 | &#10060; | Hashed Array Tree                    | *TODO*                             | An implementation of a dynamic array backed by a [hashed array tree](https://en.wikipedia.org/wiki/Hashed_array_tree). |
 | &#10060; | Fibonacci Heap                       | *TODO*                             | An implementation of a priority queue backed by a [Fibonacci heap](http://en.wikipedia.org/wiki/Fibonacci_heap). |
