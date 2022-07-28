@@ -5,8 +5,7 @@ Most entries on this list were taken directly from Keith Schwarz's
 |          | Name                                 | File                               | Description |
 | -------- | ------------------------------------ | ---------------------------------- | ----------- |
 | &#9989;  | Binomial Heap                        | [src/heap.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/heap.rs) | An implementation of a [binomial heap](http://en.wikipedia.org/wiki/Binomial_heap) for use as a priority queue. |
-| &#10060; | Topological Sort                     | *TODO*                             | An algorithm for finding a [topological ordering](http://en.wikipedia.org/wiki/Topological_sorting) of a [DAG](https://en.wikipedia.org/wiki/Directed_acyclic_graph). |
-| &#10060; | Deflate                              | *TODO*                             | An implementation of the [Deflate](https://en.wikipedia.org/wiki/Deflate) algorithm |
+| &#9989;  | Topological Sort                     | [src/toposort.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/toposort.rs) | An algorithm for finding a [topological ordering](http://en.wikipedia.org/wiki/Topological_sorting) of a [DAG](https://en.wikipedia.org/wiki/Directed_acyclic_graph). |
 | &#10060; | **Graph**                            | *TODO*                             | An implementation of an undirected [graph](https://en.wikipedia.org/wiki/Graph_(abstract_data_type)). |
 | &#9989;  | Directed Graph                       | [src/digraph.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/digraph.rs) | An implementation of a [directed graph](https://en.wikipedia.org/wiki/Directed_graph). |
 | &#10060; | **Weighted Dircted Graph**           | *TODO*                             | An implementation of a [directed graph](https://en.wikipedia.org/wiki/Graph_(abstract_data_type)) with weights. |
@@ -36,6 +35,7 @@ Most entries on this list were taken directly from Keith Schwarz's
 | &#10060; | Bellman-Ford Algorithm               | *TODO*                             | An implementation of the [Bellman-Ford algorithm](http://en.wikipedia.org/wiki/Bellman%E2%80%93Ford_algorithm) for single-source shortest paths. |
 | &#10060; | **Graham Scan**                      | *TODO*                             | An implementation of the [Graham scan](https://en.wikipedia.org/wiki/Graham_scan) for finding convex hulls in 2D space. |
 | &#10060; | Johnson's Algorithm                  | *TODO*                             | An implementation of [Johnson's algorithm](https://en.wikipedia.org/wiki/Johnson's_algorithm) for all-pairs shortest paths. |
+| &#10060; | Deflate                              | *TODO*                             | An implementation of the [Deflate](https://en.wikipedia.org/wiki/Deflate) algorithm |
 | &#10060; | Ring Buffer-Backed Queue             | *TODO*                             | An implementation of a FIFO queue using a [ring buffer](http://en.wikipedia.org/wiki/Circular_buffer). |
 | &#10060; | Rabin-Karp Algorithm                 | *TODO*                             | An implementation of the [Rabin-Karp algorithm](http://en.wikipedia.org/wiki/Rabin%E2%80%93Karp_string_search_algorithm) for string matching. |
 | &#10060; | **Min-Queue**                        | *TODO*                             | An implementation of a [FIFO queue](http://en.wikipedia.org/wiki/Queue_(data_structure)) that supports O(1) push, pop, and find-minimum. |

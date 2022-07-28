@@ -359,10 +359,7 @@ impl<N> DiGraph<N> {
     ///     println!("{from} -> {to}");
     /// }
     /// ```
-    pub fn edges(&self) -> Edges<'_, N>
-    where
-        N: Hash + Eq,
-    {
+    pub fn edges(&self) -> Edges<'_, N> {
         let mut edges = Vec::new();
         for (node_id, neighbor_ids) in &self.neighbors {
             if !self.id_to_node.contains_key(node_id) {
@@ -428,6 +425,31 @@ pub struct IntoIter<N> {
 
 impl<N> Iterator for IntoIter<N> {
     type Item = N;
+    fn next(&mut self) -> Option<Self::Item> {
+        self.nodes.pop()
+    }
+
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        (self.nodes.len(), Some(self.nodes.len()))
+    }
+}
+
+impl<'a, N> IntoIterator for &'a DiGraph<N> {
+    type IntoIter = Iter<'a, N>;
+    type Item = &'a N;
+    fn into_iter(self) -> Self::IntoIter {
+        Iter {
+            nodes: self.node_to_id.keys().collect(),
+        }
+    }
+}
+
+pub struct Iter<'a, N: 'a> {
+    nodes: Vec<&'a N>,
+}
+
+impl<'a, N> Iterator for Iter<'a, N> {
+    type Item = &'a N;
     fn next(&mut self) -> Option<Self::Item> {
         self.nodes.pop()
     }
