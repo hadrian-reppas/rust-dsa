@@ -4,7 +4,7 @@ Most entries on this list were taken directly from Keith Schwarz's
 
 |          | Name                                 | File                               | Description |
 | -------- | ------------------------------------ | ---------------------------------- | ----------- |
-| &#9989;  | Binomial Heap                        | [src/heap.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/heap.rs) | An implementation of a [binomial heap](http://en.wikipedia.org/wiki/Binomial_heap) for use as a priority queue. |
+| &#9989;  | Binomial Heap                        | [src/heap.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/heap.rs) | A [priority queue](http://en.wikipedia.org/wiki/Priority_queue) implementation backed by a [binary heap](https://en.wikipedia.org/wiki/Binary_heap). |
 | &#9989;  | Topological Sort                     | [src/toposort.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/toposort.rs) | An algorithm for finding a [topological ordering](http://en.wikipedia.org/wiki/Topological_sorting) of a [DAG](https://en.wikipedia.org/wiki/Directed_acyclic_graph). |
 | &#9989;  | Graph                                | [src/graph.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/graph.rs) | An implementation of an [graph](https://en.wikipedia.org/wiki/Graph_(abstract_data_type)). |
 | &#9989;  | Directed Graph                       | [src/digraph.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/digraph.rs) | An implementation of a [directed graph](https://en.wikipedia.org/wiki/Directed_graph). |
@@ -15,7 +15,7 @@ Most entries on this list were taken directly from Keith Schwarz's
 | &#10060; | Interval Heap                        | *TODO*                             | An implementation of a [double-ended priority queue](http://en.wikipedia.org/wiki/Double-ended_priority_queue) using an [interval heap](http://www.mhhe.com/engcs/compsci/sahni/enrich/c9/interval.pdf). |
 | &#10060; | Quickselect                          | *TODO*                             | An implementation of the [quickselect](https://en.wikipedia.org/wiki/Quickselect) algorithm. |
 | &#10060; | Union-Find                           | *TODO*                             | An implementation of a [disjoint-set data structure](http://en.wikipedia.org/wiki/Disjoint-set_data_structure) using a disjoint set forest. |
-| &#10060; | **Insertion Sort**                   | *TODO*                             | An implementation of the [insertion sort](https://en.wikipedia.org/wiki/Insertion_sort) algorithm. |
+| &#9989;  | Insertion Sort                       | [src/insertion_sort.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/insertion_sort.rs) | An implementation of the [insertion sort](https://en.wikipedia.org/wiki/Insertion_sort) algorithm. |
 | &#10060; | Radix Sort                           | *TODO*                             | An implementation of the [radix sort](https://en.wikipedia.org/wiki/Radix_sort) algorithm. |
 | &#10060; | Mergesort                            | *TODO*                             | An implementation of the [merge sort](https://en.wikipedia.org/wiki/Merge_sort) algorithm. |
 | &#10060; | Quicksort                            | *TODO*                             | An implementation of the [quicksort](https://en.wikipedia.org/wiki/Quicksort) algorithm. |
