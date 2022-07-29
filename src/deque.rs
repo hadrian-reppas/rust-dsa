@@ -29,7 +29,7 @@ const MIN_CAPACITY: usize = 10;
 /// // And iterators.
 /// let deque_b: Deque<_> = "deque".chars().collect();
 ///
-/// // We can also iterate over a deque.
+/// // We can iterate over a deque.
 /// for (a, b) in deque_a.into_iter().zip(deque_b) {
 ///     assert_eq!(a, b);
 /// }
@@ -39,8 +39,14 @@ const MIN_CAPACITY: usize = 10;
 ///     deque.pop_front();
 ///     deque.push_back(i);
 /// }
-/// // After pushing and poping a million elements, the capacity remains at 5
+/// // After pushing and poping a million elements,
+/// // the capacity is still 5.
 /// assert_eq!(deque.capacity(), 5);
+///
+/// assert_eq!(
+///     deque.into_iter().collect::<Vec<_>>(),
+///     vec![999_995, 999_996, 999_997, 999_998, 999_999]
+/// );
 /// ```
 ///
 /// # Runtime complexity
@@ -444,6 +450,10 @@ impl<T> Iterator for IntoIter<T> {
     fn next(&mut self) -> Option<Self::Item> {
         self.deque.pop_front()
     }
+
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        (self.deque.len(), Some(self.deque.len()))
+    }
 }
 
 impl<T> Drop for Deque<T> {
@@ -466,6 +476,10 @@ impl<T> Iterator for Drain<T> {
     type Item = T;
     fn next(&mut self) -> Option<Self::Item> {
         self.elements.pop()
+    }
+
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        (self.elements.len(), Some(self.elements.len()))
     }
 }
 
