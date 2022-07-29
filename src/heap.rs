@@ -1,9 +1,10 @@
 #![allow(dead_code)]
 
-use std::cmp::{Ord, Ordering};
+use std::cmp::Ord;
 use std::convert::From;
 
-/// A priority queue implementation backed by a binary heap.
+/// A [priority queue](http://en.wikipedia.org/wiki/Priority_queue) implementation
+/// backed by a [binary heap](https://en.wikipedia.org/wiki/Binary_heap).
 ///
 /// [BinaryHeap::pop] removes the *smallest* item.
 ///
@@ -174,7 +175,7 @@ impl<T> BinaryHeap<T> {
     {
         while index > 0 {
             let parent = (index - 1) / 2;
-            if self.items[parent].cmp(&self.items[index]) == Ordering::Greater {
+            if self.items[parent] > self.items[index] {
                 self.items.swap(parent, index);
                 index = parent;
             } else {
@@ -193,18 +194,14 @@ impl<T> BinaryHeap<T> {
             // find the index of the smallest child
             let child1 = 2 * index + 1;
             let child2 = child1 + 1;
-            let mindex = if child2 >= self.len()
-                || self.items[child1].cmp(&self.items[child2]) == Ordering::Less
-            {
+            let mindex = if child2 >= self.len() || self.items[child1] < self.items[child2] {
                 child1
             } else {
                 child2
             };
 
             // if the item at `index` is greater than its smallest child, swap the two
-            if mindex < self.len()
-                && self.items[index].cmp(&self.items[mindex]) == Ordering::Greater
-            {
+            if mindex < self.len() && self.items[index] > self.items[mindex] {
                 self.items.swap(index, mindex);
                 index = mindex;
             } else {

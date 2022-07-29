@@ -4,7 +4,8 @@ use crate::DiGraph;
 use std::collections::{HashMap, HashSet};
 use std::hash::Hash;
 
-/// Returns a topological sort of the graph, if one exists.
+/// Returns a [topological sort](http://en.wikipedia.org/wiki/Topological_sorting)
+/// of the graph, if one exists.
 ///
 /// If the graph contains one or more directed cycles, `None` is returned.
 ///

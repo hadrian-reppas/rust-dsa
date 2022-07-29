@@ -290,12 +290,10 @@ impl<T> Deque<T> {
             elements.push(unsafe { self.buffer[i].assume_init_read() });
             i = self.increment(i);
         }
+        self.len = 0; // `self` is now empty
 
         let mut drained_elements: Vec<_> = elements.drain(range).collect();
         drained_elements.reverse();
-
-        // to prevent `drop()` from dropping anything
-        self.len = 0;
 
         *self = elements.into_iter().collect();
 
