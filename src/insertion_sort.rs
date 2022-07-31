@@ -17,10 +17,12 @@ use std::cmp::Ord;
 /// insertion_sort(food.as_mut_slice());
 /// assert_eq!(food, vec!["apple", "banana", "carrot", "dragonfruit", "eggplant"]);
 ///
-/// let mut decreasing: Vec<_> = (0..1000).rev().collect();
-/// let incrasing: Vec<_> = (0..1000).collect();
-/// insertion_sort(decreasing.as_mut_slice());
-/// assert_eq!(decreasing, increasing);
+/// let mut range: Vec<_> = (0..1000).rev().collect();
+/// insertion_sort(range.as_mut_slice());
+/// assert_eq!(
+///     range,
+///     (0..1000).collect::<Vec<_>>()
+/// );
 /// ```
 pub fn insertion_sort<T>(arr: &mut [T])
 where

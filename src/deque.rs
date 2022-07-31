@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-use std::{mem::MaybeUninit, ops::RangeBounds};
+use std::ops::RangeBounds;
 
 const MIN_CAPACITY: usize = 10;
 
@@ -58,7 +58,7 @@ const MIN_CAPACITY: usize = 10;
 /// | [Deque::pop_back]   | *O*(1)             |
 /// | [Deque::pop_front]  | *O*(1)             |
 pub struct Deque<T> {
-    buffer: Vec<MaybeUninit<T>>,
+    buffer: Vec<Option<T>>,
     front: usize,
     back: usize,
     len: usize,
@@ -87,7 +87,7 @@ impl<T> Deque<T> {
     /// ```
     pub fn with_capacity(capacity: usize) -> Self {
         Deque {
-            buffer: (0..capacity).map(|_| MaybeUninit::uninit()).collect(),
+            buffer: (0..capacity).map(|_| None).collect(),
             front: 0,
             back: 0,
             len: 0,
@@ -112,7 +112,7 @@ impl<T> Deque<T> {
         }
 
         self.len += 1;
-        self.buffer[self.back] = MaybeUninit::new(value);
+        self.buffer[self.back] = Some(value);
         self.back = self.increment(self.back);
     }
 
@@ -135,7 +135,7 @@ impl<T> Deque<T> {
 
         self.len += 1;
         self.front = self.decrement(self.front);
-        self.buffer[self.front] = MaybeUninit::new(value);
+        self.buffer[self.front] = Some(value);
     }
 
     /// Pops a value from the back of the deque.
@@ -157,7 +157,9 @@ impl<T> Deque<T> {
         } else {
             self.len -= 1;
             self.back = self.decrement(self.back);
-            Some(unsafe { self.buffer[self.back].assume_init_read() })
+            let value = self.buffer[self.back].take();
+            debug_assert!(value.is_some());
+            value
         }
     }
 
@@ -179,9 +181,10 @@ impl<T> Deque<T> {
             None
         } else {
             self.len -= 1;
-            let value = unsafe { self.buffer[self.front].assume_init_read() };
+            let value = self.buffer[self.front].take();
+            debug_assert!(value.is_some());
             self.front = self.increment(self.front);
-            Some(value)
+            value
         }
     }
 
@@ -202,7 +205,9 @@ impl<T> Deque<T> {
         if self.is_empty() {
             None
         } else {
-            Some(unsafe { self.buffer[self.decrement(self.back)].assume_init_ref() })
+            let value = &self.buffer[self.decrement(self.back)];
+            debug_assert!(value.is_some());
+            value.as_ref()
         }
     }
 
@@ -223,7 +228,9 @@ impl<T> Deque<T> {
         if self.is_empty() {
             None
         } else {
-            Some(unsafe { self.buffer[self.front].assume_init_ref() })
+            let value = &self.buffer[self.front];
+            debug_assert!(value.is_some());
+            value.as_ref()
         }
     }
 
@@ -248,9 +255,9 @@ impl<T> Deque<T> {
     pub fn get(&self, index: usize) -> Option<&T> {
         if index < self.len() {
             let i = self.add(self.front, index);
-            self.buffer
-                .get(i)
-                .map(|value| unsafe { value.assume_init_ref() })
+            let value = &self.buffer[i];
+            debug_assert!(value.is_some());
+            value.as_ref()
         } else {
             None
         }
@@ -259,6 +266,10 @@ impl<T> Deque<T> {
     /// Removes the specified range from the deque, returning all removed elements as an iterator.
     ///
     /// To simplify the implementation, this always reallocates the deque.
+    ///
+    /// # Panics
+    /// Panics if the starting point is greater than the end point or if the
+    /// end point is greater than the length of the deque.
     ///
     /// # Example
     /// ```
@@ -276,10 +287,6 @@ impl<T> Deque<T> {
     /// assert_eq!(deque.pop_front(), Some('z'));
     /// assert_eq!(deque.pop_front(), None);
     /// ```
-    ///
-    /// # Panics
-    /// Panics if the starting point is greater than the end point or if the
-    /// end point is greater than the length of the deque.
     pub fn drain<R>(&mut self, range: R) -> Drain<T>
     where
         R: RangeBounds<usize>,
@@ -287,10 +294,9 @@ impl<T> Deque<T> {
         let mut elements = Vec::with_capacity(self.len());
         let mut i = self.front;
         for _ in 0..self.len() {
-            elements.push(unsafe { self.buffer[i].assume_init_read() });
+            elements.push(self.buffer[i].take().unwrap());
             i = self.increment(i);
         }
-        self.len = 0; // `self` is now empty
 
         let mut drained_elements: Vec<_> = elements.drain(range).collect();
         drained_elements.reverse();
@@ -371,7 +377,7 @@ impl<T> Deque<T> {
     /// assert_eq!(deque.len(), 2);
     /// ```
     pub fn shrink_to_fit(&mut self) {
-        self.buffer = self.drain(..).map(MaybeUninit::new).collect();
+        self.buffer = self.drain(..).map(Option::Some).collect();
         self.len = self.buffer.len();
     }
 
@@ -401,8 +407,8 @@ impl<T> Deque<T> {
         let delta = new_capacity - old_capacity;
         let new_buffer: Vec<_> = self
             .drain(..)
-            .map(MaybeUninit::new)
-            .chain((0..delta).map(|_| MaybeUninit::uninit()))
+            .map(Option::Some)
+            .chain((0..delta).map(|_| None))
             .collect();
 
         *self = Deque {
@@ -454,18 +460,6 @@ impl<T> Iterator for IntoIter<T> {
     }
 }
 
-impl<T> Drop for Deque<T> {
-    fn drop(&mut self) {
-        let mut i = self.front;
-        for _ in 0..self.len() {
-            unsafe {
-                self.buffer[i].assume_init_drop();
-            }
-            i = self.increment(i);
-        }
-    }
-}
-
 pub struct Drain<T> {
     elements: Vec<T>,
 }
@@ -483,7 +477,7 @@ impl<T> Iterator for Drain<T> {
 
 impl<T> FromIterator<T> for Deque<T> {
     fn from_iter<A: IntoIterator<Item = T>>(iter: A) -> Self {
-        let buffer: Vec<_> = iter.into_iter().map(MaybeUninit::new).collect();
+        let buffer: Vec<_> = iter.into_iter().map(Option::Some).collect();
         Deque {
             len: buffer.len(),
             buffer,

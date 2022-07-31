@@ -140,6 +140,10 @@ where
 ///
 /// Returns `false` if the ordering is *not* a topological sort or if the graph contains cycles.
 ///
+/// # Panics
+/// Panics if any element of `sort` is not contained in `graph` of if there are
+/// duplicate elemnts in `sort`.
+///
 /// # Example
 /// ```
 /// use rust_dsa::{DiGraph, is_topological_sort};
@@ -159,10 +163,6 @@ where
 ///     vec![&'b', &'a', &'c']
 /// ));
 /// ```
-///
-/// # Panics
-/// Panics if any element of `sort` is not contained in `graph` of if there are
-/// duplicate elemnts in `sort`.
 pub fn is_topological_sort<N>(graph: &DiGraph<N>, sort: Vec<&N>) -> bool
 where
     N: Hash + Eq,

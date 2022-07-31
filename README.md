@@ -12,6 +12,7 @@ Most entries on this list were taken directly from Keith Schwarz's
 | &#9989;  | Weighted Graph                       | [src/wgraph.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/wgraph.rs) | An implementation of an undirected [graph](https://en.wikipedia.org/wiki/Graph_(abstract_data_type)) with weights. |
 | &#10060; | Bounded Priority Queue               | *TODO*                             | An implementation of a [priority queue](http://en.wikipedia.org/wiki/Priority_queue) with a fixed upper limit to its size. |
 | &#10060; | VList                                | *TODO*                             | A dynamic array implementation backed by a [VList](https://rosettacode.org/wiki/VList). |
+| &#9989;  | Immutable Vector                     | [src/ivector.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/ivector.rs) | An immutable vector implementation with efficient edits/clones. |
 | &#10060; | Interval Heap                        | *TODO*                             | An implementation of a [double-ended priority queue](http://en.wikipedia.org/wiki/Double-ended_priority_queue) using an [interval heap](http://www.mhhe.com/engcs/compsci/sahni/enrich/c9/interval.pdf). |
 | &#10060; | Quickselect                          | *TODO*                             | An implementation of the [quickselect](https://en.wikipedia.org/wiki/Quickselect) algorithm. |
 | &#10060; | Union-Find                           | *TODO*                             | An implementation of a [disjoint-set data structure](http://en.wikipedia.org/wiki/Disjoint-set_data_structure) using a disjoint set forest. |
@@ -56,6 +57,7 @@ Most entries on this list were taken directly from Keith Schwarz's
 | &#10060; | **Radix Tree**                       | *TODO*                             | A [radix tree](https://en.wikipedia.org/wiki/Radix_tree) implementation. |
 | &#10060; | Ukkonen's algorithm                  | *TODO*                             | An implementation of [Ukkonen's algorithm](https://en.wikipedia.org/wiki/Ukkonen%27s_algorithm) for constructing [suffix trees](https://en.wikipedia.org/wiki/Suffix_tree). |
 | &#10060; | k-d Tree                             | *TODO*                             | A [k-d tree](https://en.wikipedia.org/wiki/K-d_tree) implementation. |
+| &#10060; | Finger Tree                          | *TODO*                             | A [finger tree](https://en.wikipedia.org/wiki/Finger_tree) implementation. |
 | &#10060; | Interval Tree                        | *TODO*                             | An [interval tree](https://en.wikipedia.org/wiki/Interval_tree) implementation. |
 | &#10060; | Hough Transform                      | *TODO*                             | An implementation of the [Hough transform](https://en.wikipedia.org/wiki/Hough_transform). |
 | &#10060; | BSP Tree                             | *TODO*                             | An implementation of a [BSP tree](https://en.wikipedia.org/wiki/Binary_space_partitioning). |
