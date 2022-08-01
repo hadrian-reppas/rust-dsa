@@ -1,14 +1,13 @@
 use std::{fmt::Debug, ops::RangeBounds, rc::Rc};
 
-const ARITY: usize = 4;
+const ARITY: usize = 32;
 
 /// An immutable vector implementation with efficient edits/clones.
 ///
 /// Internally, the vector is represented like a [finger tree](https://en.wikipedia.org/wiki/Finger_tree).
 /// Each interal node holds up to 32 children, and each leaf node holds up to 32 values.
 /// Most operations take *O*(log<sub>32</sub> *n*) time, but log<sub>32</sub> grows
-/// *really* slowly (log<sub>32</sub>(`usize::MAX`) < 13), so in pracice they are
-/// basically *O*(1).
+/// *really* slowly, so in pracice they are basically *O*(1).
 ///
 /// # Example
 /// ```
@@ -52,13 +51,13 @@ const ARITY: usize = 4;
 ///
 /// # Runtime complexity
 ///
-/// | Operation                  | Runtime Complexity        |
-/// | -------------------------- | ------------------------- |
-/// | [ImmutableVector::push]    | *O*(log<sub>32</sub> *n*) |
-/// | [ImmutableVector::remove]  | *O*(log<sub>32</sub> *n*) |
-/// | [ImmutableVector::replace] | *O*(log<sub>32</sub> *n*) |
-/// | [ImmutableVector::join]    | *O*(1)                    |
-/// | [ImmutableVector::clone]   | *O*(1)                    |
+/// | Operation                    | Runtime Complexity        |
+/// | ---------------------------- | ------------------------- |
+/// | [`ImmutableVector::push`]    | *O*(log<sub>32</sub> *n*) |
+/// | [`ImmutableVector::remove`]  | *O*(log<sub>32</sub> *n*) |
+/// | [`ImmutableVector::replace`] | *O*(log<sub>32</sub> *n*) |
+/// | [`ImmutableVector::join`]    | *O*(1)                    |
+/// | [`ImmutableVector::clone`]   | *O*(1)                    |
 #[derive(Clone)]
 pub struct ImmutableVector<T> {
     item: Rc<Item<T>>,
@@ -112,7 +111,7 @@ impl<T> ImmutableVector<T> {
             .collect()
     }
 
-    /// Returns an [Rc] that contains to the element at `index` or None if out of bounds.
+    /// Returns an [`Rc`] that contains to the element at `index` or None if out of bounds.
     ///
     /// # Example
     /// ```
@@ -677,37 +676,5 @@ impl<T> Item<T> {
             }
             Self::Leaf { .. } => 0,
         }
-    }
-}
-
-#[cfg(test)]
-mod test {
-    use super::ImmutableVector;
-    #[test]
-    fn test() {
-        let vector = ImmutableVector::new();
-        // Each time we push a value, the original vector doesn't change.
-        let vector1 = vector.push(1);
-        let vector2 = vector1.push(2);
-        let vector3 = vector2.push(3);
-
-        println!("{:?}", vector);
-        println!("{:?}", vector1);
-        println!("{:?}", vector2);
-        println!("{:?}", vector3);
-
-        println!();
-
-        let v: ImmutableVector<i32> = ImmutableVector::from([]);
-        println!("{:?}", v);
-        println!("{:?}", ImmutableVector::from([1]));
-        println!("{:?}", ImmutableVector::from([1, 2]));
-        println!("{:?}", ImmutableVector::from([1, 2, 3]));
-
-        println!();
-
-        let v = ImmutableVector::from([1, 2, 3, 4, 5, 6, 7]);
-        println!("{:?}", v);
-        println!("{:?}", v.remove(2));
     }
 }

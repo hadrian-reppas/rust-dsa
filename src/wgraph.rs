@@ -10,8 +10,8 @@ use crate::{DiGraph, Graph};
 ///
 /// To simplify the implementation, nodes and edges `clone`d when they are inserted.
 ///
-/// This is a thin wrapper around [WeightedDiGraph]. This crate also defines
-/// [Graph] and [DiGraph].
+/// This is a thin wrapper around [`WeightedDiGraph`]. This crate also defines
+/// [`Graph`] and [`DiGraph`].
 ///
 /// # Example
 /// ```

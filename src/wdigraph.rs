@@ -10,7 +10,7 @@ use crate::{DiGraph, Graph, WeightedGraph};
 ///
 /// To simplify the implementation, nodes are `clone`d when they are inserted.
 ///
-/// This crate also defines [DiGraph], [Graph] and [WeightedGraph].
+/// This crate also defines [`DiGraph`], [`Graph`] and [`WeightedGraph`].
 ///
 /// # Example
 /// ```

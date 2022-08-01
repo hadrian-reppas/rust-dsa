@@ -11,8 +11,8 @@ use crate::{Graph, WeightedGraph};
 ///
 /// To simplify the implementation, nodes are `clone`d when they are inserted.
 ///
-/// This is a thin wrapper around [WeightedDiGraph]. This crate also defines
-/// [Graph] and [WeightedGraph].
+/// This is a thin wrapper around [`WeightedDiGraph`]. This crate also defines
+/// [`Graph`] and [`WeightedGraph`].
 ///
 /// # Example
 /// ```

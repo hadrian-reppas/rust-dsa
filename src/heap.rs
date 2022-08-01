@@ -39,12 +39,12 @@ use std::convert::From;
 ///
 /// # Runtime complexity
 ///
-/// | Operation            | Runtime Complexity |
-/// | -------------------- | ------------------ |
-/// | [BinaryHeap::insert] | *O*(log *n*)       |
-/// | [BinaryHeap::peek]   | *O*(1)             |
-/// | [BinaryHeap::pop]    | *O*(log *n*)       |
-/// | [BinaryHeap::from]   | *O*(*n*)           |
+/// | Operation              | Runtime Complexity |
+/// | ---------------------- | ------------------ |
+/// | [`BinaryHeap::insert`] | *O*(log *n*)       |
+/// | [`BinaryHeap::peek`]   | *O*(1)             |
+/// | [`BinaryHeap::pop`]    | *O*(log *n*)       |
+/// | [`BinaryHeap::from`]   | *O*(*n*)           |
 pub struct BinaryHeap<T> {
     items: Vec<T>,
 }

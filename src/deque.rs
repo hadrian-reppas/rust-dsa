@@ -4,7 +4,8 @@ use std::ops::RangeBounds;
 
 const MIN_CAPACITY: usize = 10;
 
-/// A deque implementation backed by a ring buffer.
+/// A [deque](https://en.wikipedia.org/wiki/Double-ended_queue) implementation backed
+/// by a ring buffer.
 ///
 /// # Example
 /// ```
