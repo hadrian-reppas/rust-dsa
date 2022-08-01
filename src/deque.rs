@@ -1,5 +1,6 @@
 #![allow(dead_code)]
 
+use std::fmt::Debug;
 use std::ops::RangeBounds;
 
 const MIN_CAPACITY: usize = 10;
@@ -31,7 +32,7 @@ const MIN_CAPACITY: usize = 10;
 /// let deque_b: Deque<_> = "deque".chars().collect();
 ///
 /// // We can iterate over a deque.
-/// for (a, b) in deque_a.into_iter().zip(deque_b) {
+/// for (a, b) in std::iter::zip(deque_a, deque_b) {
 ///     assert_eq!(a, b);
 /// }
 ///
@@ -461,6 +462,41 @@ impl<T> Iterator for IntoIter<T> {
     }
 }
 
+impl<'a, T: 'a> IntoIterator for &'a Deque<T> {
+    type IntoIter = Iter<'a, T>;
+    type Item = &'a T;
+    fn into_iter(self) -> Self::IntoIter {
+        Iter {
+            deque: self,
+            index: 0,
+        }
+    }
+}
+
+pub struct Iter<'a, T> {
+    deque: &'a Deque<T>,
+    index: usize,
+}
+
+impl<'a, T> Iterator for Iter<'a, T> {
+    type Item = &'a T;
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.index < self.deque.len() {
+            self.index += 1;
+            self.deque.get(self.index - 1)
+        } else {
+            None
+        }
+    }
+
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        (
+            self.deque.len() - self.index,
+            Some(self.deque.len() - self.index),
+        )
+    }
+}
+
 pub struct Drain<T> {
     elements: Vec<T>,
 }
@@ -503,5 +539,22 @@ impl<T> From<Vec<T>> for Deque<T> {
 impl<T> Default for Deque<T> {
     fn default() -> Self {
         Deque::new()
+    }
+}
+
+impl<T> Debug for Deque<T>
+where
+    T: Debug,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "[")?;
+        for (i, value) in self.into_iter().enumerate() {
+            if i == 0 {
+                write!(f, "{:?}", value)?;
+            } else {
+                write!(f, ", {:?}", value)?;
+            }
+        }
+        write!(f, "]")
     }
 }

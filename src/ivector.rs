@@ -1,4 +1,4 @@
-use std::{fmt::Debug, ops::RangeBounds, rc::Rc};
+use std::{fmt::Debug, iter, ops::RangeBounds, rc::Rc};
 
 const ARITY: usize = 32;
 
@@ -355,7 +355,7 @@ where
 {
     fn eq(&self, other: &Self) -> bool {
         if self.len() == other.len() {
-            for (s, o) in self.into_iter().zip(other) {
+            for (s, o) in iter::zip(self, other) {
                 if s != o {
                     return false;
                 }
@@ -507,7 +507,7 @@ impl<T> Item<T> {
                             Rc::new(Self::new_leaf(values.to_vec())),
                             Rc::new(Self::new_leaf(vec![Rc::new(value)])),
                         ],
-                        ARITY + 1,
+                        values.len() + 1,
                     )
                 } else {
                     Self::Leaf {
