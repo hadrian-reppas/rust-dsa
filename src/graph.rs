@@ -380,6 +380,34 @@ impl<N> Default for Graph<N> {
     }
 }
 
+impl<N> PartialEq for Graph<N>
+where
+    N: Hash + Eq,
+{
+    /// Returns `true` if the two graphs are equal.
+    ///
+    /// # Example
+    /// ```
+    /// use rust_dsa::Graph;
+    ///
+    /// let mut a = Graph::new();
+    /// a.insert_edge(&1, &2);
+    /// a.insert_edge(&3, &2);
+    /// a.insert_edge(&1, &2);
+    /// a.remove_edge(&2, &1);
+    ///
+    /// let mut b: Graph<i32> = [1, 2, 3].into_iter().collect();
+    /// b.insert_edge(&2, &3);
+    ///
+    /// assert!(a == b);
+    /// ```
+    fn eq(&self, other: &Self) -> bool {
+        self.inner == other.inner
+    }
+}
+
+impl<N: Eq + Hash> Eq for Graph<N> {}
+
 impl<N> From<Vec<(N, N)>> for Graph<N>
 where
     N: Clone + Hash + Eq,

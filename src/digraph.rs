@@ -328,6 +328,47 @@ impl<N> Default for DiGraph<N> {
     }
 }
 
+impl<N> PartialEq for DiGraph<N>
+where
+    N: Hash + Eq,
+{
+    /// Returns `true` if the two graphs are equal.
+    ///
+    /// # Example
+    /// ```
+    /// use rust_dsa::DiGraph;
+    ///
+    /// let mut a = DiGraph::from([(1, 2), (2, 3), (2, 4)]);
+    /// let mut b: DiGraph<i32> = (1..=4).collect();
+    ///
+    /// assert!(a != b);
+    ///
+    /// b.insert_edge(&1, &2);
+    /// b.insert_edge(&2, &3);
+    /// b.insert_edge(&4, &2);
+    ///
+    /// assert!(a != b);
+    ///
+    /// b.insert_edge(&2, &4);
+    ///
+    /// assert!(a != b);
+    ///
+    /// b.remove_edge(&4, &2);
+    ///
+    /// assert!(a == b);
+    ///
+    /// a.remove_node(&4);
+    /// b.remove_node(&4);
+    ///
+    /// assert!(a == b);
+    /// ```
+    fn eq(&self, other: &Self) -> bool {
+        self.inner == other.inner
+    }
+}
+
+impl<N: Eq + Hash> Eq for DiGraph<N> {}
+
 impl<N> From<Vec<(N, N)>> for DiGraph<N>
 where
     N: Clone + Hash + Eq,

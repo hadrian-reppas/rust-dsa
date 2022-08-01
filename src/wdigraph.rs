@@ -76,10 +76,10 @@ use crate::{DiGraph, Graph, WeightedGraph};
 pub struct WeightedDiGraph<N, E> {
     // first, map each node to an id
     pub(crate) node_to_id: HashMap<N, usize>,
-    id_to_node: HashMap<usize, N>,
+    pub(crate) id_to_node: HashMap<usize, N>,
 
     // then represent the graph with adjacency lists of ids
-    edges: HashMap<usize, HashMap<usize, E>>,
+    pub(crate) edges: HashMap<usize, HashMap<usize, E>>,
 
     counter: usize,
 }
@@ -425,6 +425,96 @@ impl<N, E> Default for WeightedDiGraph<N, E> {
     }
 }
 
+impl<N, E> PartialEq for WeightedDiGraph<N, E>
+where
+    N: Eq + Hash,
+    E: PartialEq,
+{
+    /// Returns `true` if the two graphs are equal.
+    ///
+    /// # Example
+    /// ```
+    /// use rust_dsa::WeightedDiGraph;
+    ///
+    /// let mut a = WeightedDiGraph::new();
+    /// a.insert_edge(&1, &2, 'a');
+    /// a.insert_edge(&3, &2, 'b');
+    /// a.insert_edge(&2, &1, 'c');
+    /// a.remove_edge(&1, &2);
+    ///
+    /// let mut b: WeightedDiGraph<i32, char> = [1, 2, 3].into_iter().collect();
+    /// b.insert_edge(&3, &2, 'b');
+    /// b.insert_edge(&2, &1, 'c');
+    ///
+    /// assert!(a == b);
+    ///
+    /// let mut c = WeightedDiGraph::new();
+    /// c.insert_edge(&1, &2, 'a');
+    /// c.insert_edge(&3, &2, 'b');
+    /// c.insert_edge(&2, &1, 'c');
+    ///
+    /// assert!(a != c);
+    /// assert!(b != c);
+    ///
+    /// let mut d = WeightedDiGraph::new();
+    /// d.insert_edge(&1, &2, 'a');
+    /// d.insert_edge(&3, &2, 'b');
+    /// d.insert_edge(&2, &1, 'z');
+    ///
+    /// assert!(c != d);
+    /// ```
+    fn eq(&self, other: &Self) -> bool {
+        if self.len() != other.len() {
+            // different number of nodes in `other`
+            return false;
+        }
+
+        for (node, id) in &self.node_to_id {
+            if let Some(other_id) = other.node_to_id.get(node) {
+                let edges = self.edges.get(id).unwrap();
+                let other_edges = other.edges.get(other_id).unwrap();
+                if edges
+                    .iter()
+                    .filter(|(id, _)| self.id_to_node.contains_key(id))
+                    .count()
+                    != other_edges
+                        .iter()
+                        .filter(|(id, _)| other.id_to_node.contains_key(id))
+                        .count()
+                {
+                    // different number of edges out of `node`
+                    return false;
+                }
+                for (neighbor_id, weight) in edges {
+                    if let Some(neighbor) = self.id_to_node.get(neighbor_id) {
+                        if let Some(other_neighbor_id) = other.node_to_id.get(neighbor) {
+                            if let Some(other_weight) = other_edges.get(other_neighbor_id) {
+                                if weight != other_weight {
+                                    // weight between `node` and `neighbor` in `self` does not
+                                    // equal weight between `node` and `neighbor` in `other`
+                                    return false;
+                                }
+                            } else {
+                                // no edge between `node` and `neighbor` in `other`
+                                return false;
+                            }
+                        } else {
+                            // `neighbor` not in `other`
+                            return false;
+                        }
+                    }
+                }
+            } else {
+                // `node` not in `other`
+                return false;
+            }
+        }
+        true
+    }
+}
+
+impl<N: Eq + Hash, E: Eq> Eq for WeightedDiGraph<N, E> {}
+
 impl<N, E> From<Vec<(N, N, E)>> for WeightedDiGraph<N, E>
 where
     N: Clone + Hash + Eq,
@@ -463,15 +553,17 @@ where
         let mut counter = 0;
         let mut node_to_id = HashMap::new();
         let mut id_to_node = HashMap::new();
+        let mut edges = HashMap::new();
         for node in iter {
             node_to_id.insert(node.clone(), counter);
             id_to_node.insert(counter, node);
+            edges.insert(counter, HashMap::new());
             counter += 1;
         }
         WeightedDiGraph {
             node_to_id,
             id_to_node,
-            edges: HashMap::new(),
+            edges,
             counter,
         }
     }

@@ -391,6 +391,45 @@ impl<N, E> Default for WeightedGraph<N, E> {
     }
 }
 
+impl<N, E> PartialEq for WeightedGraph<N, E>
+where
+    N: Hash + Eq,
+    E: PartialEq,
+{
+    /// Returns `true` if the two graphs are equal.
+    ///
+    /// # Example
+    /// ```
+    /// use rust_dsa::WeightedGraph;
+    ///
+    /// let mut a = WeightedGraph::new();
+    /// a.insert_edge(&1, &2, 'a');
+    /// a.insert_edge(&3, &2, 'b');
+    /// a.remove_edge(&2, &1);
+    ///
+    /// let mut b: WeightedGraph<i32, char> = [1, 2, 3].into_iter().collect();
+    /// b.insert_edge(&3, &2, 'b');
+    ///
+    /// assert!(a == b);
+    ///
+    /// let mut c = WeightedGraph::new();
+    /// c.insert_node(1);
+    /// c.insert_edge(&3, &2, 'b');
+    /// c.insert_node(4);
+    ///
+    /// assert!(a != c);
+    ///
+    /// c.remove_node(&4);
+    ///
+    /// assert!(a == c);
+    /// ```
+    fn eq(&self, other: &Self) -> bool {
+        self.inner == other.inner
+    }
+}
+
+impl<N: Eq + Hash, E: Eq> Eq for WeightedGraph<N, E> {}
+
 impl<N, E> From<Vec<(N, N, E)>> for WeightedGraph<N, E>
 where
     N: Clone + Hash + Eq,
