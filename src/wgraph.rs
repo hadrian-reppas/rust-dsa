@@ -81,7 +81,7 @@ use crate::{DiGraph, Graph};
 ///     println!("{node}");
 /// }
 /// ```
-
+#[derive(Clone)]
 pub struct WeightedGraph<N, E> {
     inner: WeightedDiGraph<N, E>,
 }

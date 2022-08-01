@@ -73,6 +73,7 @@ use crate::{DiGraph, Graph, WeightedGraph};
 ///     println!("{node}");
 /// }
 /// ```
+#[derive(Clone)]
 pub struct WeightedDiGraph<N, E> {
     // first, map each node to an id
     pub(crate) node_to_id: HashMap<N, usize>,
