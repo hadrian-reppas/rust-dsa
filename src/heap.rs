@@ -247,10 +247,6 @@ where
     fn next(&mut self) -> Option<Self::Item> {
         self.heap.pop()
     }
-
-    fn size_hint(&self) -> (usize, Option<usize>) {
-        (self.heap.len(), Some(self.heap.len()))
-    }
 }
 
 impl<T> From<Vec<T>> for BinaryHeap<T>

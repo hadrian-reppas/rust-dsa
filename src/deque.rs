@@ -456,10 +456,6 @@ impl<T> Iterator for IntoIter<T> {
     fn next(&mut self) -> Option<Self::Item> {
         self.deque.pop_front()
     }
-
-    fn size_hint(&self) -> (usize, Option<usize>) {
-        (self.deque.len(), Some(self.deque.len()))
-    }
 }
 
 impl<'a, T: 'a> IntoIterator for &'a Deque<T> {
@@ -488,13 +484,6 @@ impl<'a, T> Iterator for Iter<'a, T> {
             None
         }
     }
-
-    fn size_hint(&self) -> (usize, Option<usize>) {
-        (
-            self.deque.len() - self.index,
-            Some(self.deque.len() - self.index),
-        )
-    }
 }
 
 pub struct Drain<T> {
@@ -505,10 +494,6 @@ impl<T> Iterator for Drain<T> {
     type Item = T;
     fn next(&mut self) -> Option<Self::Item> {
         self.elements.pop()
-    }
-
-    fn size_hint(&self) -> (usize, Option<usize>) {
-        (self.elements.len(), Some(self.elements.len()))
     }
 }
 

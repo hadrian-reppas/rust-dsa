@@ -599,10 +599,6 @@ impl<N> Iterator for IntoIter<N> {
     fn next(&mut self) -> Option<Self::Item> {
         self.nodes.pop()
     }
-
-    fn size_hint(&self) -> (usize, Option<usize>) {
-        (self.nodes.len(), Some(self.nodes.len()))
-    }
 }
 
 pub struct Iter<'a, N: 'a> {
@@ -613,10 +609,6 @@ impl<'a, N> Iterator for Iter<'a, N> {
     type Item = &'a N;
     fn next(&mut self) -> Option<Self::Item> {
         self.nodes.pop()
-    }
-
-    fn size_hint(&self) -> (usize, Option<usize>) {
-        (self.nodes.len(), Some(self.nodes.len()))
     }
 }
 
@@ -629,10 +621,6 @@ impl<'a, N, E> Iterator for WeightedNeighbors<'a, N, E> {
     fn next(&mut self) -> Option<Self::Item> {
         self.neighbors.pop()
     }
-
-    fn size_hint(&self) -> (usize, Option<usize>) {
-        (self.neighbors.len(), Some(self.neighbors.len()))
-    }
 }
 
 pub struct WeightedEdges<'a, N: 'a, E: 'a> {
@@ -643,9 +631,5 @@ impl<'a, N, E> Iterator for WeightedEdges<'a, N, E> {
     type Item = (&'a N, &'a N, &'a E);
     fn next(&mut self) -> Option<Self::Item> {
         self.edges.pop()
-    }
-
-    fn size_hint(&self) -> (usize, Option<usize>) {
-        (self.edges.len(), Some(self.edges.len()))
     }
 }

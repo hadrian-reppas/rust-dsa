@@ -510,8 +510,4 @@ where
         }
         None
     }
-
-    fn size_hint(&self) -> (usize, Option<usize>) {
-        (0, self.inner.size_hint().1)
-    }
 }

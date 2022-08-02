@@ -438,10 +438,6 @@ impl<'a, N> Iterator for Neighbors<'a, N> {
     fn next(&mut self) -> Option<Self::Item> {
         self.inner.next().map(|(neighbor, _)| neighbor)
     }
-
-    fn size_hint(&self) -> (usize, Option<usize>) {
-        self.inner.size_hint()
-    }
 }
 
 pub struct Edges<'a, N: 'a> {
@@ -452,9 +448,5 @@ impl<'a, N> Iterator for Edges<'a, N> {
     type Item = (&'a N, &'a N);
     fn next(&mut self) -> Option<Self::Item> {
         self.inner.next().map(|(from, to, _)| (from, to))
-    }
-
-    fn size_hint(&self) -> (usize, Option<usize>) {
-        self.inner.size_hint()
     }
 }
