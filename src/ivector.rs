@@ -375,12 +375,6 @@ impl<T, const N: usize> From<[T; N]> for ImmutableVector<T> {
     }
 }
 
-impl<T> From<Vec<T>> for ImmutableVector<T> {
-    fn from(vec: Vec<T>) -> Self {
-        vec.into_iter().collect()
-    }
-}
-
 impl<T> IntoIterator for ImmutableVector<T> {
     type IntoIter = IntoIter<T>;
     type Item = Rc<T>;

@@ -249,24 +249,6 @@ where
     }
 }
 
-impl<T> From<Vec<T>> for BinaryHeap<T>
-where
-    T: Ord,
-{
-    /// Uses the [heapify algorithm](https://johnderinger.wordpress.com/2012/12/28/heapify/)
-    /// to create a [BinaryHeap] in *O*(*n*) time.
-    fn from(items: Vec<T>) -> BinaryHeap<T>
-    where
-        T: Ord,
-    {
-        let mut heap = BinaryHeap { items };
-        for i in (0..heap.len()).rev() {
-            heap.bubble_down(i);
-        }
-        heap
-    }
-}
-
 impl<T, const N: usize> From<[T; N]> for BinaryHeap<T>
 where
     T: Ord,

@@ -409,20 +409,6 @@ where
 
 impl<N: Eq + Hash> Eq for Graph<N> {}
 
-impl<N> From<Vec<(N, N)>> for Graph<N>
-where
-    N: Clone + Hash + Eq,
-{
-    /// Creates a graph from an edge list.
-    fn from(edges: Vec<(N, N)>) -> Self {
-        let mut graph = Graph::new();
-        for (from, to) in edges {
-            graph.insert_edge(&from, &to);
-        }
-        graph
-    }
-}
-
 impl<N, const M: usize> From<[(N, N); M]> for Graph<N>
 where
     N: Clone + Hash + Eq,

@@ -219,12 +219,6 @@ impl<T, const N: usize> From<[T; N]> for VList<T> {
     }
 }
 
-impl<T> From<Vec<T>> for VList<T> {
-    fn from(vec: Vec<T>) -> Self {
-        vec.into_iter().collect()
-    }
-}
-
 impl<T> FromIterator<T> for VList<T> {
     /// # Example
     /// ```

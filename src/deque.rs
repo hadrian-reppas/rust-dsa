@@ -515,12 +515,6 @@ impl<T, const N: usize> From<[T; N]> for Deque<T> {
     }
 }
 
-impl<T> From<Vec<T>> for Deque<T> {
-    fn from(vec: Vec<T>) -> Self {
-        vec.into_iter().collect()
-    }
-}
-
 impl<T> Default for Deque<T> {
     fn default() -> Self {
         Deque::new()

@@ -516,20 +516,6 @@ where
 
 impl<N: Eq + Hash, E: Eq> Eq for WeightedDiGraph<N, E> {}
 
-impl<N, E> From<Vec<(N, N, E)>> for WeightedDiGraph<N, E>
-where
-    N: Clone + Hash + Eq,
-{
-    /// Creates a graph from an edge list.
-    fn from(edges: Vec<(N, N, E)>) -> Self {
-        let mut graph = WeightedDiGraph::new();
-        for (from, to, weight) in edges {
-            graph.insert_edge(&from, &to, weight);
-        }
-        graph
-    }
-}
-
 impl<N, E, const M: usize> From<[(N, N, E); M]> for WeightedDiGraph<N, E>
 where
     N: Clone + Hash + Eq,

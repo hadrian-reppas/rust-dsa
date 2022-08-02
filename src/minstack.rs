@@ -116,7 +116,7 @@ impl<T> MinStack<T> {
     /// ```
     /// use rust_dsa::MinStack;
     ///
-    /// let mut stack = MinStack::from(vec!['a']);
+    /// let mut stack = MinStack::from(['a']);
     ///
     /// assert_eq!(stack.peek(), Some(&'a'));
     ///
@@ -236,15 +236,6 @@ where
 {
     fn from(arr: [T; N]) -> Self {
         arr.into_iter().collect()
-    }
-}
-
-impl<T> From<Vec<T>> for MinStack<T>
-where
-    T: Ord,
-{
-    fn from(vec: Vec<T>) -> Self {
-        vec.into_iter().collect()
     }
 }
 

@@ -113,7 +113,7 @@ impl<T> MinQueue<T> {
     /// ```
     /// use rust_dsa::MinQueue;
     ///
-    /// let mut queue = MinQueue::from(vec!['a']);
+    /// let mut queue = MinQueue::from(['a']);
     ///
     /// assert_eq!(queue.peek(), Some(&'a'));
     ///
@@ -229,15 +229,6 @@ where
 {
     fn from(arr: [T; N]) -> Self {
         arr.into_iter().collect()
-    }
-}
-
-impl<T> From<Vec<T>> for MinQueue<T>
-where
-    T: Ord,
-{
-    fn from(vec: Vec<T>) -> Self {
-        vec.into_iter().collect()
     }
 }
 
