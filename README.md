@@ -10,8 +10,7 @@ Most entries on this list were taken directly from Keith Schwarz's
 | &#9989;  | Directed Graph                       | [src/digraph.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/digraph.rs) | An implementation of a [directed graph](https://en.wikipedia.org/wiki/Directed_graph). |
 | &#9989;  | Weighted Dircted Graph               | [src/wdigraph.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/wdigraph.rs) | An implementation of a [directed graph](https://en.wikipedia.org/wiki/Graph_(abstract_data_type)) with weights. |
 | &#9989;  | Weighted Graph                       | [src/wgraph.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/wgraph.rs) | An implementation of an undirected [graph](https://en.wikipedia.org/wiki/Graph_(abstract_data_type)) with weights. |
-| &#10060; | Bounded Priority Queue               | *TODO*                             | An implementation of a [priority queue](http://en.wikipedia.org/wiki/Priority_queue) with a fixed upper limit to its size. |
-| &#10060; | VList                                | *TODO*                             | A dynamic array implementation backed by a [VList](https://rosettacode.org/wiki/VList). |
+| &#9989;  | VList                                | [src/vlist.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/vlist.rs) | A dynamic array implementation backed by a [VList](https://rosettacode.org/wiki/VList). |
 | &#9989;  | Immutable Vector                     | [src/ivector.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/ivector.rs) | An immutable vector implementation with efficient edits/clones. |
 | &#10060; | Interval Heap                        | *TODO*                             | An implementation of a [double-ended priority queue](http://en.wikipedia.org/wiki/Double-ended_priority_queue) using an [interval heap](http://www.mhhe.com/engcs/compsci/sahni/enrich/c9/interval.pdf). |
 | &#10060; | Quickselect                          | *TODO*                             | An implementation of the [quickselect](https://en.wikipedia.org/wiki/Quickselect) algorithm. |
@@ -50,6 +49,7 @@ Most entries on this list were taken directly from Keith Schwarz's
 | &#10060; | GADDAG                               | *TODO*                             | A [GADDAG](https://en.wikipedia.org/wiki/GADDAG) implementation. |
 | &#10060; | Burrows–Wheeler Transform            | *TODO*                             | An implementation of the [Burrows-Wheeler transform](https://en.wikipedia.org/wiki/Burrows%E2%80%93Wheeler_transform). |
 | &#10060; | Seam Carving                         | *TODO*                             | An implementation of the [seam carving](https://en.wikipedia.org/wiki/Seam_carving) algorithm. |
+| &#10060; | Bounded Priority Queue               | *TODO*                             | An implementation of a [priority queue](http://en.wikipedia.org/wiki/Priority_queue) with a fixed upper limit to its size. |
 | &#10060; | Fast Fourier Transform               | *TODO*                             | An implementation of the [fast Fourier transform](https://en.wikipedia.org/wiki/Fast_Fourier_transform) algorithm. |
 | &#10060; | Brodal Queue                         | *TODO*                             | A [Brodal queue](https://en.wikipedia.org/wiki/Brodal_queue) implementation for use as a priority queue. |
 | &#10060; | Chan's Algorithm                     | *TODO*                             | An implementation of [Chan's algorithm](https://en.wikipedia.org/wiki/Chan%27s_algorithm). |

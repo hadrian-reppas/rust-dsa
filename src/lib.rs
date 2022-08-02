@@ -8,6 +8,7 @@ mod minqueue;
 mod minstack;
 mod mjrty;
 mod toposort;
+mod vlist;
 mod wdigraph;
 mod wgraph;
 
@@ -21,5 +22,6 @@ pub use minqueue::MinQueue;
 pub use minstack::MinStack;
 pub use mjrty::majority_element;
 pub use toposort::{is_topological_sort, topological_sort};
+pub use vlist::VList;
 pub use wdigraph::WeightedDiGraph;
 pub use wgraph::WeightedGraph;
