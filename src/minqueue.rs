@@ -228,11 +228,7 @@ where
     T: Ord,
 {
     fn from(arr: [T; N]) -> Self {
-        let mut stack = MinQueue::with_capacity(N);
-        for value in arr {
-            stack.push(value);
-        }
-        stack
+        arr.into_iter().collect()
     }
 }
 
@@ -241,11 +237,7 @@ where
     T: Ord,
 {
     fn from(vec: Vec<T>) -> Self {
-        let mut stack = MinQueue::with_capacity(vec.len());
-        for value in vec {
-            stack.push(value);
-        }
-        stack
+        vec.into_iter().collect()
     }
 }
 
@@ -264,7 +256,7 @@ where
 }
 
 impl<T> IntoIterator for MinQueue<T> {
-    type IntoIter = std::vec::IntoIter<T>;
+    type IntoIter = IntoIter<T>;
     type Item = T;
     fn into_iter(self) -> Self::IntoIter {
         let mut vec = Vec::with_capacity(self.len());
@@ -276,7 +268,20 @@ impl<T> IntoIterator for MinQueue<T> {
                 .rev(),
         );
         vec.extend(self.new.get_stack().into_iter().map(|(value, _)| value));
-        vec.into_iter()
+        IntoIter {
+            iter: vec.into_iter(),
+        }
+    }
+}
+
+pub struct IntoIter<T> {
+    iter: std::vec::IntoIter<T>,
+}
+
+impl<T> Iterator for IntoIter<T> {
+    type Item = T;
+    fn next(&mut self) -> Option<Self::Item> {
+        self.iter.next()
     }
 }
 

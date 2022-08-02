@@ -20,7 +20,7 @@ const MIN_CAPACITY: usize = 10;
 /// deque.push_back(1);
 /// deque.push_front(3);
 ///
-/// // And pop from the front or back
+/// // And pop from the front or back.
 /// assert_eq!(deque.pop_back(), Some(1));
 /// assert_eq!(deque.pop_front(), Some(3));
 /// assert_eq!(deque.pop_front(), Some(4));
