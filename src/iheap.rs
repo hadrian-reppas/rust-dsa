@@ -3,8 +3,38 @@
 ///
 /// # Example
 /// ```
-/// todo!()
+/// use rust_dsa::IntervalHeap;
+///
+/// // First, we create a new heap.
+/// let mut heap = IntervalHeap::new();
+///
+/// // Then we can add values in any order.
+/// heap.insert(4);
+/// heap.insert(1);
+/// heap.insert(3);
+/// heap.insert(6);
+///
+/// // We can peek at the min and max values.
+/// assert_eq!(heap.peek_min(), Some(&1));
+/// assert_eq!(heap.peek_max(), Some(&6));
+///
+/// // And pop them off from both ends.
+/// assert_eq!(heap.pop_min(), Some(1));
+/// assert_eq!(heap.pop_min(), Some(3));
+/// assert_eq!(heap.pop_max(), Some(6));
+/// assert_eq!(heap.pop_min(), Some(4));
+/// assert_eq!(heap.pop_min(), None);
+///
+/// // We can also create heaps from arrays.
+/// let mut heap = IntervalHeap::from([2, 6, 2]);
+///
+/// // And heaps can contain duplicate items.
+/// assert_eq!(heap.pop_min(), Some(2));
+/// assert_eq!(heap.pop_min(), Some(2));
+///
+/// assert_eq!(heap.len(), 1);
 /// ```
+#[derive(Clone)]
 pub struct IntervalHeap<T> {
     nodes: Vec<Node<T>>,
 }
@@ -19,7 +49,15 @@ impl<T> IntervalHeap<T> {
     ///
     /// # Example
     /// ```
-    /// todo!()
+    /// use rust_dsa::IntervalHeap;
+    ///
+    /// let mut heap = IntervalHeap::new();
+    ///
+    /// heap.insert('h');
+    /// heap.insert('n');
+    ///
+    /// assert_eq!(heap.peek_min(), Some(&'h'));
+    /// assert_eq!(heap.peek_max(), Some(&'n'));
     /// ```
     pub fn insert(&mut self, value: T)
     where
@@ -51,33 +89,41 @@ impl<T> IntervalHeap<T> {
     ///
     /// # Example
     /// ```
-    /// todo!()
+    /// use rust_dsa::IntervalHeap;
+    ///
+    /// let mut heap = IntervalHeap::from([4, 3, 6]);
+    ///
+    /// assert_eq!(heap.pop_min(), Some(3));
+    /// assert_eq!(heap.pop_min(), Some(4));
+    /// assert_eq!(heap.pop_min(), Some(6));
+    /// assert_eq!(heap.pop_min(), None);
     /// ```
     pub fn pop_min(&mut self) -> Option<T>
     where
         T: Ord,
     {
-        // TODO: combine this into one match
-        if self.nodes.len() <= 1 {
-            match self.nodes.pop() {
-                None => None,
-                Some(Node::Normal { low, high }) => {
+        match self.nodes.pop() {
+            None => None,
+            Some(Node::Normal { low, high }) => {
+                if let Some(root) = self.nodes.get_mut(0) {
+                    let min = root.replace_low(low);
+                    self.nodes.push(Node::new_odd(high));
+                    self.bubble_down_low();
+                    Some(min)
+                } else {
                     self.nodes.push(Node::new_odd(high));
                     Some(low)
                 }
-                Some(Node::Odd { value }) => Some(value),
             }
-        } else {
-            let value = match self.nodes.pop().unwrap() {
-                Node::Normal { low, high } => {
-                    let value = self.nodes[0].replace_low(low);
-                    self.nodes.push(Node::new_odd(high));
-                    value
+            Some(Node::Odd { value }) => {
+                if let Some(root) = self.nodes.get_mut(0) {
+                    let min = root.replace_low(value);
+                    self.bubble_down_low();
+                    Some(min)
+                } else {
+                    Some(value)
                 }
-                Node::Odd { value } => self.nodes[0].replace_low(value),
-            };
-            self.bubble_down_low();
-            Some(value)
+            }
         }
     }
 
@@ -85,33 +131,41 @@ impl<T> IntervalHeap<T> {
     ///
     /// # Example
     /// ```
-    /// todo!()
+    /// use rust_dsa::IntervalHeap;
+    ///
+    /// let mut heap = IntervalHeap::from([4, 3, 6]);
+    ///
+    /// assert_eq!(heap.pop_max(), Some(6));
+    /// assert_eq!(heap.pop_max(), Some(4));
+    /// assert_eq!(heap.pop_max(), Some(3));
+    /// assert_eq!(heap.pop_max(), None);
     /// ```
     pub fn pop_max(&mut self) -> Option<T>
     where
         T: Ord,
     {
-        // TODO: combine this into one match
-        if self.nodes.len() <= 1 {
-            match self.nodes.pop() {
-                None => None,
-                Some(Node::Normal { low, high }) => {
+        match self.nodes.pop() {
+            None => None,
+            Some(Node::Normal { low, high }) => {
+                if let Some(root) = self.nodes.get_mut(0) {
+                    let max = root.replace_high(high);
+                    self.nodes.push(Node::new_odd(low));
+                    self.bubble_down_high();
+                    Some(max)
+                } else {
                     self.nodes.push(Node::new_odd(low));
                     Some(high)
                 }
-                Some(Node::Odd { value }) => Some(value),
             }
-        } else {
-            let value = match self.nodes.pop().unwrap() {
-                Node::Normal { low, high } => {
-                    let value = self.nodes[0].replace_high(high);
-                    self.nodes.push(Node::new_odd(low));
-                    value
+            Some(Node::Odd { value }) => {
+                if let Some(root) = self.nodes.get_mut(0) {
+                    let max = root.replace_high(value);
+                    self.bubble_down_high();
+                    Some(max)
+                } else {
+                    Some(value)
                 }
-                Node::Odd { value } => self.nodes[0].replace_high(value),
-            };
-            self.bubble_down_high();
-            Some(value)
+            }
         }
     }
 
@@ -119,13 +173,21 @@ impl<T> IntervalHeap<T> {
     ///
     /// # Example
     /// ```
-    /// todo!()
+    /// use rust_dsa::IntervalHeap;
+    ///
+    /// let mut heap = IntervalHeap::from(['a', 'b', 'c']);
+    ///
+    /// assert_eq!(heap.peek_min(), Some(&'a'));
+    ///
+    /// heap.clear();
+    ///
+    /// assert_eq!(heap.peek_min(), None);
     /// ```
     pub fn peek_min(&mut self) -> Option<&T> {
         match self.nodes.get(0) {
+            None => None,
             Some(Node::Normal { low, .. }) => Some(low),
             Some(Node::Odd { value }) => Some(value),
-            None => None,
         }
     }
 
@@ -133,13 +195,21 @@ impl<T> IntervalHeap<T> {
     ///
     /// # Example
     /// ```
-    /// todo!()
+    /// use rust_dsa::IntervalHeap;
+    ///
+    /// let mut heap = IntervalHeap::from(['a', 'b', 'c']);
+    ///
+    /// assert_eq!(heap.peek_max(), Some(&'c'));
+    ///
+    /// heap.clear();
+    ///
+    /// assert_eq!(heap.peek_min(), None);
     /// ```
     pub fn peek_max(&mut self) -> Option<&T> {
         match self.nodes.get(0) {
+            None => None,
             Some(Node::Normal { high, .. }) => Some(high),
             Some(Node::Odd { value }) => Some(value),
-            None => None,
         }
     }
 
@@ -147,7 +217,15 @@ impl<T> IntervalHeap<T> {
     ///
     /// # Example
     /// ```
-    /// todo!()
+    /// use rust_dsa::IntervalHeap;
+    ///
+    /// let mut heap: IntervalHeap<_> = (0..42).collect();
+    ///
+    /// assert_eq!(heap.len(), 42);
+    ///
+    /// heap.clear();
+    ///
+    /// assert_eq!(heap.len(), 0);
     /// ```
     pub fn len(&self) -> usize {
         match self.nodes.last() {
@@ -161,7 +239,15 @@ impl<T> IntervalHeap<T> {
     ///
     /// # Example
     /// ```
-    /// todo!()
+    /// use rust_dsa::IntervalHeap;
+    ///
+    /// let mut heap: IntervalHeap<_> = ('a'..='z').collect();
+    ///
+    /// assert!(!heap.is_empty());
+    ///
+    /// heap.clear();
+    ///
+    /// assert!(heap.is_empty());
     /// ```
     pub fn is_empty(&self) -> bool {
         self.len() == 0
@@ -171,7 +257,15 @@ impl<T> IntervalHeap<T> {
     ///
     /// # Example
     /// ```
-    /// todo!()
+    /// use rust_dsa::IntervalHeap;
+    ///
+    /// let mut heap: IntervalHeap<_> = ('a'..='z').collect();
+    ///
+    /// assert!(!heap.is_empty());
+    ///
+    /// heap.clear();
+    ///
+    /// assert!(heap.is_empty());
     /// ```
     pub fn clear(&mut self) {
         self.nodes.clear();
@@ -181,9 +275,11 @@ impl<T> IntervalHeap<T> {
     where
         T: Ord,
     {
+        debug_assert!(matches!(self.nodes.get(index), Some(Node::Normal { .. })));
+
         while index > 0 {
             let parent_index = (index - 1) / 2;
-            let (parent, cur) = mut_refs(parent_index, index, &mut self.nodes);
+            let (parent, cur) = self.nodes.get_both_mut(parent_index, index);
             if cur.high() > parent.high() {
                 std::mem::swap(cur.high_mut(), parent.high_mut());
                 index = parent_index;
@@ -197,9 +293,11 @@ impl<T> IntervalHeap<T> {
     where
         T: Ord,
     {
+        debug_assert!(matches!(self.nodes.get(index), Some(Node::Normal { .. })));
+
         while index > 0 {
             let parent_index = (index - 1) / 2;
-            let (parent, cur) = mut_refs(parent_index, index, &mut self.nodes);
+            let (parent, cur) = self.nodes.get_both_mut(parent_index, index);
             if cur.low() < parent.low() {
                 std::mem::swap(cur.low_mut(), parent.low_mut());
                 index = parent_index;
@@ -213,16 +311,16 @@ impl<T> IntervalHeap<T> {
     where
         T: Ord,
     {
-        if self.nodes.len() <= 1 {
-            return;
-        }
+        debug_assert!(self.nodes.len() > 1);
+        debug_assert!(matches!(self.nodes.last(), Some(Node::Odd { .. })));
+
         let parent_index = (self.nodes.len() - 2) / 2;
-        let (parent, odd) = mut_refs(parent_index, self.nodes.len() - 1, &mut self.nodes);
-        if odd.value() > parent.high() {
-            std::mem::swap(odd.value_mut(), parent.high_mut());
+        let (parent, cur) = self.nodes.get_both_mut(parent_index, self.nodes.len() - 1);
+        if cur.value() > parent.high() {
+            std::mem::swap(cur.value_mut(), parent.high_mut());
             self.bubble_up_high(parent_index);
-        } else if odd.value() < parent.low() {
-            std::mem::swap(odd.value_mut(), parent.low_mut());
+        } else if cur.value() < parent.low() {
+            std::mem::swap(cur.value_mut(), parent.low_mut());
             self.bubble_up_low(parent_index);
         }
     }
@@ -249,7 +347,7 @@ impl<T> IntervalHeap<T> {
             if max_child < self.nodes.len()
                 && self.nodes[index].high() < self.nodes[max_child].high_or_value()
             {
-                let (parent, child) = mut_refs(index, max_child, &mut self.nodes);
+                let (parent, child) = self.nodes.get_both_mut(index, max_child);
                 std::mem::swap(parent.high_mut(), child.high_or_value_mut());
                 child.order_bounds();
                 index = max_child;
@@ -281,7 +379,7 @@ impl<T> IntervalHeap<T> {
             if min_child < self.nodes.len()
                 && self.nodes[index].low() > self.nodes[min_child].low_or_value()
             {
-                let (parent, child) = mut_refs(index, min_child, &mut self.nodes);
+                let (parent, child) = self.nodes.get_both_mut(index, min_child);
                 std::mem::swap(parent.low_mut(), child.low_or_value_mut());
                 child.order_bounds();
                 index = min_child;
@@ -292,13 +390,61 @@ impl<T> IntervalHeap<T> {
     }
 }
 
-fn mut_refs<T>(parent_index: usize, child_index: usize, slice: &mut [T]) -> (&mut T, &mut T) {
-    assert!(parent_index < child_index);
-    let (first_slice, second_slice) = slice.split_at_mut(child_index);
-    (&mut first_slice[parent_index], &mut second_slice[0])
+impl<T> Default for IntervalHeap<T> {
+    fn default() -> Self {
+        IntervalHeap::new()
+    }
 }
 
-#[derive(Debug, Clone)]
+impl<T, const N: usize> From<[T; N]> for IntervalHeap<T>
+where
+    T: Ord,
+{
+    /// ```
+    /// use rust_dsa::IntervalHeap;
+    ///
+    /// let random = [
+    ///     49, 166, 19, 170, 83, 176, 51, 192, 81, 73, 147, 121, 232, 178, 202, 122, 202, 237, 158,
+    ///     243, 170, 129, 8, 204, 217, 105, 132, 35, 246, 160, 250, 41, 149, 110, 76, 46, 183, 8, 13,
+    ///     4, 226, 173, 81, 101, 227, 132, 6, 5, 209, 131, 191, 137, 234, 126, 119, 24, 37, 156, 32,
+    ///     177, 46, 180, 144, 58, 80, 82, 103, 5, 71, 55, 90, 102, 127, 80, 87, 172, 28, 59, 161, 201,
+    ///     103, 241, 148, 163, 3, 119, 112, 15, 36, 209, 45, 124, 6, 110, 185, 148, 51, 236, 43, 157,
+    /// ];
+    ///
+    /// let bools: Vec<_> = random.iter().map(|i| i % 2 == 0).collect();
+    ///
+    /// let mut sorted = random.clone();
+    /// sorted.sort();
+    /// let mut iter = sorted.into_iter();
+    ///
+    /// let mut heap = IntervalHeap::from(random);
+    ///
+    /// for take_from_front in bools {
+    ///     if take_from_front {
+    ///         assert_eq!(heap.pop_min(), iter.next());
+    ///     } else {
+    ///         assert_eq!(heap.pop_max(), iter.next_back());
+    ///     }
+    /// }
+    /// ```
+    fn from(array: [T; N]) -> IntervalHeap<T> {
+        array.into_iter().collect()
+    }
+}
+
+impl<T> FromIterator<T> for IntervalHeap<T>
+where
+    T: Ord,
+{
+    fn from_iter<A: IntoIterator<Item = T>>(iter: A) -> Self {
+        let mut heap = IntervalHeap::new();
+        for value in iter {
+            heap.insert(value);
+        }
+        heap
+    }
+}
+#[derive(Clone)]
 enum Node<T> {
     Normal { low: T, high: T },
     Odd { value: T },
@@ -409,130 +555,20 @@ impl<T> Node<T> {
     }
 }
 
-impl<T> Default for IntervalHeap<T> {
-    fn default() -> Self {
-        IntervalHeap::new()
-    }
+trait GetBothMut {
+    type Item;
+    fn get_both_mut(
+        &mut self,
+        parent_index: usize,
+        child_index: usize,
+    ) -> (&mut Self::Item, &mut Self::Item);
 }
 
-impl<T, const N: usize> From<[T; N]> for IntervalHeap<T>
-where
-    T: Ord,
-{
-    fn from(array: [T; N]) -> IntervalHeap<T> {
-        array.into_iter().collect()
-    }
-}
-
-impl<T> FromIterator<T> for IntervalHeap<T>
-where
-    T: Ord,
-{
-    fn from_iter<A: IntoIterator<Item = T>>(iter: A) -> Self {
-        let mut heap = IntervalHeap::new();
-        for value in iter {
-            heap.insert(value);
-        }
-        heap
-    }
-}
-
-fn is_heap<T: Ord>(heap: &[Node<T>]) -> bool {
-    is_heap_rec(heap, 0)
-}
-
-fn is_heap_rec<T: Ord>(heap: &[Node<T>], index: usize) -> bool {
-    let (plow, phigh) = match heap.get(index) {
-        Some(Node::Normal { low, high }) => (low, high),
-        _ => return true,
-    };
-
-    let child1 = 2 * index + 1;
-    let child2 = child1 + 1;
-    (match heap.get(child1) {
-        Some(Node::Normal { low, high }) => {
-            plow <= low && low <= high && high <= phigh && is_heap_rec(heap, child1)
-        }
-        Some(Node::Odd { value }) => plow <= value && value <= phigh,
-        None => true,
-    }) && (match heap.get(child2) {
-        Some(Node::Normal { low, high }) => {
-            plow <= low && low <= high && high <= phigh && is_heap_rec(heap, child1)
-        }
-        Some(Node::Odd { value }) => plow <= value && value <= phigh,
-        None => true,
-    })
-}
-
-#[cfg(test)]
-mod tests {
-    use super::IntervalHeap;
-    use rand::Rng;
-    #[test]
-    fn test() {
-        /*
-        let mut heap = IntervalHeap::new();
-        heap.insert(1);
-        heap.insert(2);
-        heap.insert(5);
-        heap.insert(3);
-        heap.insert(8);
-        heap.insert(-3);
-        heap.insert(2);
-        heap.insert(4);
-        heap.insert(14);
-
-        println!("{:?}", heap.nodes);
-
-        println!("POP MIN: {:?}", heap.pop_min());
-
-        println!("{:?}", heap.nodes);
-
-        assert!(false);
-        */
-
-        let n = 10_000_000;
-
-        let mut rng = rand::thread_rng();
-        let vec: Vec<_> = (0..n).map(|_| rng.gen::<u64>()).collect();
-        let mut sorted = vec.clone();
-        sorted.sort();
-        //let blow = sorted.clone();
-        //let mut i = 0;
-        //let mut j = blow.len();
-        let mut heap: IntervalHeap<_> = vec.into_iter().collect();
-
-        // println!("sorted: {:?}", sorted);
-
-        let mut iter = sorted.into_iter();
-
-        for _ in 0..n {
-            //mlet last = heap.nodes.clone();
-            //if !super::is_heap(&heap.nodes) {
-            //    println!("\x1b[31mNOT A HEAP!!\x1b[0m");
-            //}
-            //println!("heap.nodes: {:?}", heap.nodes);
-            //println!("blow: {:?}", &blow[i..j]);
-
-            if rng.gen::<bool>() {
-                let a = heap.pop_min();
-                let b = iter.next();
-                //i += 1;
-                //println!("{:?} {:?}", a, b);
-                if a != b {
-                    // println!("heap.nodes: {:?}", last);
-                }
-                assert_eq!(a, b);
-            } else {
-                let a = heap.pop_max();
-                let b = iter.next_back();
-                //j -= 1;
-                //println!("{:?} {:?}", a, b);
-                if a != b {
-                    // println!("heap.nodes: {:?}", last);
-                }
-                assert_eq!(a, b);
-            }
-        }
+impl<T> GetBothMut for Vec<T> {
+    type Item = T;
+    fn get_both_mut(&mut self, parent_index: usize, child_index: usize) -> (&mut T, &mut T) {
+        assert!(parent_index < child_index);
+        let (first_slice, second_slice) = self.split_at_mut(child_index);
+        (&mut first_slice[parent_index], &mut second_slice[0])
     }
 }
