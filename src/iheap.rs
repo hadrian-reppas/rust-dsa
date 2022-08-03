@@ -1,5 +1,7 @@
+use std::mem;
+
 /// An [interval heap](https://en.wikipedia.org/wiki/Double-ended_priority_queue#Interval_heaps)
-/// implementation for use as a double-ended priority queue.
+/// implementation for use as a [double-ended priority queue](http://en.wikipedia.org/wiki/Double-ended_priority_queue).
 ///
 /// # Example
 /// ```
@@ -34,6 +36,17 @@
 ///
 /// assert_eq!(heap.len(), 1);
 /// ```
+///
+/// # Runtime complexity
+///
+/// | Operation                  | Runtime Complexity |
+/// | ---------------------------| ------------------ |
+/// | [`IntervalHeap::insert`]   | *O*(log *n*)       |
+/// | [`IntervalHeap::pop_min`]  | *O*(log *n*)       |
+/// | [`IntervalHeap::pop_max`]  | *O*(log *n*)       |
+/// | [`IntervalHeap::peek_min`] | *O*(1)             |
+/// | [`IntervalHeap::peek_max`] | *O*(1)             |
+/// | [`IntervalHeap::from`]     | *O*(*n* log *n*)   |
 #[derive(Clone)]
 pub struct IntervalHeap<T> {
     nodes: Vec<Node<T>>,
@@ -223,6 +236,10 @@ impl<T> IntervalHeap<T> {
     ///
     /// assert_eq!(heap.len(), 42);
     ///
+    /// heap.pop_max();
+    ///
+    /// assert_eq!(heap.len(), 41);
+    ///
     /// heap.clear();
     ///
     /// assert_eq!(heap.len(), 0);
@@ -281,7 +298,7 @@ impl<T> IntervalHeap<T> {
             let parent_index = (index - 1) / 2;
             let (parent, cur) = self.nodes.get_both_mut(parent_index, index);
             if cur.high() > parent.high() {
-                std::mem::swap(cur.high_mut(), parent.high_mut());
+                mem::swap(cur.high_mut(), parent.high_mut());
                 index = parent_index;
             } else {
                 break;
@@ -299,7 +316,7 @@ impl<T> IntervalHeap<T> {
             let parent_index = (index - 1) / 2;
             let (parent, cur) = self.nodes.get_both_mut(parent_index, index);
             if cur.low() < parent.low() {
-                std::mem::swap(cur.low_mut(), parent.low_mut());
+                mem::swap(cur.low_mut(), parent.low_mut());
                 index = parent_index;
             } else {
                 break;
@@ -317,10 +334,10 @@ impl<T> IntervalHeap<T> {
         let parent_index = (self.nodes.len() - 2) / 2;
         let (parent, cur) = self.nodes.get_both_mut(parent_index, self.nodes.len() - 1);
         if cur.value() > parent.high() {
-            std::mem::swap(cur.value_mut(), parent.high_mut());
+            mem::swap(cur.value_mut(), parent.high_mut());
             self.bubble_up_high(parent_index);
         } else if cur.value() < parent.low() {
-            std::mem::swap(cur.value_mut(), parent.low_mut());
+            mem::swap(cur.value_mut(), parent.low_mut());
             self.bubble_up_low(parent_index);
         }
     }
@@ -329,10 +346,10 @@ impl<T> IntervalHeap<T> {
     where
         T: Ord,
     {
-        // TODO: Clean up
+        debug_assert!(matches!(self.nodes.get(0), Some(Node::Normal { .. })));
+
         let mut index = 0;
         loop {
-            // find the index of the biggest child
             let child1 = 2 * index + 1;
             let child2 = child1 + 1;
             let max_child = if child2 >= self.nodes.len()
@@ -343,12 +360,11 @@ impl<T> IntervalHeap<T> {
                 child2
             };
 
-            // if the `high` value at `index` is smaller than its biggest child, swap the two
             if max_child < self.nodes.len()
                 && self.nodes[index].high() < self.nodes[max_child].high_or_value()
             {
                 let (parent, child) = self.nodes.get_both_mut(index, max_child);
-                std::mem::swap(parent.high_mut(), child.high_or_value_mut());
+                mem::swap(parent.high_mut(), child.high_or_value_mut());
                 child.order_bounds();
                 index = max_child;
             } else {
@@ -361,10 +377,10 @@ impl<T> IntervalHeap<T> {
     where
         T: Ord,
     {
-        // TODO: Clean up
+        debug_assert!(matches!(self.nodes.get(0), Some(Node::Normal { .. })));
+
         let mut index = 0;
         loop {
-            // find the index of the smallest child
             let child1 = 2 * index + 1;
             let child2 = child1 + 1;
             let min_child = if child2 >= self.nodes.len()
@@ -375,12 +391,11 @@ impl<T> IntervalHeap<T> {
                 child2
             };
 
-            // if the `low` value at `index` is bigger than its smallest child, swap the two
             if min_child < self.nodes.len()
                 && self.nodes[index].low() > self.nodes[min_child].low_or_value()
             {
                 let (parent, child) = self.nodes.get_both_mut(index, min_child);
-                std::mem::swap(parent.low_mut(), child.low_or_value_mut());
+                mem::swap(parent.low_mut(), child.low_or_value_mut());
                 child.order_bounds();
                 index = min_child;
             } else {
@@ -465,21 +480,21 @@ impl<T> Node<T> {
     {
         if let Node::Normal { low, high } = self {
             if high < low {
-                std::mem::swap(high, low);
+                mem::swap(high, low);
             }
         }
     }
 
     fn replace_high(&mut self, new_high: T) -> T {
         match self {
-            Node::Normal { high, .. } => std::mem::replace(high, new_high),
+            Node::Normal { high, .. } => mem::replace(high, new_high),
             _ => panic!(),
         }
     }
 
     fn replace_low(&mut self, new_low: T) -> T {
         match self {
-            Node::Normal { low, .. } => std::mem::replace(low, new_low),
+            Node::Normal { low, .. } => mem::replace(low, new_low),
             _ => panic!(),
         }
     }
