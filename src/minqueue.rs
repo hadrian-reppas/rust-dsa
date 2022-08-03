@@ -43,6 +43,7 @@ use std::{fmt::Debug, iter};
 ///
 /// assert!(a == b);
 /// ```
+#[derive(Clone)]
 pub struct MinQueue<T> {
     old: MinStack<T>,
     new: MinStack<T>,

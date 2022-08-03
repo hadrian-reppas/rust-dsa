@@ -21,6 +21,9 @@ use std::convert::From;
 /// heap.insert(1);
 /// heap.insert(3);
 ///
+/// // We can peek at the minimum item.
+/// assert_eq!(heap.peek(), Some(&1));
+///
 /// // And pop them off in ascending order.
 /// assert_eq!(heap.pop(), Some(1));
 /// assert_eq!(heap.pop(), Some(3));
@@ -45,6 +48,7 @@ use std::convert::From;
 /// | [`BinaryHeap::peek`]   | *O*(1)             |
 /// | [`BinaryHeap::pop`]    | *O*(log *n*)       |
 /// | [`BinaryHeap::from`]   | *O*(*n*)           |
+#[derive(Clone)]
 pub struct BinaryHeap<T> {
     items: Vec<T>,
 }
@@ -249,23 +253,34 @@ where
     }
 }
 
+impl<T> FromIterator<T> for BinaryHeap<T>
+where
+    T: Ord,
+{
+    /// Uses the [heapify algorithm](https://johnderinger.wordpress.com/2012/12/28/heapify/)
+    /// to create a [BinaryHeap] in *O*(*n*) time.
+    fn from_iter<A: IntoIterator<Item = T>>(iter: A) -> Self {
+        let mut heap = BinaryHeap {
+            items: iter.into_iter().collect(),
+        };
+        for i in (0..heap.len()).rev() {
+            heap.bubble_down(i);
+        }
+        heap
+    }
+}
+
 impl<T, const N: usize> From<[T; N]> for BinaryHeap<T>
 where
     T: Ord,
 {
     /// Uses the [heapify algorithm](https://johnderinger.wordpress.com/2012/12/28/heapify/)
     /// to create a [BinaryHeap] in *O*(*n*) time.
-    fn from(array: [T; N]) -> BinaryHeap<T>
+    fn from(arr: [T; N]) -> BinaryHeap<T>
     where
         T: Ord,
     {
-        let mut heap = BinaryHeap {
-            items: array.into(),
-        };
-        for i in (0..heap.len()).rev() {
-            heap.bubble_down(i);
-        }
-        heap
+        arr.into_iter().collect()
     }
 }
 

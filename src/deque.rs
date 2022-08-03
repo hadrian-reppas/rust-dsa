@@ -59,6 +59,7 @@ const MIN_CAPACITY: usize = 10;
 /// | [Deque::push_front] | *O*(1)             |
 /// | [Deque::pop_back]   | *O*(1)             |
 /// | [Deque::pop_front]  | *O*(1)             |
+#[derive(Clone)]
 pub struct Deque<T> {
     buffer: Vec<Option<T>>,
     front: usize,

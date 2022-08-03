@@ -17,7 +17,6 @@ use std::cmp::Eq;
 /// let winner = majority_element(strs.into_iter());
 /// assert_eq!(winner, None);
 /// ```
-#[allow(dead_code)]
 pub fn majority_element<I>(elements: I) -> Option<I::Item>
 where
     I: Iterator + Clone,

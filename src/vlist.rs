@@ -39,6 +39,7 @@ use std::iter;
 ///     assert_eq!(a, b);
 /// }
 /// ```
+#[derive(Clone)]
 pub struct VList<T> {
     nodes: LinkedList<Vec<T>>,
     len: usize,
