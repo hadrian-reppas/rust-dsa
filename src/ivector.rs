@@ -225,7 +225,7 @@ impl<T> ImmutableVector<T> {
     /// ```
     /// use rust_dsa::ImmutableVector;
     ///
-    /// let empty: ImmutableVector<_> = ImmutableVector::new();
+    /// let empty: ImmutableVector<bool> = ImmutableVector::new();
     /// let forty: ImmutableVector<_> = (0..40).collect();
     ///
     /// assert_eq!(empty.len(), 0);
@@ -241,7 +241,7 @@ impl<T> ImmutableVector<T> {
     /// ```
     /// use rust_dsa::ImmutableVector;
     ///
-    /// let empty: ImmutableVector<_> = ImmutableVector::new();
+    /// let empty: ImmutableVector<bool> = ImmutableVector::new();
     /// let forty: ImmutableVector<_> = (0..40).collect();
     ///
     /// assert!(empty.is_empty());
