@@ -285,7 +285,7 @@ impl<T> Default for ImmutableVector<T> {
 }
 
 impl<T> FromIterator<Rc<T>> for ImmutableVector<T> {
-    fn from_iter<A: IntoIterator<Item = Rc<T>>>(iter: A) -> ImmutableVector<T> {
+    fn from_iter<I: IntoIterator<Item = Rc<T>>>(iter: I) -> ImmutableVector<T> {
         let mut items = Vec::new();
         let mut piter = iter.into_iter().peekable();
         while piter.peek().is_some() {
@@ -327,7 +327,7 @@ impl<T> FromIterator<Rc<T>> for ImmutableVector<T> {
 }
 
 impl<T> FromIterator<T> for ImmutableVector<T> {
-    fn from_iter<A: IntoIterator<Item = T>>(iter: A) -> ImmutableVector<T> {
+    fn from_iter<I: IntoIterator<Item = T>>(iter: I) -> ImmutableVector<T> {
         iter.into_iter().map(Rc::new).collect()
     }
 }

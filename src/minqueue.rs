@@ -237,7 +237,7 @@ impl<T> FromIterator<T> for MinQueue<T>
 where
     T: Ord,
 {
-    fn from_iter<A: IntoIterator<Item = T>>(iter: A) -> MinQueue<T> {
+    fn from_iter<I: IntoIterator<Item = T>>(iter: I) -> MinQueue<T> {
         let iter = iter.into_iter();
         let mut stack = MinQueue::with_capacity(iter.size_hint().0);
         for value in iter {

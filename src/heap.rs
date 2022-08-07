@@ -259,7 +259,7 @@ where
 {
     /// Uses the [heapify algorithm](https://johnderinger.wordpress.com/2012/12/28/heapify/)
     /// to create a [BinaryHeap] in *O*(*n*) time.
-    fn from_iter<A: IntoIterator<Item = T>>(iter: A) -> BinaryHeap<T> {
+    fn from_iter<I: IntoIterator<Item = T>>(iter: I) -> BinaryHeap<T> {
         let mut heap = BinaryHeap {
             items: iter.into_iter().collect(),
         };

@@ -499,7 +499,7 @@ impl<T> Iterator for Drain<T> {
 }
 
 impl<T> FromIterator<T> for Deque<T> {
-    fn from_iter<A: IntoIterator<Item = T>>(iter: A) -> Deque<T> {
+    fn from_iter<I: IntoIterator<Item = T>>(iter: I) -> Deque<T> {
         let buffer: Vec<_> = iter.into_iter().map(Option::Some).collect();
         Deque {
             len: buffer.len(),

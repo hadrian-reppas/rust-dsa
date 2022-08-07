@@ -451,7 +451,7 @@ where
 {
     /// Creates a graph with the elements of the iterator. The graph does not
     /// contain any edges.
-    fn from_iter<T: IntoIterator<Item = N>>(iter: T) -> WeightedGraph<N, E> {
+    fn from_iter<I: IntoIterator<Item = N>>(iter: I) -> WeightedGraph<N, E> {
         WeightedGraph {
             inner: WeightedDiGraph::from_iter(iter),
         }

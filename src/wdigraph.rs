@@ -536,7 +536,7 @@ where
 {
     /// Creates a graph with the elements of the iterator. The graph does not
     /// contain any edges.
-    fn from_iter<T: IntoIterator<Item = N>>(iter: T) -> WeightedDiGraph<N, E> {
+    fn from_iter<I: IntoIterator<Item = N>>(iter: I) -> WeightedDiGraph<N, E> {
         let mut counter = 0;
         let mut node_to_id = HashMap::new();
         let mut id_to_node = HashMap::new();

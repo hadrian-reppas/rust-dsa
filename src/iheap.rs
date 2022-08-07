@@ -451,7 +451,7 @@ impl<T> FromIterator<T> for IntervalHeap<T>
 where
     T: Ord,
 {
-    fn from_iter<A: IntoIterator<Item = T>>(iter: A) -> IntervalHeap<T> {
+    fn from_iter<I: IntoIterator<Item = T>>(iter: I) -> IntervalHeap<T> {
         let mut heap = IntervalHeap::new();
         for value in iter {
             heap.insert(value);

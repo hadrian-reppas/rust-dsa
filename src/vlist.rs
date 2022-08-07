@@ -232,7 +232,7 @@ impl<T> FromIterator<T> for VList<T> {
     ///     assert_eq!(ints.pop(), Some(i));
     /// }
     /// ```
-    fn from_iter<A: IntoIterator<Item = T>>(iter: A) -> VList<T> {
+    fn from_iter<I: IntoIterator<Item = T>>(iter: I) -> VList<T> {
         let iter = iter.into_iter();
         let mut list = VList::new();
         for value in iter {
