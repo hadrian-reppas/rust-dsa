@@ -102,7 +102,7 @@ impl<N, E> WeightedDiGraph<N, E> {
     /// ```
     /// use rust_dsa::WeightedDiGraph;
     ///
-    /// let mut graph: WeightedDiGraph<i32, ()> = WeightedDiGraph::new();
+    /// let mut graph: WeightedDiGraph<_, ()> = WeightedDiGraph::new();
     /// graph.insert_node(1);
     ///
     /// assert!(graph.contains_node(&1));
@@ -223,7 +223,7 @@ impl<N, E> WeightedDiGraph<N, E> {
     /// ```
     /// use rust_dsa::WeightedDiGraph;
     ///
-    /// let mut graph: WeightedDiGraph<i32, ()> = WeightedDiGraph::new();
+    /// let mut graph: WeightedDiGraph<_, f64> = WeightedDiGraph::new();
     ///
     /// graph.insert_node(1);
     ///
@@ -299,7 +299,7 @@ impl<N, E> WeightedDiGraph<N, E> {
     /// ```
     /// use rust_dsa::WeightedDiGraph;
     ///
-    /// let graph: WeightedDiGraph<i32, ()> = (0..42).collect();
+    /// let graph: WeightedDiGraph<_, ()> = (0..42).collect();
     ///
     /// assert_eq!(graph.len(), 42);
     /// ```
@@ -313,7 +313,7 @@ impl<N, E> WeightedDiGraph<N, E> {
     /// ```
     /// use rust_dsa::WeightedDiGraph;
     ///
-    /// let mut graph: WeightedDiGraph<char, ()> = "abc".chars().collect();
+    /// let mut graph: WeightedDiGraph<_, bool> = "abc".chars().collect();
     ///
     /// assert!(!graph.is_empty());
     ///
@@ -331,7 +331,7 @@ impl<N, E> WeightedDiGraph<N, E> {
     /// ```
     /// use rust_dsa::WeightedDiGraph;
     ///
-    /// let mut graph: WeightedDiGraph<char, ()> = "abc".chars().collect();
+    /// let mut graph: WeightedDiGraph<_, u8> = "abc".chars().collect();
     ///
     /// assert!(!graph.is_empty());
     ///
@@ -443,7 +443,7 @@ where
     /// a.insert_edge(&2, &1, 'c');
     /// a.remove_edge(&1, &2);
     ///
-    /// let mut b: WeightedDiGraph<i32, char> = [1, 2, 3].into_iter().collect();
+    /// let mut b: WeightedDiGraph<_, _> = [1, 2, 3].into_iter().collect();
     /// b.insert_edge(&3, &2, 'b');
     /// b.insert_edge(&2, &1, 'c');
     ///

@@ -223,7 +223,7 @@ impl<N> DiGraph<N> {
     /// ```
     /// use rust_dsa::DiGraph;
     ///
-    /// let graph: DiGraph<i32> = (0..42).collect();
+    /// let graph: DiGraph<_> = (0..42).collect();
     ///
     /// assert_eq!(graph.len(), 42);
     /// ```
@@ -237,7 +237,7 @@ impl<N> DiGraph<N> {
     /// ```
     /// use rust_dsa::DiGraph;
     ///
-    /// let mut graph: DiGraph<char> = "abc".chars().collect();
+    /// let mut graph: DiGraph<_> = "abc".chars().collect();
     ///
     /// assert!(!graph.is_empty());
     ///
@@ -255,7 +255,7 @@ impl<N> DiGraph<N> {
     /// ```
     /// use rust_dsa::DiGraph;
     ///
-    /// let mut graph: DiGraph<char> = "abc".chars().collect();
+    /// let mut graph: DiGraph<_> = "abc".chars().collect();
     ///
     /// assert!(!graph.is_empty());
     ///
@@ -285,7 +285,7 @@ impl<N> DiGraph<N> {
     ///     (3, 2),
     /// ]);
     ///
-    /// let neighbors: HashSet<&i32> = graph.neighbors_of(&1).collect();
+    /// let neighbors: HashSet<_> = graph.neighbors_of(&1).collect();
     ///
     /// assert_eq!(
     ///     HashSet::from([&2, &3, &4]),
@@ -340,7 +340,7 @@ where
     /// use rust_dsa::DiGraph;
     ///
     /// let mut a = DiGraph::from([(1, 2), (2, 3), (2, 4)]);
-    /// let mut b: DiGraph<i32> = (1..=4).collect();
+    /// let mut b: DiGraph<_> = (1..=4).collect();
     ///
     /// assert!(a != b);
     ///

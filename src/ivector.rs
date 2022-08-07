@@ -96,8 +96,8 @@ impl<T> ImmutableVector<T> {
     /// ```
     /// use rust_dsa::ImmutableVector;
     ///
-    /// let racecar: ImmutableVector<char> = "racecar".chars().collect();
-    /// let car: ImmutableVector<char> = "car".chars().collect();
+    /// let racecar: ImmutableVector<_> = "racecar".chars().collect();
+    /// let car: ImmutableVector<_> = "car".chars().collect();
     ///
     /// assert_eq!(racecar.range(4..), car);
     /// ```
@@ -155,7 +155,7 @@ impl<T> ImmutableVector<T> {
     /// ```
     /// use rust_dsa::ImmutableVector;
     ///
-    /// let feast: ImmutableVector<char> = "feast".chars().collect();
+    /// let feast: ImmutableVector<_> = "feast".chars().collect();
     ///
     /// let east = feast.remove(0);
     ///
@@ -179,8 +179,8 @@ impl<T> ImmutableVector<T> {
     /// ```
     /// use rust_dsa::ImmutableVector;
     ///
-    /// let unseasonably: ImmutableVector<char> = "unseasonably".chars().collect();
-    /// let unreasonably: ImmutableVector<char> = "unreasonably".chars().collect();
+    /// let unseasonably: ImmutableVector<_> = "unseasonably".chars().collect();
+    /// let unreasonably: ImmutableVector<_> = "unreasonably".chars().collect();
     ///
     /// assert_eq!(
     ///     unseasonably.replace(2, 'r'),
@@ -225,8 +225,8 @@ impl<T> ImmutableVector<T> {
     /// ```
     /// use rust_dsa::ImmutableVector;
     ///
-    /// let empty: ImmutableVector<i32> = ImmutableVector::new();
-    /// let forty: ImmutableVector<i32> = (0..40).collect();
+    /// let empty: ImmutableVector<_> = ImmutableVector::new();
+    /// let forty: ImmutableVector<_> = (0..40).collect();
     ///
     /// assert_eq!(empty.len(), 0);
     /// assert_eq!(forty.len(), 40);
@@ -241,8 +241,8 @@ impl<T> ImmutableVector<T> {
     /// ```
     /// use rust_dsa::ImmutableVector;
     ///
-    /// let empty: ImmutableVector<i32> = ImmutableVector::new();
-    /// let forty: ImmutableVector<i32> = (0..40).collect();
+    /// let empty: ImmutableVector<_> = ImmutableVector::new();
+    /// let forty: ImmutableVector<_> = (0..40).collect();
     ///
     /// assert!(empty.is_empty());
     /// assert!(!forty.is_empty());

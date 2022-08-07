@@ -44,7 +44,7 @@ use std::{fmt::Debug, iter};
 /// let a = MinStack::from(['s', 't', 'a', 'c', 'k']);
 ///
 /// // And iterators.
-/// let b: MinStack<char> = "stack".chars().collect();
+/// let b: MinStack<_> = "stack".chars().collect();
 ///
 /// assert!(a == b);
 /// ```

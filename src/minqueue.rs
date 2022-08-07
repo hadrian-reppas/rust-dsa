@@ -39,7 +39,7 @@ use std::{fmt::Debug, iter};
 /// let a = MinQueue::from(['q', 'u', 'e', 'u', 'e']);
 ///
 /// // And iterators.
-/// let b: MinQueue<char> = "queue".chars().collect();
+/// let b: MinQueue<_> = "queue".chars().collect();
 ///
 /// assert!(a == b);
 /// ```

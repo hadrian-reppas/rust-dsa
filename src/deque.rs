@@ -84,7 +84,7 @@ impl<T> Deque<T> {
     /// ```
     /// use rust_dsa::Deque;
     ///
-    /// let deque: Deque<i32> = Deque::with_capacity(10);
+    /// let deque: Deque<_> = Deque::with_capacity(10);
     ///
     /// assert_eq!(deque.capacity(), 10);
     /// ```

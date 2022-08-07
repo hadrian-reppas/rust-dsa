@@ -241,7 +241,7 @@ impl<N> Graph<N> {
     /// ```
     /// use rust_dsa::Graph;
     ///
-    /// let graph: Graph<i32> = (0..42).collect();
+    /// let graph: Graph<_> = (0..42).collect();
     ///
     /// assert_eq!(graph.len(), 42);
     /// ```
@@ -255,7 +255,7 @@ impl<N> Graph<N> {
     /// ```
     /// use rust_dsa::Graph;
     ///
-    /// let mut graph: Graph<char> = "abc".chars().collect();
+    /// let mut graph: Graph<_> = "abc".chars().collect();
     ///
     /// assert!(!graph.is_empty());
     ///
@@ -273,7 +273,7 @@ impl<N> Graph<N> {
     /// ```
     /// use rust_dsa::Graph;
     ///
-    /// let mut graph: Graph<char> = "abc".chars().collect();
+    /// let mut graph: Graph<_> = "abc".chars().collect();
     ///
     /// assert!(!graph.is_empty());
     ///
@@ -303,7 +303,7 @@ impl<N> Graph<N> {
     ///     (3, 2),
     /// ]);
     ///
-    /// let neighbors: HashSet<&i32> = graph.neighbors_of(&1).collect();
+    /// let neighbors: HashSet<_> = graph.neighbors_of(&1).collect();
     ///
     /// assert_eq!(
     ///     HashSet::from([&2, &3, &4]),
@@ -397,7 +397,7 @@ where
     /// a.insert_edge(&1, &2);
     /// a.remove_edge(&2, &1);
     ///
-    /// let mut b: Graph<i32> = [1, 2, 3].into_iter().collect();
+    /// let mut b: Graph<_> = [1, 2, 3].into_iter().collect();
     /// b.insert_edge(&2, &3);
     ///
     /// assert!(a == b);

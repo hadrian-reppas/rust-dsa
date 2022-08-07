@@ -100,7 +100,7 @@ impl<N, E> WeightedGraph<N, E> {
     /// ```
     /// use rust_dsa::WeightedGraph;
     ///
-    /// let mut graph: WeightedGraph<i32, bool> = WeightedGraph::new();
+    /// let mut graph: WeightedGraph<_, bool> = WeightedGraph::new();
     /// graph.insert_node(1);
     ///
     /// assert!(graph.contains_node(&1));
@@ -146,7 +146,7 @@ impl<N, E> WeightedGraph<N, E> {
     /// let foo = "foo".to_string();
     /// let bar = "bar".to_string();
     ///
-    /// let mut graph: WeightedGraph<String, i32> = WeightedGraph::new();
+    /// let mut graph: WeightedGraph<_, i32> = WeightedGraph::new();
     /// graph.insert_node(foo.clone());
     /// graph.insert_node(bar.clone());
     ///
@@ -193,7 +193,7 @@ impl<N, E> WeightedGraph<N, E> {
     /// ```
     /// use rust_dsa::WeightedGraph;
     ///
-    /// let mut graph: WeightedGraph<i32, f64> = WeightedGraph::new();
+    /// let mut graph: WeightedGraph<_, f64> = WeightedGraph::new();
     ///
     /// graph.insert_node(1);
     ///
@@ -257,7 +257,7 @@ impl<N, E> WeightedGraph<N, E> {
     /// ```
     /// use rust_dsa::WeightedGraph;
     ///
-    /// let graph: WeightedGraph<i32, u8> = (0..42).collect();
+    /// let graph: WeightedGraph<_, u8> = (0..42).collect();
     ///
     /// assert_eq!(graph.len(), 42);
     /// ```
@@ -271,7 +271,7 @@ impl<N, E> WeightedGraph<N, E> {
     /// ```
     /// use rust_dsa::WeightedGraph;
     ///
-    /// let mut graph: WeightedGraph<char, i32> = "abc".chars().collect();
+    /// let mut graph: WeightedGraph<_, i32> = "abc".chars().collect();
     ///
     /// assert!(!graph.is_empty());
     ///
@@ -289,7 +289,7 @@ impl<N, E> WeightedGraph<N, E> {
     /// ```
     /// use rust_dsa::WeightedGraph;
     ///
-    /// let mut graph: WeightedGraph<char, i32> = "abc".chars().collect();
+    /// let mut graph: WeightedGraph<_, i32> = "abc".chars().collect();
     ///
     /// assert!(!graph.is_empty());
     ///
@@ -319,7 +319,7 @@ impl<N, E> WeightedGraph<N, E> {
     ///     (3, 2, 'z'),
     /// ]);
     ///
-    /// let neighbors: HashSet<(&i32, &char)> = graph.neighbors_of(&1).collect();
+    /// let neighbors: HashSet<_> = graph.neighbors_of(&1).collect();
     ///
     /// assert_eq!(
     ///     HashSet::from([(&2, &'a'), (&3, &'b'), (&4, &'c')]),
@@ -407,7 +407,7 @@ where
     /// a.insert_edge(&3, &2, 'b');
     /// a.remove_edge(&2, &1);
     ///
-    /// let mut b: WeightedGraph<i32, char> = [1, 2, 3].into_iter().collect();
+    /// let mut b: WeightedGraph<_, _> = [1, 2, 3].into_iter().collect();
     /// b.insert_edge(&3, &2, 'b');
     ///
     /// assert!(a == b);
