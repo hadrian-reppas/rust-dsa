@@ -87,7 +87,7 @@ pub struct WeightedDiGraph<N, E> {
 
 impl<N, E> WeightedDiGraph<N, E> {
     /// Creates an empty graph.
-    pub fn new() -> Self {
+    pub fn new() -> WeightedDiGraph<N, E> {
         WeightedDiGraph {
             edges: HashMap::new(),
             node_to_id: HashMap::new(),
@@ -421,7 +421,7 @@ impl<N, E> WeightedDiGraph<N, E> {
 }
 
 impl<N, E> Default for WeightedDiGraph<N, E> {
-    fn default() -> Self {
+    fn default() -> WeightedDiGraph<N, E> {
         WeightedDiGraph::new()
     }
 }
@@ -464,7 +464,7 @@ where
     ///
     /// assert!(c != d);
     /// ```
-    fn eq(&self, other: &Self) -> bool {
+    fn eq(&self, other: &WeightedDiGraph<N, E>) -> bool {
         if self.len() != other.len() {
             // different number of nodes in `other`
             return false;
@@ -521,7 +521,7 @@ where
     N: Clone + Hash + Eq,
 {
     /// Creates a graph from an edge list.
-    fn from(edges: [(N, N, E); M]) -> Self {
+    fn from(edges: [(N, N, E); M]) -> WeightedDiGraph<N, E> {
         let mut graph = WeightedDiGraph::new();
         for (from, to, weight) in edges {
             graph.insert_edge(&from, &to, weight);
@@ -536,7 +536,7 @@ where
 {
     /// Creates a graph with the elements of the iterator. The graph does not
     /// contain any edges.
-    fn from_iter<T: IntoIterator<Item = N>>(iter: T) -> Self {
+    fn from_iter<T: IntoIterator<Item = N>>(iter: T) -> WeightedDiGraph<N, E> {
         let mut counter = 0;
         let mut node_to_id = HashMap::new();
         let mut id_to_node = HashMap::new();

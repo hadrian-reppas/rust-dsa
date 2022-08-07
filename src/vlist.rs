@@ -47,7 +47,7 @@ pub struct VList<T> {
 
 impl<T> VList<T> {
     /// Creates an empty list.
-    pub fn new() -> Self {
+    pub fn new() -> VList<T> {
         VList {
             nodes: LinkedList::new(),
             len: 0,
@@ -209,13 +209,13 @@ impl<T> VList<T> {
 }
 
 impl<T> Default for VList<T> {
-    fn default() -> Self {
+    fn default() -> VList<T> {
         VList::new()
     }
 }
 
 impl<T, const N: usize> From<[T; N]> for VList<T> {
-    fn from(arr: [T; N]) -> Self {
+    fn from(arr: [T; N]) -> VList<T> {
         arr.into_iter().collect()
     }
 }
@@ -232,7 +232,7 @@ impl<T> FromIterator<T> for VList<T> {
     ///     assert_eq!(ints.pop(), Some(i));
     /// }
     /// ```
-    fn from_iter<A: IntoIterator<Item = T>>(iter: A) -> Self {
+    fn from_iter<A: IntoIterator<Item = T>>(iter: A) -> VList<T> {
         let iter = iter.into_iter();
         let mut list = VList::new();
         for value in iter {
@@ -307,7 +307,7 @@ impl<T> PartialEq for VList<T>
 where
     T: PartialEq,
 {
-    fn eq(&self, other: &Self) -> bool {
+    fn eq(&self, other: &VList<T>) -> bool {
         if self.len() == other.len() {
             for (s, o) in iter::zip(self, other) {
                 if s != o {

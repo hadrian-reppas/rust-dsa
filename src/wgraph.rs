@@ -88,7 +88,7 @@ pub struct WeightedGraph<N, E> {
 
 impl<N, E> WeightedGraph<N, E> {
     /// Creates an empty graph.
-    pub fn new() -> Self {
+    pub fn new() -> WeightedGraph<N, E> {
         WeightedGraph {
             inner: WeightedDiGraph::new(),
         }
@@ -386,7 +386,7 @@ impl<N, E> WeightedGraph<N, E> {
 }
 
 impl<N, E> Default for WeightedGraph<N, E> {
-    fn default() -> Self {
+    fn default() -> WeightedGraph<N, E> {
         WeightedGraph::new()
     }
 }
@@ -423,7 +423,7 @@ where
     ///
     /// assert!(a == c);
     /// ```
-    fn eq(&self, other: &Self) -> bool {
+    fn eq(&self, other: &WeightedGraph<N, E>) -> bool {
         self.inner == other.inner
     }
 }
@@ -436,7 +436,7 @@ where
     E: Clone,
 {
     /// Creates a graph from an edge list.
-    fn from(edges: [(N, N, E); M]) -> Self {
+    fn from(edges: [(N, N, E); M]) -> WeightedGraph<N, E> {
         let mut graph = WeightedGraph::new();
         for (from, to, weight) in edges {
             graph.insert_edge(&from, &to, weight);
@@ -451,7 +451,7 @@ where
 {
     /// Creates a graph with the elements of the iterator. The graph does not
     /// contain any edges.
-    fn from_iter<T: IntoIterator<Item = N>>(iter: T) -> Self {
+    fn from_iter<T: IntoIterator<Item = N>>(iter: T) -> WeightedGraph<N, E> {
         WeightedGraph {
             inner: WeightedDiGraph::from_iter(iter),
         }

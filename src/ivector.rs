@@ -65,7 +65,7 @@ pub struct ImmutableVector<T> {
 
 impl<T> ImmutableVector<T> {
     /// Creates an empty vector.
-    pub fn new() -> Self {
+    pub fn new() -> ImmutableVector<T> {
         ImmutableVector {
             item: Rc::new(Item::new()),
         }
@@ -279,13 +279,13 @@ impl<T> ImmutableVector<T> {
 }
 
 impl<T> Default for ImmutableVector<T> {
-    fn default() -> Self {
-        Self::new()
+    fn default() -> ImmutableVector<T> {
+        ImmutableVector::new()
     }
 }
 
 impl<T> FromIterator<Rc<T>> for ImmutableVector<T> {
-    fn from_iter<A: IntoIterator<Item = Rc<T>>>(iter: A) -> Self {
+    fn from_iter<A: IntoIterator<Item = Rc<T>>>(iter: A) -> ImmutableVector<T> {
         let mut items = Vec::new();
         let mut piter = iter.into_iter().peekable();
         while piter.peek().is_some() {
@@ -327,7 +327,7 @@ impl<T> FromIterator<Rc<T>> for ImmutableVector<T> {
 }
 
 impl<T> FromIterator<T> for ImmutableVector<T> {
-    fn from_iter<A: IntoIterator<Item = T>>(iter: A) -> Self {
+    fn from_iter<A: IntoIterator<Item = T>>(iter: A) -> ImmutableVector<T> {
         iter.into_iter().map(Rc::new).collect()
     }
 }
@@ -353,7 +353,7 @@ impl<T> PartialEq for ImmutableVector<T>
 where
     T: PartialEq,
 {
-    fn eq(&self, other: &Self) -> bool {
+    fn eq(&self, other: &ImmutableVector<T>) -> bool {
         if self.len() == other.len() {
             for (s, o) in iter::zip(self, other) {
                 if s != o {
@@ -370,7 +370,7 @@ where
 impl<T> Eq for ImmutableVector<T> where T: Eq {}
 
 impl<T, const N: usize> From<[T; N]> for ImmutableVector<T> {
-    fn from(arr: [T; N]) -> Self {
+    fn from(arr: [T; N]) -> ImmutableVector<T> {
         arr.into_iter().collect()
     }
 }
@@ -437,28 +437,28 @@ enum Item<T> {
 
 impl<T> Item<T> {
     fn new() -> Item<T> {
-        Self::new_leaf(Vec::new())
+        Item::new_leaf(Vec::new())
     }
 
     fn new_internal(children: Vec<Rc<Item<T>>>, len: usize) -> Item<T> {
-        Self::Internal { children, len }
+        Item::Internal { children, len }
     }
 
     fn new_leaf(values: Vec<Rc<T>>) -> Item<T> {
-        Self::Leaf { values }
+        Item::Leaf { values }
     }
 
     fn nested_leaf(value: Rc<T>, depth: usize) -> Item<T> {
-        let mut item = Self::new_leaf(vec![value]);
+        let mut item = Item::new_leaf(vec![value]);
         for _ in 0..depth {
-            item = Self::new_internal(vec![Rc::new(item)], 1);
+            item = Item::new_internal(vec![Rc::new(item)], 1);
         }
         item
     }
 
     fn get(&self, index: usize) -> Option<&T> {
         match self {
-            Self::Internal { children, .. } => {
+            Item::Internal { children, .. } => {
                 let mut index = index;
                 for child in children {
                     if index < child.len() {
@@ -468,13 +468,13 @@ impl<T> Item<T> {
                 }
                 None
             }
-            Self::Leaf { values } => values.get(index).map(Rc::as_ref),
+            Item::Leaf { values } => values.get(index).map(Rc::as_ref),
         }
     }
 
     fn get_rc(&self, index: usize) -> Option<Rc<T>> {
         match self {
-            Self::Internal { children, .. } => {
+            Item::Internal { children, .. } => {
                 let mut index = index;
                 for child in children {
                     if index < child.len() {
@@ -484,7 +484,7 @@ impl<T> Item<T> {
                 }
                 None
             }
-            Self::Leaf { values } => values.get(index).map(Rc::clone),
+            Item::Leaf { values } => values.get(index).map(Rc::clone),
         }
     }
 
@@ -494,31 +494,31 @@ impl<T> Item<T> {
 
     fn push_rec(&self, value: T, depth: usize) -> Item<T> {
         match self {
-            Self::Leaf { values } => {
+            Item::Leaf { values } => {
                 if values.len() == ARITY {
-                    Self::new_internal(
+                    Item::new_internal(
                         vec![
-                            Rc::new(Self::new_leaf(values.to_vec())),
-                            Rc::new(Self::new_leaf(vec![Rc::new(value)])),
+                            Rc::new(Item::new_leaf(values.to_vec())),
+                            Rc::new(Item::new_leaf(vec![Rc::new(value)])),
                         ],
                         values.len() + 1,
                     )
                 } else {
-                    Self::Leaf {
+                    Item::Leaf {
                         values: values.iter().cloned().chain(Some(Rc::new(value))).collect(),
                     }
                 }
             }
-            Self::Internal { children, len } => {
+            Item::Internal { children, len } => {
                 if children
                     .last()
                     .map(Rc::as_ref)
-                    .map(Self::can_append)
+                    .map(Item::can_append)
                     .unwrap_or(true)
                 {
                     match children.split_last() {
                         None => Item::new_leaf(vec![Rc::new(value)]),
-                        Some((last, others)) => Self::new_internal(
+                        Some((last, others)) => Item::new_internal(
                             others
                                 .iter()
                                 .cloned()
@@ -528,19 +528,19 @@ impl<T> Item<T> {
                         ),
                     }
                 } else if children.len() < ARITY {
-                    Self::new_internal(
+                    Item::new_internal(
                         children
                             .iter()
                             .cloned()
-                            .chain(Some(Rc::new(Self::nested_leaf(Rc::new(value), depth))))
+                            .chain(Some(Rc::new(Item::nested_leaf(Rc::new(value), depth))))
                             .collect(),
                         len + 1,
                     )
                 } else {
-                    Self::new_internal(
+                    Item::new_internal(
                         vec![
-                            Rc::new(Self::new_internal(children.to_vec(), *len)),
-                            Rc::new(Self::new_leaf(vec![Rc::new(value)])),
+                            Rc::new(Item::new_internal(children.to_vec(), *len)),
+                            Rc::new(Item::new_leaf(vec![Rc::new(value)])),
                         ],
                         len + 1,
                     )
@@ -561,7 +561,7 @@ impl<T> Item<T> {
 
     fn remove_rec(&self, index: usize) -> Item<T> {
         match self {
-            Self::Internal { children, len } => {
+            Item::Internal { children, len } => {
                 let mut new_children = Vec::with_capacity(children.len());
                 let mut index = index;
                 let mut citer = children.iter();
@@ -575,9 +575,9 @@ impl<T> Item<T> {
                     index -= child.len();
                 }
                 new_children.extend(citer.cloned());
-                Self::new_internal(new_children, len - 1)
+                Item::new_internal(new_children, len - 1)
             }
-            Self::Leaf { values } => Self::new_leaf(
+            Item::Leaf { values } => Item::new_leaf(
                 values
                     .iter()
                     .enumerate()
@@ -602,7 +602,7 @@ impl<T> Item<T> {
     fn replace_rec(&self, index: usize, value: T) -> Item<T> {
         let mut value = Some(value);
         match self {
-            Self::Internal { children, len } => {
+            Item::Internal { children, len } => {
                 let mut new_children = Vec::with_capacity(children.len());
                 let mut index = index;
                 let mut citer = children.iter();
@@ -616,9 +616,9 @@ impl<T> Item<T> {
                     index -= child.len();
                 }
                 new_children.extend(citer.cloned());
-                Self::new_internal(new_children, *len)
+                Item::new_internal(new_children, *len)
             }
-            Self::Leaf { values } => Self::new_leaf(
+            Item::Leaf { values } => Item::new_leaf(
                 values
                     .iter()
                     .enumerate()
@@ -636,8 +636,8 @@ impl<T> Item<T> {
 
     fn len(&self) -> usize {
         match self {
-            Self::Internal { len, .. } => *len,
-            Self::Leaf { values } => values.len(),
+            Item::Internal { len, .. } => *len,
+            Item::Leaf { values } => values.len(),
         }
     }
 
@@ -647,28 +647,28 @@ impl<T> Item<T> {
 
     fn can_append(&self) -> bool {
         match self {
-            Self::Internal { children, .. } => {
+            Item::Internal { children, .. } => {
                 if let Some(last) = children.last() {
                     children.len() < ARITY || last.can_append()
                 } else {
                     true
                 }
             }
-            Self::Leaf { values } => values.len() < ARITY,
+            Item::Leaf { values } => values.len() < ARITY,
         }
     }
 
     fn depth(&self) -> usize {
         match self {
-            Self::Internal { children, .. } => {
+            Item::Internal { children, .. } => {
                 children
                     .get(0)
                     .map(Rc::as_ref)
-                    .map(Self::depth)
+                    .map(Item::depth)
                     .unwrap_or(0)
                     + 1
             }
-            Self::Leaf { .. } => 0,
+            Item::Leaf { .. } => 0,
         }
     }
 }

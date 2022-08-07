@@ -54,7 +54,7 @@ pub struct BinaryHeap<T> {
 }
 
 impl<T> BinaryHeap<T> {
-    /// Creates an empty heap.
+    /// Creates an BinaryHeap<T> heap.
     pub fn new() -> Self {
         BinaryHeap { items: Vec::new() }
     }
@@ -259,7 +259,7 @@ where
 {
     /// Uses the [heapify algorithm](https://johnderinger.wordpress.com/2012/12/28/heapify/)
     /// to create a [BinaryHeap] in *O*(*n*) time.
-    fn from_iter<A: IntoIterator<Item = T>>(iter: A) -> Self {
+    fn from_iter<A: IntoIterator<Item = T>>(iter: A) -> BinaryHeap<T> {
         let mut heap = BinaryHeap {
             items: iter.into_iter().collect(),
         };
@@ -285,7 +285,7 @@ where
 }
 
 impl<T> Default for BinaryHeap<T> {
-    fn default() -> Self {
+    fn default() -> BinaryHeap<T> {
         BinaryHeap::new()
     }
 }

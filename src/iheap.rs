@@ -54,7 +54,7 @@ pub struct IntervalHeap<T> {
 
 impl<T> IntervalHeap<T> {
     /// Creates an empty heap.
-    pub fn new() -> Self {
+    pub fn new() -> IntervalHeap<T> {
         IntervalHeap { nodes: Vec::new() }
     }
 
@@ -196,7 +196,7 @@ impl<T> IntervalHeap<T> {
     ///
     /// assert_eq!(heap.peek_min(), None);
     /// ```
-    pub fn peek_min(&mut self) -> Option<&T> {
+    pub fn peek_min(&self) -> Option<&T> {
         match self.nodes.get(0) {
             None => None,
             Some(Node::Normal { low, .. }) => Some(low),
@@ -218,7 +218,7 @@ impl<T> IntervalHeap<T> {
     ///
     /// assert_eq!(heap.peek_min(), None);
     /// ```
-    pub fn peek_max(&mut self) -> Option<&T> {
+    pub fn peek_max(&self) -> Option<&T> {
         match self.nodes.get(0) {
             None => None,
             Some(Node::Normal { high, .. }) => Some(high),
@@ -406,7 +406,7 @@ impl<T> IntervalHeap<T> {
 }
 
 impl<T> Default for IntervalHeap<T> {
-    fn default() -> Self {
+    fn default() -> IntervalHeap<T> {
         IntervalHeap::new()
     }
 }
@@ -451,7 +451,7 @@ impl<T> FromIterator<T> for IntervalHeap<T>
 where
     T: Ord,
 {
-    fn from_iter<A: IntoIterator<Item = T>>(iter: A) -> Self {
+    fn from_iter<A: IntoIterator<Item = T>>(iter: A) -> IntervalHeap<T> {
         let mut heap = IntervalHeap::new();
         for value in iter {
             heap.insert(value);
@@ -459,6 +459,7 @@ where
         heap
     }
 }
+
 #[derive(Clone)]
 enum Node<T> {
     Normal { low: T, high: T },
@@ -466,11 +467,11 @@ enum Node<T> {
 }
 
 impl<T> Node<T> {
-    fn new_normal(low: T, high: T) -> Self {
+    fn new_normal(low: T, high: T) -> Node<T> {
         Node::Normal { low, high }
     }
 
-    fn new_odd(value: T) -> Self {
+    fn new_odd(value: T) -> Node<T> {
         Node::Odd { value }
     }
 

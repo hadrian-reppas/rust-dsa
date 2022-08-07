@@ -97,7 +97,7 @@ pub struct Graph<N> {
 
 impl<N> Graph<N> {
     /// Creates an empty graph.
-    pub fn new() -> Self {
+    pub fn new() -> Graph<N> {
         Graph {
             inner: WeightedDiGraph::new(),
         }
@@ -376,7 +376,7 @@ impl<N> Graph<N> {
 }
 
 impl<N> Default for Graph<N> {
-    fn default() -> Self {
+    fn default() -> Graph<N> {
         Graph::new()
     }
 }
@@ -402,7 +402,7 @@ where
     ///
     /// assert!(a == b);
     /// ```
-    fn eq(&self, other: &Self) -> bool {
+    fn eq(&self, other: &Graph<N>) -> bool {
         self.inner == other.inner
     }
 }
@@ -414,7 +414,7 @@ where
     N: Clone + Hash + Eq,
 {
     /// Creates a graph from an edge list.
-    fn from(edges: [(N, N); M]) -> Self {
+    fn from(edges: [(N, N); M]) -> Graph<N> {
         let mut graph = Graph::new();
         for (from, to) in edges {
             graph.insert_edge(&from, &to);
@@ -429,7 +429,7 @@ where
 {
     /// Creates a graph with the elements of the iterator. The graph does not
     /// contain any edges.
-    fn from_iter<T: IntoIterator<Item = N>>(iter: T) -> Self {
+    fn from_iter<T: IntoIterator<Item = N>>(iter: T) -> Graph<N> {
         Graph {
             inner: WeightedDiGraph::from_iter(iter),
         }

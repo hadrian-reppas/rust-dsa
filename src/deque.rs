@@ -69,7 +69,7 @@ pub struct Deque<T> {
 
 impl<T> Deque<T> {
     /// Creates an empty deque.
-    pub fn new() -> Self {
+    pub fn new() -> Deque<T> {
         Deque {
             buffer: Vec::new(),
             front: 0,
@@ -88,7 +88,7 @@ impl<T> Deque<T> {
     ///
     /// assert_eq!(deque.capacity(), 10);
     /// ```
-    pub fn with_capacity(capacity: usize) -> Self {
+    pub fn with_capacity(capacity: usize) -> Deque<T> {
         Deque {
             buffer: (0..capacity).map(|_| None).collect(),
             front: 0,
@@ -499,7 +499,7 @@ impl<T> Iterator for Drain<T> {
 }
 
 impl<T> FromIterator<T> for Deque<T> {
-    fn from_iter<A: IntoIterator<Item = T>>(iter: A) -> Self {
+    fn from_iter<A: IntoIterator<Item = T>>(iter: A) -> Deque<T> {
         let buffer: Vec<_> = iter.into_iter().map(Option::Some).collect();
         Deque {
             len: buffer.len(),
@@ -511,13 +511,13 @@ impl<T> FromIterator<T> for Deque<T> {
 }
 
 impl<T, const N: usize> From<[T; N]> for Deque<T> {
-    fn from(array: [T; N]) -> Self {
+    fn from(array: [T; N]) -> Deque<T> {
         array.into_iter().collect()
     }
 }
 
 impl<T> Default for Deque<T> {
-    fn default() -> Self {
+    fn default() -> Deque<T> {
         Deque::new()
     }
 }

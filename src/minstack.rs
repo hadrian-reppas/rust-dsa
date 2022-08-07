@@ -1,6 +1,6 @@
 use std::{fmt::Debug, iter};
 
-/// An implementation of a [LIFO stack](https://en.wikipedia.org/wiki/Stack_(abstract_data_type))
+/// A [LIFO stack](https://en.wikipedia.org/wiki/Stack_(abstract_data_type))
 /// that supports *O*(1) push, pop and find-minimum.
 ///
 /// Internally, each element on the stack contains a value and the index of the minimum value below it
@@ -57,12 +57,12 @@ pub struct MinStack<T> {
 
 impl<T> MinStack<T> {
     /// Creates an empty stack.
-    pub fn new() -> Self {
+    pub fn new() -> MinStack<T> {
         MinStack { stack: Vec::new() }
     }
 
     /// Creates an empty stack with the specified capacity.
-    pub fn with_capacity(capacity: usize) -> Self {
+    pub fn with_capacity(capacity: usize) -> MinStack<T> {
         MinStack {
             stack: Vec::with_capacity(capacity),
         }
@@ -225,7 +225,7 @@ impl<T> MinStack<T> {
 }
 
 impl<T> Default for MinStack<T> {
-    fn default() -> Self {
+    fn default() -> MinStack<T> {
         MinStack::new()
     }
 }
@@ -234,7 +234,7 @@ impl<T, const N: usize> From<[T; N]> for MinStack<T>
 where
     T: Ord,
 {
-    fn from(arr: [T; N]) -> Self {
+    fn from(arr: [T; N]) -> MinStack<T> {
         arr.into_iter().collect()
     }
 }
@@ -243,7 +243,7 @@ impl<T> FromIterator<T> for MinStack<T>
 where
     T: Ord,
 {
-    fn from_iter<A: IntoIterator<Item = T>>(iter: A) -> Self {
+    fn from_iter<A: IntoIterator<Item = T>>(iter: A) -> MinStack<T> {
         let iter = iter.into_iter();
         let mut stack = MinStack::with_capacity(iter.size_hint().0);
         for value in iter {
@@ -318,7 +318,7 @@ impl<T> PartialEq for MinStack<T>
 where
     T: PartialEq,
 {
-    fn eq(&self, other: &Self) -> bool {
+    fn eq(&self, other: &MinStack<T>) -> bool {
         if self.len() == other.len() {
             for (s, o) in iter::zip(self, other) {
                 if s != o {

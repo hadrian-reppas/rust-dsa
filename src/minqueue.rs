@@ -1,7 +1,7 @@
 use crate::MinStack;
 use std::{fmt::Debug, iter};
 
-/// An implementation of a [FIFO queue](http://en.wikipedia.org/wiki/Queue_(data_structure))
+/// A [FIFO queue](http://en.wikipedia.org/wiki/Queue_(data_structure))
 /// that supports O(1) push, pop and find-minimum.
 ///
 /// Keith Schwarz explains how this works [here](https://keithschwarz.com/interesting/code/?dir=min-queue).
@@ -51,7 +51,7 @@ pub struct MinQueue<T> {
 
 impl<T> MinQueue<T> {
     /// Creates an empty queue.
-    pub fn new() -> Self {
+    pub fn new() -> MinQueue<T> {
         MinQueue {
             old: MinStack::new(),
             new: MinStack::new(),
@@ -59,7 +59,7 @@ impl<T> MinQueue<T> {
     }
 
     /// Creates an empty queue with the specified capacity.
-    pub fn with_capacity(capacity: usize) -> Self {
+    pub fn with_capacity(capacity: usize) -> MinQueue<T> {
         MinQueue {
             old: MinStack::new(),
             new: MinStack::with_capacity(capacity),
@@ -219,7 +219,7 @@ impl<T> MinQueue<T> {
 }
 
 impl<T> Default for MinQueue<T> {
-    fn default() -> Self {
+    fn default() -> MinQueue<T> {
         MinQueue::new()
     }
 }
@@ -228,7 +228,7 @@ impl<T, const N: usize> From<[T; N]> for MinQueue<T>
 where
     T: Ord,
 {
-    fn from(arr: [T; N]) -> Self {
+    fn from(arr: [T; N]) -> MinQueue<T> {
         arr.into_iter().collect()
     }
 }
@@ -237,7 +237,7 @@ impl<T> FromIterator<T> for MinQueue<T>
 where
     T: Ord,
 {
-    fn from_iter<A: IntoIterator<Item = T>>(iter: A) -> Self {
+    fn from_iter<A: IntoIterator<Item = T>>(iter: A) -> MinQueue<T> {
         let iter = iter.into_iter();
         let mut stack = MinQueue::with_capacity(iter.size_hint().0);
         for value in iter {
@@ -320,7 +320,7 @@ impl<T> PartialEq for MinQueue<T>
 where
     T: PartialEq,
 {
-    fn eq(&self, other: &Self) -> bool {
+    fn eq(&self, other: &MinQueue<T>) -> bool {
         if self.len() == other.len() {
             for (s, o) in iter::zip(self, other) {
                 if s != o {
