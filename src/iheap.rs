@@ -418,24 +418,16 @@ where
     /// ```
     /// use rust_dsa::IntervalHeap;
     ///
-    /// let random = [
-    ///     49, 166, 19, 170, 83, 176, 51, 192, 81, 73, 147, 121, 232, 178, 202, 122, 202, 237, 158,
-    ///     243, 170, 129, 8, 204, 217, 105, 132, 35, 246, 160, 250, 41, 149, 110, 76, 46, 183, 8, 13,
-    ///     4, 226, 173, 81, 101, 227, 132, 6, 5, 209, 131, 191, 137, 234, 126, 119, 24, 37, 156, 32,
-    ///     177, 46, 180, 144, 58, 80, 82, 103, 5, 71, 55, 90, 102, 127, 80, 87, 172, 28, 59, 161, 201,
-    ///     103, 241, 148, 163, 3, 119, 112, 15, 36, 209, 45, 124, 6, 110, 185, 148, 51, 236, 43, 157,
-    /// ];
-    ///
-    /// let bools: Vec<_> = random.iter().map(|i| i % 2 == 0).collect();
+    /// let random: Vec<i32> = (0..10_000).map(|_| rand::random()).collect();
     ///
     /// let mut sorted = random.clone();
     /// sorted.sort();
     /// let mut iter = sorted.into_iter();
     ///
-    /// let mut heap = IntervalHeap::from(random);
+    /// let mut heap: IntervalHeap<_> = random.into_iter().collect();
     ///
-    /// for take_from_front in bools {
-    ///     if take_from_front {
+    /// for _ in 0..10_001 {
+    ///     if rand::random() {
     ///         assert_eq!(heap.pop_min(), iter.next());
     ///     } else {
     ///         assert_eq!(heap.pop_max(), iter.next_back());
