@@ -1,5 +1,6 @@
 mod deque;
 mod digraph;
+mod graham;
 mod graph;
 mod heap;
 mod iheap;
@@ -17,6 +18,7 @@ mod wgraph;
 
 pub use deque::Deque;
 pub use digraph::DiGraph;
+pub use graham::convex_hull;
 pub use graph::Graph;
 pub use heap::BinaryHeap;
 pub use iheap::IntervalHeap;

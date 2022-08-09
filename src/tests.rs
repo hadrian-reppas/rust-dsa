@@ -1335,6 +1335,47 @@ fn wgraph_rs_400() {
 }
 
 #[test]
+fn graham_rs_20() {
+    use crate::convex_hull;
+
+    let points = [
+        (6, 0),
+        (-4, 10),
+        (-9, -6),
+        (-15, -6),
+        (15, 14),
+        (1, -16),
+        (3, -19),
+        (17, 11),
+        (5, -7),
+        (2, 3),
+        (10, 3),
+        (20, 3),
+        (-8, 1),
+        (20, -13),
+        (-10, 1),
+        (8, 16),
+    ];
+    let expected_hull = [
+        (3, -19),
+        (20, -13),
+        (20, 3),
+        (17, 11),
+        (15, 14),
+        (8, 16),
+        (-4, 10),
+        (-15, -6),
+    ];
+
+    assert_eq!(convex_hull(&points), expected_hull.to_vec());
+
+    let points = [(0, 0), (1, 2), (4, 0), (2, 4), (0, 8)];
+    let expected_hull = [(0, 0), (4, 0), (0, 8)];
+
+    assert_eq!(convex_hull(&points), expected_hull.to_vec());
+}
+
+#[test]
 fn unionfind_rs_10() {
     use crate::UnionFind;
 

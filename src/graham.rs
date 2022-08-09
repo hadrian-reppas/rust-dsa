@@ -1,0 +1,156 @@
+use std::cmp::Ordering;
+
+use num_traits::int::PrimInt;
+
+type Point<T> = (T, T);
+
+/// Returns a subset of the input points representing their convex hull.
+///
+/// Points are returned in counterclockwise order, starting with the point
+/// that has the smallest y value (and smallest x value if there is a tie).
+///
+/// This function uses [Graham's scan](https://en.wikipedia.org/wiki/Graham_scan)
+/// to find the convex hull. To keep things generic and simple, this function
+/// takes 2-tulples of integers.
+///
+/// # Panics
+/// Panics if any of the calculations overflow.
+///
+/// # Example
+/// ```
+/// use rust_dsa::convex_hull;
+///
+/// let points = [
+///     (6, 0), (-4, 10), (-9, -6), (-15, -6), (15, 14), (1, -16), (3, -19), (17, 11),
+///     (5, -7), (2, 3), (10, 3), (20, 3), (-8, 1), (20, -13), (-10, 1), (8, 16),
+/// ];
+/// let expected_hull = [(3, -19), (20, -13), (20, 3), (17, 11), (15, 14), (8, 16), (-4, 10), (-15, -6)];
+///
+/// assert_eq!(convex_hull(&points), expected_hull.to_vec());
+///
+///
+/// let points = [(0, 0), (1, 2), (4, 0), (2, 4), (0, 8)];
+/// let expected_hull = [(0, 0), (4, 0), (0, 8)];
+///
+/// assert_eq!(convex_hull(&points), expected_hull.to_vec());
+/// ```
+pub fn convex_hull<I>(points: &[Point<I>]) -> Vec<Point<I>>
+where
+    I: PrimInt,
+{
+    let (start_index, start) = match points
+        .iter()
+        .enumerate()
+        .min_by(|(_, a), (_, b)| a.flip().cmp(&b.flip()))
+    {
+        Some((index, start)) => (index, *start),
+        None => return Vec::new(),
+    };
+
+    let mut points: Vec<_> = points.to_vec();
+
+    points.swap_remove(start_index);
+
+    points.sort_by(|&a, &b| match get_orientation(start, a, b) {
+        Orientation::Counterclockwise => Ordering::Less,
+        Orientation::Clockwise => Ordering::Greater,
+        Orientation::Collinear => square_dist(start, a).cmp(&square_dist(start, b)),
+    });
+
+    points.dedup_by(|a, b| get_orientation(start, *a, *b) == Orientation::Collinear);
+
+    let mut stack = vec![start];
+
+    for point in points {
+        while !counterclockwise(&stack, point) {
+            stack.pop();
+        }
+        stack.push(point);
+    }
+
+    stack
+}
+
+fn counterclockwise<I>(points: &Vec<Point<I>>, point: Point<I>) -> bool
+where
+    I: PrimInt,
+{
+    if points.len() > 1 {
+        let a = points[points.len() - 2];
+        let b = points[points.len() - 1];
+        get_orientation(a, b, point) == Orientation::Counterclockwise
+    } else {
+        true
+    }
+}
+
+#[derive(PartialEq)]
+enum Orientation {
+    Counterclockwise,
+    Clockwise,
+    Collinear,
+}
+
+fn get_orientation<I>(a: Point<I>, b: Point<I>, c: Point<I>) -> Orientation
+where
+    I: PrimInt,
+{
+    let t = b.0.checked_sub(&a.0).expect("overflow during subtraction");
+    let u = c.1.checked_sub(&a.1).expect("overflow during subtraction");
+    let v = c.0.checked_sub(&a.0).expect("overflow during subtraction");
+    let w = b.1.checked_sub(&a.1).expect("overflow during subtraction");
+
+    let p = t.checked_mul(&u).expect("overflow during multiplication");
+    let q = v.checked_mul(&w).expect("overflow during multiplication");
+
+    match p.cmp(&q) {
+        Ordering::Equal => Orientation::Collinear,
+        Ordering::Greater => Orientation::Counterclockwise,
+        Ordering::Less => Orientation::Clockwise,
+    }
+}
+
+fn square_dist<I>(a: Point<I>, b: Point<I>) -> I
+where
+    I: PrimInt,
+{
+    let dx = a.0.checked_sub(&b.0).expect("overflow during subtraction");
+    let dy = a.1.checked_sub(&b.1).expect("overflow during subtraction");
+
+    let dx_square = dx.checked_mul(&dx).expect("overflow during multiplication");
+    let dy_square = dy.checked_mul(&dy).expect("overflow during multiplication");
+
+    dx_square
+        .checked_add(&dy_square)
+        .expect("overflow during addition")
+}
+
+trait Flip {
+    fn flip(&self) -> Self;
+}
+
+impl<I> Flip for Point<I>
+where
+    I: PrimInt,
+{
+    fn flip(&self) -> Point<I> {
+        let &(x, y) = self;
+        (y, x)
+    }
+}
+
+trait NextToLast {
+    type Item;
+    fn next_to_last(&self) -> Option<&Self::Item>;
+}
+
+impl<T> NextToLast for Vec<T> {
+    type Item = T;
+    fn next_to_last(&self) -> Option<&T> {
+        if self.len() > 1 {
+            self.get(self.len() - 2)
+        } else {
+            None
+        }
+    }
+}
