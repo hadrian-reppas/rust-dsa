@@ -15,6 +15,7 @@ def main():
     with open(os.path.join(src, "tests.rs"), "w") as output:
         write_tests(src, files, output)
 
+    os.system("cargo fmt")
     os.system("cargo test " + " ".join(sys.argv[1:]))
 
 def write_tests(src, files, output):
