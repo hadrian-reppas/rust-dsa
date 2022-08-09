@@ -7,20 +7,19 @@ use std::cmp::Ord;
 /// ```
 /// use rust_dsa::insertion_sort;
 ///
-/// let mut ints = vec![42, 14, 2, 18, 33, 19, 21, 38];
-/// insertion_sort(ints.as_mut_slice());
-/// assert_eq!(ints, vec![2, 14, 18, 19, 21, 33, 38, 42]);
+/// let mut ints = [42, 14, 2, 18, 33, 19, 21, 38];
+/// insertion_sort(&mut ints);
+/// assert_eq!(&ints, &[2, 14, 18, 19, 21, 33, 38, 42]);
 ///
-/// let mut food = vec!["banana", "eggplant", "dragonfruit", "apple", "carrot"];
-/// insertion_sort(food.as_mut_slice());
-/// assert_eq!(food, vec!["apple", "banana", "carrot", "dragonfruit", "eggplant"]);
+/// let mut food = ["banana", "eggplant", "dragonfruit", "apple", "carrot"];
+/// insertion_sort(&mut food);
+/// assert_eq!(&food, &["apple", "banana", "carrot", "dragonfruit", "eggplant"]);
 ///
-/// let mut range: Vec<_> = (0..1000).rev().collect();
-/// insertion_sort(range.as_mut_slice());
-/// assert_eq!(
-///     range,
-///     (0..1000).collect::<Vec<_>>()
-/// );
+/// let mut random: Vec<i64> = (0..1_000).map(|_| rand::random()).collect();
+/// insertion_sort(&mut random);
+/// for i in 1..random.len() {
+///     assert!(random[i - 1] <= random[i]);
+/// }
 /// ```
 pub fn insertion_sort<T>(arr: &mut [T])
 where
