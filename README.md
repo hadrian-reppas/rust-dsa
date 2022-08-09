@@ -1,3 +1,12 @@
+# Data Structures and Algorithms in Rust
+
+## Testing
+
+The doctests are *very* slow, so you can run `test.py` to copy all doctests
+into `src/tests.rs` and run them. This makes them run around 100x faster.
+
+## TODO
+
 Most entries on this list were taken directly from Keith Schwarz's
 [Archive of Interesting Code](https://keithschwarz.com/interesting/) and
 [TODO list](https://keithschwarz.com/interesting/todo.html).
