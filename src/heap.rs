@@ -1,5 +1,3 @@
-#![allow(dead_code)]
-
 use std::cmp::Ord;
 use std::convert::From;
 

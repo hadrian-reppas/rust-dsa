@@ -1,5 +1,3 @@
-#![allow(dead_code)]
-
 use crate::wdigraph::{IntoIter, Iter, WeightedEdges, WeightedNeighbors};
 use crate::WeightedDiGraph;
 use std::hash::Hash;
@@ -139,7 +137,7 @@ impl<N> DiGraph<N> {
     ///
     /// let mut graph = DiGraph::new();
     /// graph.insert_node(foo.clone());
-    /// graph.insert_node(bar.clone());
+    /// graph.insert_node(bar);
     ///
     /// assert!(graph.contains_node(&foo));
     ///
@@ -205,7 +203,7 @@ impl<N> DiGraph<N> {
     /// ```
     /// use rust_dsa::DiGraph;
     ///
-    /// let mut graph = DiGraph::from([('a', 'b'), ('b', 'c'), ('b', 'd')]);
+    /// let graph = DiGraph::from([('a', 'b'), ('b', 'c'), ('b', 'd')]);
     ///
     /// assert!(graph.contains_edge(&'b', &'c'));
     /// assert!(!graph.contains_edge(&'c', &'d'));

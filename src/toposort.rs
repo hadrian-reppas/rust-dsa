@@ -1,5 +1,3 @@
-#![allow(dead_code)]
-
 use crate::DiGraph;
 use std::collections::{HashMap, HashSet};
 use std::hash::Hash;

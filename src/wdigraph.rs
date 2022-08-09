@@ -1,5 +1,3 @@
-#![allow(dead_code)]
-
 use std::collections::HashMap;
 use std::hash::Hash;
 
@@ -160,7 +158,7 @@ impl<N, E> WeightedDiGraph<N, E> {
     /// let foo = "foo".to_string();
     /// let bar = "bar".to_string();
     ///
-    /// let mut graph = WeightedDiGraph::from([(foo.clone(), bar.clone(), 2)]);
+    /// let mut graph = WeightedDiGraph::from([(foo.clone(), bar, 2)]);
     ///
     /// assert!(graph.contains_node(&foo));
     ///
@@ -243,7 +241,7 @@ impl<N, E> WeightedDiGraph<N, E> {
     /// ```
     /// use rust_dsa::WeightedDiGraph;
     ///
-    /// let mut graph = WeightedDiGraph::from([
+    /// let graph = WeightedDiGraph::from([
     ///     ('a', 'b', 1),
     ///     ('b', 'c', 2),
     ///     ('b', 'd', 3),
@@ -271,7 +269,7 @@ impl<N, E> WeightedDiGraph<N, E> {
     /// ```
     /// use rust_dsa::WeightedDiGraph;
     ///
-    /// let mut graph = WeightedDiGraph::from([
+    /// let graph = WeightedDiGraph::from([
     ///     ('a', 'b', 1),
     ///     ('b', 'c', 2),
     ///     ('b', 'd', 3),

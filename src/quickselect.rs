@@ -43,20 +43,20 @@ where
 ///
 /// # Example
 /// ```
-/// use rust_dsa::select;
+/// use rust_dsa::select_in_place;
 ///
 /// let mut nums = [80, 61, 36, 70, 53, 54, 59, 17, 76, 49];
 ///
-/// assert_eq!(select(&mut nums, 4), &54);
-/// assert_eq!(select(&mut nums, 6), &61);
-/// assert_eq!(select(&mut nums, 0), &17);
-/// assert_eq!(select(&mut nums, 9), &80);
+/// assert_eq!(select_in_place(&mut nums, 4), &54);
+/// assert_eq!(select_in_place(&mut nums, 6), &61);
+/// assert_eq!(select_in_place(&mut nums, 0), &17);
+/// assert_eq!(select_in_place(&mut nums, 9), &80);
 ///
 /// let mut strs = ["foo", "bar", "baz"];
 ///
-/// assert_eq!(select(&mut strs, 0), &"bar");
-/// assert_eq!(select(&mut strs, 1), &"baz");
-/// assert_eq!(select(&mut strs, 2), &"foo");
+/// assert_eq!(select_in_place(&mut strs, 0), &"bar");
+/// assert_eq!(select_in_place(&mut strs, 1), &"baz");
+/// assert_eq!(select_in_place(&mut strs, 2), &"foo");
 /// ```
 pub fn select_in_place<T>(slice: &mut [T], k: usize) -> &mut T
 where
@@ -113,8 +113,6 @@ where
 ///
 ///
 /// let mut nums: Vec<i32> = (0..10_000).map(|_| rand::random()).collect();
-///
-/// assert!(nums.len() > 0);
 ///
 /// let pivot_index = partition(&mut nums, 0);
 /// let pivot = nums[pivot_index];

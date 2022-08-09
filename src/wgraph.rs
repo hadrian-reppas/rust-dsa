@@ -1,5 +1,3 @@
-#![allow(dead_code)]
-
 use crate::wdigraph::{IntoIter, Iter, WeightedDiGraph, WeightedEdges, WeightedNeighbors};
 use std::{collections::HashSet, hash::Hash};
 
@@ -148,7 +146,7 @@ impl<N, E> WeightedGraph<N, E> {
     ///
     /// let mut graph: WeightedGraph<_, i32> = WeightedGraph::new();
     /// graph.insert_node(foo.clone());
-    /// graph.insert_node(bar.clone());
+    /// graph.insert_node(bar);
     ///
     /// assert!(graph.contains_node(&foo));
     ///
@@ -213,7 +211,7 @@ impl<N, E> WeightedGraph<N, E> {
     /// ```
     /// use rust_dsa::WeightedGraph;
     ///
-    /// let mut graph = WeightedGraph::from([
+    /// let graph = WeightedGraph::from([
     ///     ('a', 'b', true),
     ///     ('b', 'c', true),
     ///     ('b', 'd', true),
@@ -235,7 +233,7 @@ impl<N, E> WeightedGraph<N, E> {
     /// ```
     /// use rust_dsa::WeightedGraph;
     ///
-    /// let mut graph = WeightedGraph::from([
+    /// let graph = WeightedGraph::from([
     ///     ('a', 'b', 1),
     ///     ('b', 'c', 2),
     ///     ('b', 'd', 3),

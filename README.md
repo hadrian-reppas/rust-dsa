@@ -17,9 +17,10 @@ Most entries on this list were taken directly from Keith Schwarz's
 | &#9989;  | Union-Find                           | [src/unionfind.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/unionfind.rs) | An implementation of a [disjoint-set data structure](http://en.wikipedia.org/wiki/Disjoint-set_data_structure) using a disjoint set forest. |
 | &#9989;  | Insertion Sort                       | [src/insertion_sort.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/insertion_sort.rs) | An implementation of the [insertion sort](https://en.wikipedia.org/wiki/Insertion_sort) algorithm. |
 | &#10060; | Radix Sort                           | *TODO*                             | An implementation of the [radix sort](https://en.wikipedia.org/wiki/Radix_sort) algorithm. |
-| &#10060; | Mergesort                            | *TODO*                             | An implementation of the [merge sort](https://en.wikipedia.org/wiki/Merge_sort) algorithm. |
 | &#10060; | Quicksort                            | *TODO*                             | An implementation of the [quicksort](https://en.wikipedia.org/wiki/Quicksort) algorithm. |
+| &#10060; | Mergesort                            | *TODO*                             | An implementation of the [merge sort](https://en.wikipedia.org/wiki/Merge_sort) algorithm. |
 | &#10060; | Heapsort                             | *TODO*                             | An implementation of the [heapsort](https://en.wikipedia.org/wiki/Heapsort) algorithm. |
+| &#10060; | Cycle Sort                           | *TODO*                             | An implementation of the [cycle sort](https://en.wikipedia.org/wiki/Cycle_sort) algorithm. |
 | &#10060; | Timsort                              | *TODO*                             | An implementation of the [Timsort](https://en.wikipedia.org/wiki/Timsort) algorithm. |
 | &#9989;  | MJRTY                                | [src/mjrty.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/mjrty.rs) | A fast, linear-time algorithm for finding the [majority element](http://www.cs.utexas.edu/~moore/best-ideas/mjrty/) of a data set. |
 | &#10060; | Extendible Array                     | *TODO*                             | A dynamic array implementation with O(1) worst-case lookup and append. |

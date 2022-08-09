@@ -38,8 +38,12 @@ use std::hash::Hash;
 /// // We can also create `UnionFind`s from arrays.
 /// let uf = UnionFind::from(["foo", "bar"]);
 ///
+/// assert!(!uf.friends(&"foo", &"bar").unwrap());
+///
 /// // And iterators.
 /// let uf: UnionFind<_> = "string".chars().collect();
+///
+/// assert!(!uf.friends(&'s', &'t').unwrap());
 /// ```
 pub struct UnionFind<T> {
     map: HashMap<T, usize>,
