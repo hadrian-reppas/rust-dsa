@@ -283,6 +283,28 @@ fn insertion_sort_rs_7() {
 }
 
 #[test]
+fn quicksort_rs_8() {
+    use crate::quicksort;
+
+    let mut ints = [42, 14, 2, 18, 33, 19, 21, 38];
+    quicksort(&mut ints);
+    assert_eq!(&ints, &[2, 14, 18, 19, 21, 33, 38, 42]);
+
+    let mut food = ["banana", "eggplant", "dragonfruit", "apple", "carrot"];
+    quicksort(&mut food);
+    assert_eq!(
+        &food,
+        &["apple", "banana", "carrot", "dragonfruit", "eggplant"]
+    );
+
+    let mut random: Vec<i64> = (0..1_000).map(|_| rand::random()).collect();
+    quicksort(&mut random);
+    for i in 1..random.len() {
+        assert!(random[i - 1] <= random[i]);
+    }
+}
+
+#[test]
 fn graph_rs_18() {
     use crate::Graph;
 
