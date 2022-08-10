@@ -297,7 +297,7 @@ fn quicksort_rs_8() {
         &["apple", "banana", "carrot", "dragonfruit", "eggplant"]
     );
 
-    let mut random: Vec<i64> = (0..1_000).map(|_| rand::random()).collect();
+    let mut random: Vec<i64> = (0..100_000).map(|_| rand::random()).collect();
     quicksort(&mut random);
     for i in 1..random.len() {
         assert!(random[i - 1] <= random[i]);
@@ -1359,7 +1359,7 @@ fn wgraph_rs_400() {
 }
 
 #[test]
-fn graham_rs_20() {
+fn graham_rs_19() {
     use crate::convex_hull;
 
     let points = [
@@ -2159,6 +2159,38 @@ fn minqueue_rs_204() {
     queue.clear();
 
     assert!(queue.is_empty());
+}
+
+#[test]
+fn levenshtein_rs_7() {
+    use crate::edit_distance;
+
+    let a = [9, 4, 8, 5, 9, 3, 8, 5];
+    let b = [1, 9, 4, 8, 3, 5];
+    assert_eq!(edit_distance(&a, &b), 4);
+
+    let kitten = ['k', 'i', 't', 't', 'e', 'n'];
+    let sitting = ['s', 'i', 't', 't', 'i', 'n', 'g'];
+    assert_eq!(edit_distance(&kitten, &sitting), 3);
+
+    let x = ["foo", "bar", "baz", "baz"];
+    let y = ["baz", "foo", "bar", "baz"];
+    assert_eq!(edit_distance(&x, &y), 2);
+}
+
+#[test]
+fn levenshtein_rs_52() {
+    use crate::str_distance;
+
+    assert_eq!(str_distance("kitten", "sitting"), 3);
+
+    assert_eq!(str_distance("intention", "execution"), 5);
+
+    assert_eq!(str_distance("sail", "wail"), 1);
+
+    assert_eq!(str_distance("Levenshtein", "Levenshtein"), 0);
+
+    assert_eq!(str_distance("", "foo"), 3);
 }
 
 #[test]

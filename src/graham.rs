@@ -1,6 +1,5 @@
-use std::cmp::Ordering;
-
 use num_traits::int::PrimInt;
+use std::cmp::Ordering;
 
 type Point<T> = (T, T);
 
@@ -131,26 +130,10 @@ trait Flip {
 
 impl<I> Flip for Point<I>
 where
-    I: PrimInt,
+    I: Copy,
 {
     fn flip(&self) -> Point<I> {
         let &(x, y) = self;
         (y, x)
-    }
-}
-
-trait NextToLast {
-    type Item;
-    fn next_to_last(&self) -> Option<&Self::Item>;
-}
-
-impl<T> NextToLast for Vec<T> {
-    type Item = T;
-    fn next_to_last(&self) -> Option<&T> {
-        if self.len() > 1 {
-            self.get(self.len() - 2)
-        } else {
-            None
-        }
     }
 }

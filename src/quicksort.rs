@@ -16,7 +16,7 @@ use std::cmp::Ord;
 /// quicksort(&mut food);
 /// assert_eq!(&food, &["apple", "banana", "carrot", "dragonfruit", "eggplant"]);
 ///
-/// let mut random: Vec<i64> = (0..1_000).map(|_| rand::random()).collect();
+/// let mut random: Vec<i64> = (0..100_000).map(|_| rand::random()).collect();
 /// quicksort(&mut random);
 /// for i in 1..random.len() {
 ///     assert!(random[i - 1] <= random[i]);
