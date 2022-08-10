@@ -29,7 +29,6 @@ Most entries on this list were taken directly from Keith Schwarz's
 | &#9989;  | Quicksort                            | [src/quicksort.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/quicksort.rs) | An implementation of the [quicksort](https://en.wikipedia.org/wiki/Quicksort) algorithm. |
 | &#10060; | Mergesort                            | *TODO*                             | An implementation of the [merge sort](https://en.wikipedia.org/wiki/Merge_sort) algorithm. |
 | &#10060; | Heapsort                             | *TODO*                             | An implementation of the [heapsort](https://en.wikipedia.org/wiki/Heapsort) algorithm. |
-| &#10060; | Cycle Sort                           | *TODO*                             | An implementation of the [cycle sort](https://en.wikipedia.org/wiki/Cycle_sort) algorithm. |
 | &#10060; | Timsort                              | *TODO*                             | An implementation of the [Timsort](https://en.wikipedia.org/wiki/Timsort) algorithm. |
 | &#9989;  | MJRTY                                | [src/mjrty.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/mjrty.rs) | A fast, linear-time algorithm for finding the [majority element](http://www.cs.utexas.edu/~moore/best-ideas/mjrty/) of a data set. |
 | &#10060; | Extendible Array                     | *TODO*                             | A dynamic array implementation with O(1) worst-case lookup and append. |

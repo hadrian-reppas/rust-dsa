@@ -1360,7 +1360,7 @@ fn wgraph_rs_400() {
 
 #[test]
 fn graham_rs_19() {
-    use crate::convex_hull;
+    use crate::graham_scan;
 
     let points = [
         (6, 0),
@@ -1391,12 +1391,12 @@ fn graham_rs_19() {
         (-15, -6),
     ];
 
-    assert_eq!(convex_hull(&points), expected_hull.to_vec());
+    assert_eq!(graham_scan(&points), expected_hull.to_vec());
 
     let points = [(0, 0), (1, 2), (4, 0), (2, 4), (0, 8)];
     let expected_hull = [(0, 0), (4, 0), (0, 8)];
 
-    assert_eq!(convex_hull(&points), expected_hull.to_vec());
+    assert_eq!(graham_scan(&points), expected_hull.to_vec());
 }
 
 #[test]

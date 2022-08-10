@@ -17,7 +17,7 @@ type Point<T> = (T, T);
 ///
 /// # Example
 /// ```
-/// use rust_dsa::convex_hull;
+/// use rust_dsa::graham_scan;
 ///
 /// let points = [
 ///     (6, 0), (-4, 10), (-9, -6), (-15, -6), (15, 14), (1, -16), (3, -19), (17, 11),
@@ -25,15 +25,15 @@ type Point<T> = (T, T);
 /// ];
 /// let expected_hull = [(3, -19), (20, -13), (20, 3), (17, 11), (15, 14), (8, 16), (-4, 10), (-15, -6)];
 ///
-/// assert_eq!(convex_hull(&points), expected_hull.to_vec());
+/// assert_eq!(graham_scan(&points), expected_hull.to_vec());
 ///
 ///
 /// let points = [(0, 0), (1, 2), (4, 0), (2, 4), (0, 8)];
 /// let expected_hull = [(0, 0), (4, 0), (0, 8)];
 ///
-/// assert_eq!(convex_hull(&points), expected_hull.to_vec());
+/// assert_eq!(graham_scan(&points), expected_hull.to_vec());
 /// ```
-pub fn convex_hull<I>(points: &[Point<I>]) -> Vec<Point<I>>
+pub fn graham_scan<I>(points: &[Point<I>]) -> Vec<Point<I>>
 where
     I: PrimInt,
 {
