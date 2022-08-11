@@ -1366,9 +1366,9 @@ fn trie_rs_7() {
     let mut trie = GenericTrie::new();
 
     // Then we can insert keys and items.
-    trie.insert(&[1, 2, 3], "foo");
-    trie.insert(&[1, 2, 4], "bar");
-    trie.insert(&[1, 2, 4, 0], "baz");
+    trie.insert([1, 2, 3], "foo");
+    trie.insert([1, 2, 4], "bar");
+    trie.insert([1, 2, 4, 0], "baz");
 
     assert!(trie.contains_key(&[1, 2, 3]));
     assert!(trie.contains_key(&[1, 2, 4]));
@@ -1399,9 +1399,9 @@ fn trie_rs_59() {
 
     let mut trie = GenericTrie::new();
 
-    trie.insert(&['c', 'a', 'b'], 0);
-    trie.insert(&['c', 'a', 'r'], 0);
-    trie.insert(&['c'], 0);
+    trie.insert(['c', 'a', 'b'], 0);
+    trie.insert(['c', 'a', 'r'], 0);
+    trie.insert(['c'], 0);
 
     assert!(trie.contains_key(&['c', 'a', 'b']));
     assert!(trie.contains_key(&['c', 'a', 'r']));
@@ -1409,13 +1409,13 @@ fn trie_rs_59() {
 }
 
 #[test]
-fn trie_rs_96() {
+fn trie_rs_97() {
     use crate::GenericTrie;
 
     let mut trie = GenericTrie::new();
 
-    trie.insert(&['c', 'a', 'b'], 1);
-    trie.insert(&['c', 'a', 'r'], 2);
+    trie.insert(['c', 'a', 'b'], 1);
+    trie.insert(['c', 'a', 'r'], 2);
 
     assert_eq!(trie.get(&['c', 'a', 'b']), Some(&1));
     assert_eq!(trie.get(&['c', 'a', 'r']), Some(&2));
@@ -1423,13 +1423,13 @@ fn trie_rs_96() {
 }
 
 #[test]
-fn trie_rs_121() {
+fn trie_rs_122() {
     use crate::GenericTrie;
 
     let mut trie = GenericTrie::new();
 
-    trie.insert(&[1, 2, 3], 'a');
-    trie.insert(&[1, 2, 4], 'b');
+    trie.insert([1, 2, 3], 'a');
+    trie.insert([1, 2, 4], 'b');
 
     assert_eq!(trie.get(&[1, 2, 3]), Some(&'a'));
     assert_eq!(trie.get(&[1, 2, 4]), Some(&'b'));
@@ -1441,15 +1441,15 @@ fn trie_rs_121() {
 }
 
 #[test]
-fn trie_rs_153() {
+fn trie_rs_154() {
     use crate::GenericTrie;
 
     let mut trie = GenericTrie::new();
 
-    trie.insert(&[1, 2, 3], 'a');
-    trie.insert(&[1, 2, 3, 4], 'b');
-    trie.insert(&[1, 2], 'c');
-    trie.insert(&[1], 'd');
+    trie.insert([1, 2, 3], 'a');
+    trie.insert([1, 2, 3, 4], 'b');
+    trie.insert([1, 2], 'c');
+    trie.insert([1], 'd');
 
     use std::collections::HashSet;
     assert_eq!(
@@ -1459,22 +1459,22 @@ fn trie_rs_153() {
 }
 
 #[test]
-fn trie_rs_186() {
+fn trie_rs_187() {
     use crate::GenericTrie;
 
     let mut trie = GenericTrie::new();
-    trie.insert(&[true, true, false], 0);
+    trie.insert([true, true, false], 0);
 
     assert!(trie.contains_key(&[true, true, false]));
     assert!(!trie.contains_key(&[true, false]));
 }
 
 #[test]
-fn trie_rs_212() {
+fn trie_rs_213() {
     use crate::GenericTrie;
 
     let mut trie = GenericTrie::new();
-    trie.insert(&[true, true, false], 0);
+    trie.insert([true, true, false], 0);
 
     assert!(trie.contains_prefix(&[true, true, false]));
     assert!(trie.contains_prefix(&[true, true]));
@@ -1484,13 +1484,13 @@ fn trie_rs_212() {
 }
 
 #[test]
-fn trie_rs_243() {
+fn trie_rs_244() {
     use crate::GenericTrie;
 
     let mut trie = GenericTrie::new();
-    trie.insert(&[1, 2, 3], 'a');
-    trie.insert(&[1, 2], 'b');
-    trie.insert(&[1, 2, 3], 'c');
+    trie.insert([1, 2, 3], 'a');
+    trie.insert([1, 2], 'b');
+    trie.insert([1, 2, 3], 'c');
 
     assert_eq!(trie.len(), 2);
 
@@ -1500,12 +1500,12 @@ fn trie_rs_243() {
 }
 
 #[test]
-fn trie_rs_268() {
+fn trie_rs_269() {
     use crate::GenericTrie;
 
     let mut trie = GenericTrie::new();
-    trie.insert(&[1, 2, 3], 'a');
-    trie.insert(&[1, 2], 'b');
+    trie.insert([1, 2, 3], 'a');
+    trie.insert([1, 2], 'b');
 
     assert!(!trie.is_empty());
 
@@ -1515,12 +1515,12 @@ fn trie_rs_268() {
 }
 
 #[test]
-fn trie_rs_288() {
+fn trie_rs_289() {
     use crate::GenericTrie;
 
     let mut trie = GenericTrie::new();
-    trie.insert(&[1, 2, 3], 'a');
-    trie.insert(&[1, 2], 'b');
+    trie.insert([1, 2, 3], 'a');
+    trie.insert([1, 2], 'b');
 
     assert!(!trie.is_empty());
 
@@ -1530,15 +1530,15 @@ fn trie_rs_288() {
 }
 
 #[test]
-fn trie_rs_309() {
+fn trie_rs_310() {
     use crate::GenericTrie;
 
     let mut trie = GenericTrie::new();
 
-    trie.insert(&[1, 2, 3], 'a');
-    trie.insert(&[1, 2, 3, 4], 'b');
-    trie.insert(&[1, 2], 'c');
-    trie.insert(&[1], 'd');
+    trie.insert([1, 2, 3], 'a');
+    trie.insert([1, 2, 3, 4], 'b');
+    trie.insert([1, 2], 'c');
+    trie.insert([1], 'd');
 
     use std::collections::HashSet;
     assert_eq!(
@@ -1548,17 +1548,17 @@ fn trie_rs_309() {
 }
 
 #[test]
-fn trie_rs_355() {
+fn trie_rs_356() {
     use crate::GenericTrie;
 
     let mut a = GenericTrie::new();
-    a.insert(&['a', 'b', 'c'], 1);
-    a.insert(&['a', 'x'], 2);
+    a.insert(['a', 'b', 'c'], 1);
+    a.insert(['a', 'x'], 2);
 
     let mut b = GenericTrie::new();
-    b.insert(&['a', 'b', 'c'], 1);
-    b.insert(&['a', 'x'], 2);
-    b.insert(&['z'], 3);
+    b.insert(['a', 'b', 'c'], 1);
+    b.insert(['a', 'x'], 2);
+    b.insert(['z'], 3);
 
     assert!(a != b);
 
@@ -1568,7 +1568,7 @@ fn trie_rs_355() {
 }
 
 #[test]
-fn trie_rs_435() {
+fn trie_rs_436() {
     use crate::Trie;
 
     // First, we create a new trie.
@@ -1604,7 +1604,7 @@ fn trie_rs_435() {
 }
 
 #[test]
-fn trie_rs_486() {
+fn trie_rs_487() {
     use crate::Trie;
 
     let mut trie = Trie::new();

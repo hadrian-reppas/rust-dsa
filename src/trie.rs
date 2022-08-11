@@ -11,9 +11,9 @@ use std::hash::Hash;
 /// let mut trie = GenericTrie::new();
 ///
 /// // Then we can insert keys and items.
-/// trie.insert(&[1, 2, 3], "foo");
-/// trie.insert(&[1, 2, 4], "bar");
-/// trie.insert(&[1, 2, 4, 0], "baz");
+/// trie.insert([1, 2, 3], "foo");
+/// trie.insert([1, 2, 4], "bar");
+/// trie.insert([1, 2, 4, 0], "baz");
 ///
 /// assert!(trie.contains_key(&[1, 2, 3]));
 /// assert!(trie.contains_key(&[1, 2, 4]));
@@ -61,32 +61,33 @@ impl<K, V> GenericTrie<K, V> {
     ///
     /// let mut trie = GenericTrie::new();
     ///
-    /// trie.insert(&['c', 'a', 'b'], 0);
-    /// trie.insert(&['c', 'a', 'r'], 0);
-    /// trie.insert(&['c'], 0);
+    /// trie.insert(['c', 'a', 'b'], 0);
+    /// trie.insert(['c', 'a', 'r'], 0);
+    /// trie.insert(['c'], 0);
     ///
     /// assert!(trie.contains_key(&['c', 'a', 'b']));
     /// assert!(trie.contains_key(&['c', 'a', 'r']));
     /// assert!(trie.contains_key(&['c']));
     /// ```
-    pub fn insert(&mut self, key: &[K], value: V) -> Option<V>
+    pub fn insert<I>(&mut self, key: I, value: V) -> Option<V>
     where
-        K: Clone + Hash + Eq,
+        I: IntoIterator<Item = K>,
+        K: Hash + Eq,
     {
-        match key.split_first() {
-            Some((first, rest)) => self
+        self.insert_iterator(&mut key.into_iter(), value)
+    }
+
+    pub fn insert_iterator(&mut self, key: &mut dyn Iterator<Item = K>, value: V) -> Option<V>
+    where
+        K: Hash + Eq,
+    {
+        match key.next() {
+            Some(item) => self
                 .children
-                .entry(first.clone())
+                .entry(item)
                 .or_default()
-                .insert(rest, value),
-            None => {
-                if self.value.is_some() {
-                    self.value.replace(value)
-                } else {
-                    self.value = Some(value);
-                    None
-                }
-            }
+                .insert_iterator(key, value),
+            None => self.value.replace(value),
         }
     }
 
@@ -98,8 +99,8 @@ impl<K, V> GenericTrie<K, V> {
     ///
     /// let mut trie = GenericTrie::new();
     ///
-    /// trie.insert(&['c', 'a', 'b'], 1);
-    /// trie.insert(&['c', 'a', 'r'], 2);
+    /// trie.insert(['c', 'a', 'b'], 1);
+    /// trie.insert(['c', 'a', 'r'], 2);
     ///
     /// assert_eq!(trie.get(&['c', 'a', 'b']), Some(&1));
     /// assert_eq!(trie.get(&['c', 'a', 'r']), Some(&2));
@@ -123,8 +124,8 @@ impl<K, V> GenericTrie<K, V> {
     ///
     /// let mut trie = GenericTrie::new();
     ///
-    /// trie.insert(&[1, 2, 3], 'a');
-    /// trie.insert(&[1, 2, 4], 'b');
+    /// trie.insert([1, 2, 3], 'a');
+    /// trie.insert([1, 2, 4], 'b');
     ///
     /// assert_eq!(trie.get(&[1, 2, 3]), Some(&'a'));
     /// assert_eq!(trie.get(&[1, 2, 4]), Some(&'b'));
@@ -155,10 +156,10 @@ impl<K, V> GenericTrie<K, V> {
     ///
     /// let mut trie = GenericTrie::new();
     ///
-    /// trie.insert(&[1, 2, 3], 'a');
-    /// trie.insert(&[1, 2, 3, 4], 'b');
-    /// trie.insert(&[1, 2], 'c');
-    /// trie.insert(&[1], 'd');
+    /// trie.insert([1, 2, 3], 'a');
+    /// trie.insert([1, 2, 3, 4], 'b');
+    /// trie.insert([1, 2], 'c');
+    /// trie.insert([1], 'd');
     ///
     /// use std::collections::HashSet;
     /// assert_eq!(
@@ -187,7 +188,7 @@ impl<K, V> GenericTrie<K, V> {
     /// use rust_dsa::GenericTrie;
     ///
     /// let mut trie = GenericTrie::new();
-    /// trie.insert(&[true, true, false], 0);
+    /// trie.insert([true, true, false], 0);
     ///
     /// assert!(trie.contains_key(&[true, true, false]));
     /// assert!(!trie.contains_key(&[true, false]));
@@ -213,7 +214,7 @@ impl<K, V> GenericTrie<K, V> {
     /// use rust_dsa::GenericTrie;
     ///
     /// let mut trie = GenericTrie::new();
-    /// trie.insert(&[true, true, false], 0);
+    /// trie.insert([true, true, false], 0);
     ///
     /// assert!(trie.contains_prefix(&[true, true, false]));
     /// assert!(trie.contains_prefix(&[true, true]));
@@ -244,9 +245,9 @@ impl<K, V> GenericTrie<K, V> {
     /// use rust_dsa::GenericTrie;
     ///
     /// let mut trie = GenericTrie::new();
-    /// trie.insert(&[1, 2, 3], 'a');
-    /// trie.insert(&[1, 2], 'b');
-    /// trie.insert(&[1, 2, 3], 'c');
+    /// trie.insert([1, 2, 3], 'a');
+    /// trie.insert([1, 2], 'b');
+    /// trie.insert([1, 2, 3], 'c');
     ///
     /// assert_eq!(trie.len(), 2);
     ///
@@ -269,8 +270,8 @@ impl<K, V> GenericTrie<K, V> {
     /// use rust_dsa::GenericTrie;
     ///
     /// let mut trie = GenericTrie::new();
-    /// trie.insert(&[1, 2, 3], 'a');
-    /// trie.insert(&[1, 2], 'b');
+    /// trie.insert([1, 2, 3], 'a');
+    /// trie.insert([1, 2], 'b');
     ///
     /// assert!(!trie.is_empty());
     ///
@@ -289,8 +290,8 @@ impl<K, V> GenericTrie<K, V> {
     /// use rust_dsa::GenericTrie;
     ///
     /// let mut trie = GenericTrie::new();
-    /// trie.insert(&[1, 2, 3], 'a');
-    /// trie.insert(&[1, 2], 'b');
+    /// trie.insert([1, 2, 3], 'a');
+    /// trie.insert([1, 2], 'b');
     ///
     /// assert!(!trie.is_empty());
     ///
@@ -311,10 +312,10 @@ impl<K, V> GenericTrie<K, V> {
     ///
     /// let mut trie = GenericTrie::new();
     ///
-    /// trie.insert(&[1, 2, 3], 'a');
-    /// trie.insert(&[1, 2, 3, 4], 'b');
-    /// trie.insert(&[1, 2], 'c');
-    /// trie.insert(&[1], 'd');
+    /// trie.insert([1, 2, 3], 'a');
+    /// trie.insert([1, 2, 3, 4], 'b');
+    /// trie.insert([1, 2], 'c');
+    /// trie.insert([1], 'd');
     ///
     /// use std::collections::HashSet;
     /// assert_eq!(
@@ -356,13 +357,13 @@ where
     /// use rust_dsa::GenericTrie;
     ///
     /// let mut a = GenericTrie::new();
-    /// a.insert(&['a', 'b', 'c'], 1);
-    /// a.insert(&['a', 'x'], 2);
+    /// a.insert(['a', 'b', 'c'], 1);
+    /// a.insert(['a', 'x'], 2);
     ///
     /// let mut b = GenericTrie::new();
-    /// b.insert(&['a', 'b', 'c'], 1);
-    /// b.insert(&['a', 'x'], 2);
-    /// b.insert(&['z'], 3);
+    /// b.insert(['a', 'b', 'c'], 1);
+    /// b.insert(['a', 'x'], 2);
+    /// b.insert(['z'], 3);
     ///
     /// assert!(a != b);
     ///
@@ -497,8 +498,7 @@ impl<V> Trie<V> {
     /// assert!(trie.contains_key("c"));
     /// ```
     pub fn insert(&mut self, key: &str, value: V) -> Option<V> {
-        let chars: Vec<_> = key.chars().collect();
-        self.inner.insert(&chars, value)
+        self.inner.insert(key.chars(), value)
     }
 
     /// Returns a reference to the value associated with the key, if one exists.
