@@ -1359,6 +1359,416 @@ fn wgraph_rs_400() {
 }
 
 #[test]
+fn trie_rs_7() {
+    use crate::GenericTrie;
+
+    // First, we create a new trie.
+    let mut trie = GenericTrie::new();
+
+    // Then we can insert keys and items.
+    trie.insert(&[1, 2, 3], "foo");
+    trie.insert(&[1, 2, 4], "bar");
+    trie.insert(&[1, 2, 4, 0], "baz");
+
+    assert!(trie.contains_key(&[1, 2, 3]));
+    assert!(trie.contains_key(&[1, 2, 4]));
+    assert!(trie.contains_key(&[1, 2, 4, 0]));
+
+    // We can get the values.
+    assert_eq!(trie.get(&[1, 2, 3]), Some(&"foo"));
+    assert_eq!(trie.get(&[1, 2, 4]), Some(&"bar"));
+    assert_eq!(trie.get(&[1, 2]), None);
+
+    // We can iterate over the values with a given prefix.
+    use std::collections::HashSet;
+    let get_prefix: HashSet<_> = trie.get_prefix(&[1, 2, 4]).collect();
+    assert_eq!(get_prefix, HashSet::from([&"bar", &"baz"]));
+
+    // We can remove values.
+    let removed = trie.remove(&[1, 2, 3]);
+
+    assert_eq!(removed, Some("foo"));
+    assert!(!trie.contains_key(&[1, 2, 3]));
+
+    assert_eq!(trie.len(), 2);
+}
+
+#[test]
+fn trie_rs_59() {
+    use crate::GenericTrie;
+
+    let mut trie = GenericTrie::new();
+
+    trie.insert(&['c', 'a', 'b'], 0);
+    trie.insert(&['c', 'a', 'r'], 0);
+    trie.insert(&['c'], 0);
+
+    assert!(trie.contains_key(&['c', 'a', 'b']));
+    assert!(trie.contains_key(&['c', 'a', 'r']));
+    assert!(trie.contains_key(&['c']));
+}
+
+#[test]
+fn trie_rs_96() {
+    use crate::GenericTrie;
+
+    let mut trie = GenericTrie::new();
+
+    trie.insert(&['c', 'a', 'b'], 1);
+    trie.insert(&['c', 'a', 'r'], 2);
+
+    assert_eq!(trie.get(&['c', 'a', 'b']), Some(&1));
+    assert_eq!(trie.get(&['c', 'a', 'r']), Some(&2));
+    assert_eq!(trie.get(&['c', 'a', 't']), None);
+}
+
+#[test]
+fn trie_rs_121() {
+    use crate::GenericTrie;
+
+    let mut trie = GenericTrie::new();
+
+    trie.insert(&[1, 2, 3], 'a');
+    trie.insert(&[1, 2, 4], 'b');
+
+    assert_eq!(trie.get(&[1, 2, 3]), Some(&'a'));
+    assert_eq!(trie.get(&[1, 2, 4]), Some(&'b'));
+
+    let removed = trie.remove(&[1, 2, 3]);
+
+    assert_eq!(removed, Some('a'));
+    assert!(!trie.contains_key(&[1, 2, 3]));
+}
+
+#[test]
+fn trie_rs_153() {
+    use crate::GenericTrie;
+
+    let mut trie = GenericTrie::new();
+
+    trie.insert(&[1, 2, 3], 'a');
+    trie.insert(&[1, 2, 3, 4], 'b');
+    trie.insert(&[1, 2], 'c');
+    trie.insert(&[1], 'd');
+
+    use std::collections::HashSet;
+    assert_eq!(
+        trie.get_prefix(&[1, 2]).collect::<HashSet<_>>(),
+        HashSet::from([&'a', &'b', &'c'])
+    );
+}
+
+#[test]
+fn trie_rs_186() {
+    use crate::GenericTrie;
+
+    let mut trie = GenericTrie::new();
+    trie.insert(&[true, true, false], 0);
+
+    assert!(trie.contains_key(&[true, true, false]));
+    assert!(!trie.contains_key(&[true, false]));
+}
+
+#[test]
+fn trie_rs_212() {
+    use crate::GenericTrie;
+
+    let mut trie = GenericTrie::new();
+    trie.insert(&[true, true, false], 0);
+
+    assert!(trie.contains_prefix(&[true, true, false]));
+    assert!(trie.contains_prefix(&[true, true]));
+    assert!(trie.contains_prefix(&[true]));
+    assert!(!trie.contains_prefix(&[false]));
+    assert!(!trie.contains_prefix(&[true, false]));
+}
+
+#[test]
+fn trie_rs_243() {
+    use crate::GenericTrie;
+
+    let mut trie = GenericTrie::new();
+    trie.insert(&[1, 2, 3], 'a');
+    trie.insert(&[1, 2], 'b');
+    trie.insert(&[1, 2, 3], 'c');
+
+    assert_eq!(trie.len(), 2);
+
+    trie.remove(&[1, 2]);
+
+    assert_eq!(trie.len(), 1);
+}
+
+#[test]
+fn trie_rs_268() {
+    use crate::GenericTrie;
+
+    let mut trie = GenericTrie::new();
+    trie.insert(&[1, 2, 3], 'a');
+    trie.insert(&[1, 2], 'b');
+
+    assert!(!trie.is_empty());
+
+    trie.clear();
+
+    assert!(trie.is_empty());
+}
+
+#[test]
+fn trie_rs_288() {
+    use crate::GenericTrie;
+
+    let mut trie = GenericTrie::new();
+    trie.insert(&[1, 2, 3], 'a');
+    trie.insert(&[1, 2], 'b');
+
+    assert!(!trie.is_empty());
+
+    trie.clear();
+
+    assert!(trie.is_empty());
+}
+
+#[test]
+fn trie_rs_309() {
+    use crate::GenericTrie;
+
+    let mut trie = GenericTrie::new();
+
+    trie.insert(&[1, 2, 3], 'a');
+    trie.insert(&[1, 2, 3, 4], 'b');
+    trie.insert(&[1, 2], 'c');
+    trie.insert(&[1], 'd');
+
+    use std::collections::HashSet;
+    assert_eq!(
+        trie.values().collect::<HashSet<_>>(),
+        HashSet::from([&'a', &'b', &'c', &'d'])
+    );
+}
+
+#[test]
+fn trie_rs_355() {
+    use crate::GenericTrie;
+
+    let mut a = GenericTrie::new();
+    a.insert(&['a', 'b', 'c'], 1);
+    a.insert(&['a', 'x'], 2);
+
+    let mut b = GenericTrie::new();
+    b.insert(&['a', 'b', 'c'], 1);
+    b.insert(&['a', 'x'], 2);
+    b.insert(&['z'], 3);
+
+    assert!(a != b);
+
+    b.remove(&['z']);
+
+    assert!(a == b);
+}
+
+#[test]
+fn trie_rs_435() {
+    use crate::Trie;
+
+    // First, we create a new trie.
+    let mut trie = Trie::new();
+
+    // Then we can insert keys and items.
+    trie.insert("foo", 1);
+    trie.insert("bar", 2);
+    trie.insert("ba", 3);
+
+    assert!(trie.contains_key("foo"));
+    assert!(trie.contains_key("bar"));
+    assert!(trie.contains_key("ba"));
+
+    // We can get the values.
+    assert_eq!(trie.get("foo"), Some(&1));
+    assert_eq!(trie.get("bar"), Some(&2));
+    assert_eq!(trie.get("ba"), Some(&3));
+    assert_eq!(trie.get("baz"), None);
+
+    // We can iterate over the values with a given prefix.
+    use std::collections::HashSet;
+    let get_prefix: HashSet<_> = trie.get_prefix("ba").collect();
+    assert_eq!(get_prefix, HashSet::from([&2, &3]));
+
+    // We can remove values.
+    let removed = trie.remove("ba");
+
+    assert_eq!(removed, Some(3));
+    assert!(!trie.contains_key("ba"));
+
+    assert_eq!(trie.len(), 2);
+}
+
+#[test]
+fn trie_rs_486() {
+    use crate::Trie;
+
+    let mut trie = Trie::new();
+
+    trie.insert("cab", 0);
+    trie.insert("car", 0);
+    trie.insert("c", 0);
+
+    assert!(trie.contains_key("cab"));
+    assert!(trie.contains_key("car"));
+    assert!(trie.contains_key("c"));
+}
+
+#[test]
+fn trie_rs_507() {
+    use crate::Trie;
+
+    let mut trie = Trie::new();
+
+    trie.insert("cab", 1);
+    trie.insert("car", 2);
+
+    assert_eq!(trie.get("cab"), Some(&1));
+    assert_eq!(trie.get("car"), Some(&2));
+    assert_eq!(trie.get("cat"), None);
+}
+
+#[test]
+fn trie_rs_527() {
+    use crate::Trie;
+
+    let mut trie = Trie::new();
+
+    trie.insert("foo", 1);
+    trie.insert("bar", 2);
+
+    assert_eq!(trie.get("foo"), Some(&1));
+    assert_eq!(trie.get("bar"), Some(&2));
+
+    let removed = trie.remove("foo");
+
+    assert_eq!(removed, Some(1));
+    assert!(!trie.contains_key("foo"));
+}
+
+#[test]
+fn trie_rs_551() {
+    use crate::Trie;
+
+    let mut trie = Trie::new();
+
+    trie.insert("abc", 1);
+    trie.insert("abcd", 2);
+    trie.insert("ab", 3);
+    trie.insert("a", 4);
+
+    use std::collections::HashSet;
+    assert_eq!(
+        trie.get_prefix("ab").collect::<HashSet<_>>(),
+        HashSet::from([&1, &2, &3])
+    );
+}
+
+#[test]
+fn trie_rs_575() {
+    use crate::Trie;
+
+    let mut trie = Trie::new();
+    trie.insert("cat", 0);
+
+    assert!(trie.contains_key("cat"));
+    assert!(!trie.contains_key("ca"));
+}
+
+#[test]
+fn trie_rs_592() {
+    use crate::Trie;
+
+    let mut trie = Trie::new();
+    trie.insert("xyz", 0);
+
+    assert!(trie.contains_prefix("xyz"));
+    assert!(trie.contains_prefix("xy"));
+    assert!(trie.contains_prefix("x"));
+    assert!(!trie.contains_prefix("y"));
+    assert!(!trie.contains_prefix("xz"));
+}
+
+#[test]
+fn trie_rs_612() {
+    use crate::Trie;
+
+    let mut trie = Trie::new();
+    trie.insert("abc", 1);
+    trie.insert("ab", 2);
+    trie.insert("abc", 3);
+
+    assert_eq!(trie.len(), 2);
+
+    trie.remove("ab");
+
+    assert_eq!(trie.len(), 1);
+}
+
+#[test]
+fn trie_rs_633() {
+    use crate::Trie;
+
+    let mut trie = Trie::new();
+    trie.insert("abc", 1);
+    trie.insert("ab", 2);
+
+    assert!(!trie.is_empty());
+
+    trie.clear();
+
+    assert!(trie.is_empty());
+}
+
+#[test]
+fn trie_rs_653() {
+    use crate::Trie;
+
+    let mut trie = Trie::new();
+    trie.insert("abc", 1);
+    trie.insert("ab", 2);
+
+    assert!(!trie.is_empty());
+
+    trie.clear();
+
+    assert!(trie.is_empty());
+}
+
+#[test]
+fn trie_rs_673() {
+    use crate::Trie;
+
+    let mut trie = Trie::new();
+
+    trie.insert("abc", 1);
+    trie.insert("abcd", 2);
+    trie.insert("ab", 3);
+    trie.insert("a", 4);
+
+    use std::collections::HashSet;
+    assert_eq!(
+        trie.values().collect::<HashSet<_>>(),
+        HashSet::from([&1, &2, &3, &4])
+    );
+}
+
+#[test]
+fn trie_rs_714() {
+    use crate::Trie;
+
+    let trie = Trie::from([("foo", 1), ("bar", 2), ("baz", 3)]);
+    assert_eq!(trie.get("foo"), Some(&1));
+    assert_eq!(trie.get("bar"), Some(&2));
+    assert_eq!(trie.get("baz"), Some(&3));
+    assert_eq!(trie.get("boo"), None);
+}
+
+#[test]
 fn graham_rs_19() {
     use crate::graham_scan;
 

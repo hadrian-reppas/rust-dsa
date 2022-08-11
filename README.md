@@ -63,7 +63,7 @@ Most entries on this list were taken directly from Keith Schwarz's
 | &#10060; | Brodal Queue                         | *TODO*                             | A [Brodal queue](https://en.wikipedia.org/wiki/Brodal_queue) implementation for use as a priority queue. |
 | &#10060; | Chan's Algorithm                     | *TODO*                             | An implementation of [Chan's algorithm](https://en.wikipedia.org/wiki/Chan%27s_algorithm). |
 | &#10060; | Christofide's Algorithm              | *TODO*                             | An implementation of [Christofide's algorithm](https://en.wikipedia.org/wiki/Chan%27s_algorithm) for approximating [TSP](https://en.wikipedia.org/wiki/Travelling_salesman_problem) solutions. |
-| &#10060; | Trie                                 | *TODO*                             | A [trie](https://en.wikipedia.org/wiki/Trie) implementation. |
+| &#9989;  | Trie                                 | [src/trie.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/trie.rs) | A [trie](https://en.wikipedia.org/wiki/Trie) implementation. |
 | &#10060; | **Radix Tree**                       | *TODO*                             | A [radix tree](https://en.wikipedia.org/wiki/Radix_tree) implementation. |
 | &#10060; | Ukkonen's algorithm                  | *TODO*                             | An implementation of [Ukkonen's algorithm](https://en.wikipedia.org/wiki/Ukkonen%27s_algorithm) for constructing [suffix trees](https://en.wikipedia.org/wiki/Suffix_tree). |
 | &#10060; | k-d Tree                             | *TODO*                             | A [k-d tree](https://en.wikipedia.org/wiki/K-d_tree) implementation. |
