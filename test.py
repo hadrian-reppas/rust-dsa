@@ -1,22 +1,39 @@
 import os, sys
 
 def main():
-    cwd = os.getcwd()
-    src = os.path.join(cwd, "src")
+    if "--doc" in sys.argv:
+        os.system("cargo test --doc")
+        return
 
-    is_src_file = (
-        lambda f: os.path.isfile(os.path.join(src, f))
+    cwd = os.getcwd()
+    src = cwd + "/src"
+
+    is_source_file = (
+        lambda f: os.path.isfile(src + "/" + f)
         and f.endswith(".rs")
-        and f != "tests.rs"
+        and f != "lib.rs"
     )
 
-    files = [file for file in os.listdir(src) if is_src_file(file)]
+    files = [file for file in os.listdir(src) if is_source_file(file)]
 
-    with open(os.path.join(src, "tests.rs"), "w") as output:
-        write_tests(src, files, output)
+    lib_before = open(src + "/lib.rs").read()
+
+    try:
+        with open(src + "/tests.rs", "x") as output:
+            write_tests(src, files, output)
+    except FileExistsError:
+        print("'src/tests.rs' already exists")
+        exit(1)
+    
+    with open(src + "/lib.rs", "a") as lib:
+        lib.write("\nmod tests;\n")
 
     os.system("cargo fmt")
-    os.system("cargo test " + " ".join(sys.argv[1:]))
+    os.system("cargo test")
+
+    with open(src + "/lib.rs", "w") as lib:
+        lib.write(lib_before)
+    os.system("rm src/tests.rs")
 
 def write_tests(src, files, output):
 

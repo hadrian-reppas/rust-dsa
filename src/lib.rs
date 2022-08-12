@@ -41,5 +41,3 @@ pub use unionfind::UnionFind;
 pub use vlist::VList;
 pub use wdigraph::WeightedDiGraph;
 pub use wgraph::WeightedGraph;
-
-mod tests;
