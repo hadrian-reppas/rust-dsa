@@ -94,13 +94,8 @@ fn get_orientation<I>(a: Point<I>, b: Point<I>, c: Point<I>) -> Orientation
 where
     I: PrimInt,
 {
-    let t = b.0.checked_sub(&a.0).expect("overflow during subtraction");
-    let u = c.1.checked_sub(&a.1).expect("overflow during subtraction");
-    let v = c.0.checked_sub(&a.0).expect("overflow during subtraction");
-    let w = b.1.checked_sub(&a.1).expect("overflow during subtraction");
-
-    let p = t.checked_mul(&u).expect("overflow during multiplication");
-    let q = v.checked_mul(&w).expect("overflow during multiplication");
+    let p = (b.0 - a.0) * (c.1 - a.1);
+    let q = (c.0 - a.0) * (b.1 - a.1);
 
     match p.cmp(&q) {
         Ordering::Equal => Orientation::Collinear,
@@ -113,15 +108,10 @@ fn square_dist<I>(a: Point<I>, b: Point<I>) -> I
 where
     I: PrimInt,
 {
-    let dx = a.0.checked_sub(&b.0).expect("overflow during subtraction");
-    let dy = a.1.checked_sub(&b.1).expect("overflow during subtraction");
+    let dx = a.0 - b.0;
+    let dy = a.1 - b.1;
 
-    let dx_square = dx.checked_mul(&dx).expect("overflow during multiplication");
-    let dy_square = dy.checked_mul(&dy).expect("overflow during multiplication");
-
-    dx_square
-        .checked_add(&dy_square)
-        .expect("overflow during addition")
+    dx * dx + dy * dy
 }
 
 trait Flip {

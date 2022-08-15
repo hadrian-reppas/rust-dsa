@@ -13,7 +13,7 @@ Most entries on this list were taken directly from Keith Schwarz's
 
 |          | Name                                 | File                               | Description |
 | -------- | ------------------------------------ | ---------------------------------- | ----------- |
-| &#9989;  | Binomial Heap                        | [src/heap.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/heap.rs) | A [priority queue](http://en.wikipedia.org/wiki/Priority_queue) implementation backed by a [binary heap](https://en.wikipedia.org/wiki/Binary_heap). |
+| &#9989;  | Binary Heap                          | [src/heap.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/heap.rs) | A [priority queue](http://en.wikipedia.org/wiki/Priority_queue) implementation backed by a [binary heap](https://en.wikipedia.org/wiki/Binary_heap). |
 | &#9989;  | Topological Sort                     | [src/toposort.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/toposort.rs) | An algorithm for finding a [topological ordering](http://en.wikipedia.org/wiki/Topological_sorting) of a [DAG](https://en.wikipedia.org/wiki/Directed_acyclic_graph). |
 | &#9989;  | Graph                                | [src/graph.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/graph.rs) | An implementation of an [graph](https://en.wikipedia.org/wiki/Graph_(abstract_data_type)). |
 | &#9989;  | Directed Graph                       | [src/digraph.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/digraph.rs) | An implementation of a [directed graph](https://en.wikipedia.org/wiki/Directed_graph). |
@@ -28,9 +28,11 @@ Most entries on this list were taken directly from Keith Schwarz's
 | &#9989;  | Radix Sort                           | [src/radix_sort.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/radix_sort.rs) | An implementation of the [radix sort](https://en.wikipedia.org/wiki/Radix_sort) algorithm. |
 | &#9989;  | Quicksort                            | [src/quicksort.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/quicksort.rs) | An implementation of the [quicksort](https://en.wikipedia.org/wiki/Quicksort) algorithm. |
 | &#10060; | Mergesort                            | *TODO*                             | An implementation of the [merge sort](https://en.wikipedia.org/wiki/Merge_sort) algorithm. |
-| &#10060; | Heapsort                             | *TODO*                             | An implementation of the [heapsort](https://en.wikipedia.org/wiki/Heapsort) algorithm. |
+| &#9989;  | Heapsort                             | [src/heapsort.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/heapsort.rs) | An implementation of the [heapsort](https://en.wikipedia.org/wiki/Heapsort) algorithm. |
 | &#10060; | Timsort                              | *TODO*                             | An implementation of the [Timsort](https://en.wikipedia.org/wiki/Timsort) algorithm. |
 | &#9989;  | MJRTY                                | [src/mjrty.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/mjrty.rs) | A fast, linear-time algorithm for finding the [majority element](http://www.cs.utexas.edu/~moore/best-ideas/mjrty/) of a data set. |
+| &#10060; | Quickhull                            | *TODO*                             | An implementation of the [quickhull](https://en.wikipedia.org/wiki/Quickhull) algorithm. |
+| &#10060; | Binomial Heap                        | *TODO*                             | A [priority queue](http://en.wikipedia.org/wiki/Priority_queue) implementation backed by a [binomial heap](https://en.wikipedia.org/wiki/Binomial_heap). |
 | &#10060; | Extendible Array                     | *TODO*                             | A dynamic array implementation with O(1) worst-case lookup and append. |
 | &#10060; | Hashed Array Tree                    | *TODO*                             | A dynamic array implementation backed by a [hashed array tree](https://en.wikipedia.org/wiki/Hashed_array_tree). |
 | &#10060; | Fibonacci Heap                       | *TODO*                             | A priority queue implementation backed by a [Fibonacci heap](http://en.wikipedia.org/wiki/Fibonacci_heap). |
@@ -64,7 +66,7 @@ Most entries on this list were taken directly from Keith Schwarz's
 | &#10060; | Chan's Algorithm                     | *TODO*                             | An implementation of [Chan's algorithm](https://en.wikipedia.org/wiki/Chan%27s_algorithm). |
 | &#10060; | Christofide's Algorithm              | *TODO*                             | An implementation of [Christofide's algorithm](https://en.wikipedia.org/wiki/Chan%27s_algorithm) for approximating [TSP](https://en.wikipedia.org/wiki/Travelling_salesman_problem) solutions. |
 | &#9989;  | Trie                                 | [src/trie.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/trie.rs) | A [trie](https://en.wikipedia.org/wiki/Trie) implementation. |
-| &#10060; | **Radix Tree**                       | *TODO*                             | A [radix tree](https://en.wikipedia.org/wiki/Radix_tree) implementation. |
+| &#10060; | Radix Tree                           | *TODO*                             | A [radix tree](https://en.wikipedia.org/wiki/Radix_tree) implementation. |
 | &#10060; | Ukkonen's algorithm                  | *TODO*                             | An implementation of [Ukkonen's algorithm](https://en.wikipedia.org/wiki/Ukkonen%27s_algorithm) for constructing [suffix trees](https://en.wikipedia.org/wiki/Suffix_tree). |
 | &#10060; | k-d Tree                             | *TODO*                             | A [k-d tree](https://en.wikipedia.org/wiki/K-d_tree) implementation. |
 | &#10060; | Finger Tree                          | *TODO*                             | A [finger tree](https://en.wikipedia.org/wiki/Finger_tree) implementation. |
