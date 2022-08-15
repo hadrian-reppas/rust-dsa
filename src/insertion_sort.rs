@@ -1,5 +1,3 @@
-use std::cmp::Ord;
-
 /// An implementation of the [insertion sort](https://en.wikipedia.org/wiki/Insertion_sort)
 /// algorithm.
 ///

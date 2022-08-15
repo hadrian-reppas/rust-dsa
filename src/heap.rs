@@ -1,6 +1,3 @@
-use std::cmp::Ord;
-use std::convert::From;
-
 /// A [priority queue](http://en.wikipedia.org/wiki/Priority_queue) implementation
 /// backed by a [binary heap](https://en.wikipedia.org/wiki/Binary_heap).
 ///

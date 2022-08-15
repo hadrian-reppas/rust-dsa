@@ -1,5 +1,3 @@
-use std::cmp::Eq;
-
 /// Returns the majority element of an iterator, if one exists.
 ///
 /// This is an implementation of the MJRTY algorithm described by Boyer and Moore in

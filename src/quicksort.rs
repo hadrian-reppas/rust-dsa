@@ -1,5 +1,4 @@
 use crate::partition;
-use std::cmp::Ord;
 
 /// An implementation of the [quicksort](https://en.wikipedia.org/wiki/Quicksort)
 /// algorithm.
