@@ -360,9 +360,22 @@ impl<T> FromIterator<T> for FibonacciHeap<T>
 where
     T: Ord,
 {
-    
+    /// Creates a heap from an iterator.
+    ///
     /// ```
-    /// 
+    /// use rust_dsa::FibonacciHeap;
+    ///
+    /// let mut heap: FibonacciHeap<i64> = (0..10_001).map(|_| rand::random()).collect();
+    ///
+    /// let mut prev = heap.pop().unwrap();
+    ///
+    /// for _ in 0..10_000 {
+    ///     assert!(&prev <= heap.peek().unwrap());
+    ///     prev = heap.pop().unwrap();
+    /// }
+    ///
+    /// assert_eq!(heap.pop(), None);
+    /// ```
     fn from_iter<I: IntoIterator<Item = T>>(iter: I) -> FibonacciHeap<T> {
         let mut heap = FibonacciHeap::new();
         for value in iter {
