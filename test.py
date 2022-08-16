@@ -1,7 +1,7 @@
 import os, sys
 
 def main():
-    if "--doc" in sys.argv:
+    if "--doc" in sys.argv or "-d" in sys.argv:
         os.system("cargo test --doc")
         return
 
@@ -32,7 +32,10 @@ def main():
     with open(src + "/lib.rs", "a") as lib:
         lib.write("\nmod tests;\n")
 
-    os.system("cargo test")
+    if "--release" in sys.argv or "-r" in sys.argv:
+        os.system("cargo test --release")
+    else:
+        os.system("cargo test")
 
     with open(src + "/lib.rs", "w") as lib:
         lib.write(lib_before)
