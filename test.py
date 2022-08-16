@@ -1,8 +1,15 @@
 import os, sys
 
 def main():
-    if "--doc" in sys.argv or "-d" in sys.argv:
-        os.system("cargo test --doc")
+    both = "-dr" in sys.argv or "-rd" in sys.argv
+    doc = both or "--doc" in sys.argv or "-d" in sys.argv
+    release = both or "--release" in sys.argv or "-r" in sys.argv
+
+    if doc:
+        if release:
+            os.system("cargo test --doc --release")
+        else:
+            os.system("cargo test --doc")
         return
 
     cwd = os.getcwd()
@@ -32,7 +39,7 @@ def main():
     with open(src + "/lib.rs", "a") as lib:
         lib.write("\nmod tests;\n")
 
-    if "--release" in sys.argv or "-r" in sys.argv:
+    if release:
         os.system("cargo test --release")
     else:
         os.system("cargo test")
