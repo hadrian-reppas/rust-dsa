@@ -13,7 +13,7 @@ type Point<T> = (T, T);
 /// takes 2-tulples of integers.
 ///
 /// # Panics
-/// Panics if any of the calculations overflow.
+/// Panics if any of the calculations overflow and debug assertions are on.
 ///
 /// # Example
 /// ```
