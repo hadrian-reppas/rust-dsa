@@ -1,5 +1,7 @@
+mod binomialheap;
 mod deque;
 mod digraph;
+mod fibheap;
 mod graham;
 mod graph;
 mod heap;
@@ -21,8 +23,10 @@ mod vlist;
 mod wdigraph;
 mod wgraph;
 
+pub use binomialheap::BinomialHeap;
 pub use deque::Deque;
 pub use digraph::DiGraph;
+pub use fibheap::FibonacciHeap;
 pub use graham::graham_scan;
 pub use graph::Graph;
 pub use heap::BinaryHeap;
