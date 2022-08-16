@@ -24,11 +24,14 @@ def main():
     except FileExistsError:
         print("'src/tests.rs' already exists")
         exit(1)
+    except ValueError as err:
+        print(err.args[0])
+        os.system("rm src/tests.rs")
+        exit(1)
     
     with open(src + "/lib.rs", "a") as lib:
         lib.write("\nmod tests;\n")
 
-    os.system("cargo fmt")
     os.system("cargo test")
 
     with open(src + "/lib.rs", "w") as lib:
