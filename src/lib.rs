@@ -1,3 +1,4 @@
+mod bimap;
 mod binomialheap;
 mod deque;
 mod digraph;
@@ -23,6 +24,7 @@ mod vlist;
 mod wdigraph;
 mod wgraph;
 
+pub use bimap::{BiMap, Removed};
 pub use binomialheap::BinomialHeap;
 pub use deque::Deque;
 pub use digraph::DiGraph;
