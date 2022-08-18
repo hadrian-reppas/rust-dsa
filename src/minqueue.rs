@@ -228,8 +228,8 @@ impl<T, const N: usize> From<[T; N]> for MinQueue<T>
 where
     T: Ord,
 {
-    fn from(arr: [T; N]) -> MinQueue<T> {
-        arr.into_iter().collect()
+    fn from(array: [T; N]) -> MinQueue<T> {
+        array.into_iter().collect()
     }
 }
 

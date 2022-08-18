@@ -271,11 +271,11 @@ where
 {
     /// Uses the [heapify algorithm](https://johnderinger.wordpress.com/2012/12/28/heapify/)
     /// to create a [BinaryHeap] in *O*(*n*) time.
-    fn from(arr: [T; N]) -> BinaryHeap<T>
+    fn from(array: [T; N]) -> BinaryHeap<T>
     where
         T: Ord,
     {
-        arr.into_iter().collect()
+        array.into_iter().collect()
     }
 }
 

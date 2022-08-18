@@ -309,15 +309,26 @@ impl<L, R> BiMap<L, R> {
     pub fn iter(&self) -> Iter<'_, L, R> {
         self.into_iter()
     }
+
+    /// Returns the left values in the map.
+    pub fn lefts(self) -> Vec<L> {
+        self.into_iter().map(|(left, _)| left).collect()
+    }
+
+    /// Returns right vaalues in the map.
+    pub fn rights(self) -> Vec<R> {
+        self.into_iter().map(|(_, right)| right).collect()
+    }
 }
 
-impl<L, R> FromIterator<(L, R)> for BiMap<L, R>
+impl<L, R> FromIterator<Item<L, R>> for BiMap<L, R>
 where
     L: Hash + Eq,
     R: Hash + Eq,
 {
-    fn from_iter<I: IntoIterator<Item = (L, R)>>(iter: I) -> BiMap<L, R> {
-        let mut map = BiMap::new();
+    fn from_iter<I: IntoIterator<Item = Item<L, R>>>(iter: I) -> BiMap<L, R> {
+        let mut iter = iter.into_iter();
+        let mut map = BiMap::with_capacity(iter.size_hint().0);
         for (left, right) in iter {
             map.insert(left, right);
         }
@@ -325,7 +336,7 @@ where
     }
 }
 
-impl<L, R, const N: usize> From<[(L, R); N]> for BiMap<L, R>
+impl<L, R, const N: usize> From<[Item<L, R>; N]> for BiMap<L, R>
 where
     L: Hash + Eq,
     R: Hash + Eq,
@@ -381,6 +392,20 @@ where
     L: Hash + Eq,
     R: Hash + Eq,
 {
+}
+
+impl<L, R> Clone for BiMap<L, R>
+where
+    L: Clone + Hash + Eq,
+    R: Clone + Hash + Eq,
+{
+    fn clone(&self) -> BiMap<L, R> {
+        let mut map = BiMap::with_capacity(self.len());
+        for (left, right) in self {
+            map.insert(left.clone(), right.clone());
+        }
+        map
+    }
 }
 
 impl<L, R> IntoIterator for BiMap<L, R> {

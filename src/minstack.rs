@@ -234,8 +234,8 @@ impl<T, const N: usize> From<[T; N]> for MinStack<T>
 where
     T: Ord,
 {
-    fn from(arr: [T; N]) -> MinStack<T> {
-        arr.into_iter().collect()
+    fn from(array: [T; N]) -> MinStack<T> {
+        array.into_iter().collect()
     }
 }
 

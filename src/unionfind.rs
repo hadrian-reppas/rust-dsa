@@ -336,8 +336,8 @@ impl<T, const N: usize> From<[T; N]> for UnionFind<T>
 where
     T: Hash + Eq,
 {
-    fn from(arr: [T; N]) -> UnionFind<T> {
-        arr.into_iter().collect()
+    fn from(array: [T; N]) -> UnionFind<T> {
+        array.into_iter().collect()
     }
 }
 

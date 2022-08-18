@@ -215,8 +215,8 @@ impl<T> Default for VList<T> {
 }
 
 impl<T, const N: usize> From<[T; N]> for VList<T> {
-    fn from(arr: [T; N]) -> VList<T> {
-        arr.into_iter().collect()
+    fn from(array: [T; N]) -> VList<T> {
+        array.into_iter().collect()
     }
 }
 

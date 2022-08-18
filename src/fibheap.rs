@@ -390,11 +390,11 @@ impl<T, const N: usize> From<[T; N]> for FibonacciHeap<T>
 where
     T: Ord,
 {
-    fn from(arr: [T; N]) -> FibonacciHeap<T>
+    fn from(array: [T; N]) -> FibonacciHeap<T>
     where
         T: Ord,
     {
-        arr.into_iter().collect()
+        array.into_iter().collect()
     }
 }
 
