@@ -358,6 +358,31 @@ where
     }
 }
 
+impl<L, R> PartialEq for BiMap<L, R>
+where
+    L: Hash + Eq,
+    R: Hash + Eq,
+{
+    fn eq(&self, other: &BiMap<L, R>) -> bool {
+        if self.len() != other.len() {
+            return false;
+        }
+        for (left, right) in self {
+            if self.get_by_left(left).map(|r| r != right).unwrap_or(true) {
+                return false;
+            }
+        }
+        true
+    }
+}
+
+impl<L, R> Eq for BiMap<L, R>
+where
+    L: Hash + Eq,
+    R: Hash + Eq,
+{
+}
+
 impl<L, R> IntoIterator for BiMap<L, R> {
     type IntoIter = IntoIter<L, R>;
     type Item = Item<L, R>;
@@ -470,11 +495,11 @@ impl<T> AsRef<T> for MyRc<T> {
 
 #[derive(Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[repr(transparent)]
-pub struct Wrapper<T>(T);
+struct Wrapper<T>(T);
 
 impl<T> Wrapper<T> {
-    pub fn wrap(value: &T) -> &Self {
-        unsafe { &*(value as *const T as *const Wrapper<T>) }
+    fn wrap(value: &T) -> &Wrapper<T> {
+        unsafe { std::mem::transmute(value) }
     }
 }
 
