@@ -88,7 +88,6 @@ use crate::{DiGraph, WeightedGraph};
 ///     println!("{node}");
 /// }
 /// ```
-#[derive(Clone)]
 pub struct Graph<N> {
     inner: WeightedDiGraph<N, ()>,
 }
@@ -453,7 +452,18 @@ where
     }
 }
 
-impl<N: Eq + Hash> Eq for Graph<N> {}
+impl<N> Eq for Graph<N> where N: Eq + Hash {}
+
+impl<N> Clone for Graph<N>
+where
+    N: Clone + Eq + Hash,
+{
+    fn clone(&self) -> Graph<N> {
+        Graph {
+            inner: self.inner.clone(),
+        }
+    }
+}
 
 impl<N, const M: usize> From<[(N, N); M]> for Graph<N>
 where
