@@ -38,8 +38,8 @@ use crate::{Graph, WeightedGraph};
 /// assert!(graph.contains_edge(&'a', &'c'));
 /// assert!(graph.contains_edge(&'c', &'b'));
 ///
-/// // Missing edge nodes are automatically inserted.
-/// graph.insert_edge(&'a', &'z');
+/// // Edges and nodes can be inserted together.
+/// graph.insert_edge_by_value('a', 'z');
 ///
 /// assert!(graph.contains_node(&'z'));
 /// assert!(graph.contains_edge(&'a', &'z'));
@@ -105,28 +105,51 @@ impl<N> DiGraph<N> {
 
     /// Inserts an edge into the graph.
     ///
-    /// The nodes `from` and `to` will be automatically inserted if they are not already
-    /// in the graph.
+    /// # Panics
+    /// Panics if `from` or `to` is not in the graph.
+    ///
+    /// # Example
+    /// ```
+    /// use rust_dsa::DiGraph;
+    ///
+    /// let mut graph: DiGraph<_> = [true, false].into_iter().collect();
+    ///
+    /// graph.insert_edge(&true, &false);
+    ///
+    /// assert!(graph.contains_edge(&true, &false));
+    /// assert!(!graph.contains_edge(&false, &true));
+    /// ```
+    pub fn insert_edge(&mut self, from: &N, to: &N)
+    where
+        N: Hash + Eq,
+    {
+        self.inner.insert_edge(from, to, ());
+    }
+
+    /// Inserts an edge into the graph.
+    ///
+    /// The nodes are inserted if they are not already present in the graph.
     ///
     /// # Example
     /// ```
     /// use rust_dsa::DiGraph;
     ///
     /// let mut graph = DiGraph::new();
-    /// graph.insert_edge(&true, &false);
     ///
-    /// assert!(graph.contains_edge(&true, &false));
-    /// assert!(graph.contains_node(&true));
-    /// assert!(graph.contains_node(&false));
+    /// graph.insert_edge_by_value('a', 'b');
+    ///
+    /// assert!(graph.contains_edge(&'a', &'b'));
+    /// assert!(graph.contains_node(&'a'));
+    /// assert!(graph.contains_node(&'b'));
     /// ```
-    pub fn insert_edge(&mut self, from: &N, to: &N)
+    pub fn insert_edge_by_value(&mut self, from: N, to: N)
     where
         N: Clone + Hash + Eq,
     {
-        self.inner.insert_edge(from, to, ());
+        self.inner.insert_edge_by_value(from, to, ());
     }
 
-    /// Removes a node from the graph. Returns whether the node was present in the graph.
+    /// Removes a node from the graph. Returns `true` if the node was present in the graph.
     ///
     /// # Example
     /// ```
@@ -141,11 +164,11 @@ impl<N> DiGraph<N> {
     ///
     /// assert!(graph.contains_node(&foo));
     ///
-    /// assert!(graph.remove_node(&foo));
+    /// graph.remove_node(&foo);
     ///
     /// assert!(!graph.contains_node(&foo));
     ///
-    /// assert!(!graph.remove_node(&foo));
+    /// graph.remove_node(&foo);
     /// ```
     pub fn remove_node(&mut self, node: &N) -> bool
     where
@@ -299,15 +322,39 @@ impl<N> DiGraph<N> {
         }
     }
 
+    /// Returns the number of neighbors `node` has.
+    ///
+    /// # Panics
+    /// Panics if `node` is not present in the graph.
+    ///
+    /// # Example
+    /// ```
+    /// use rust_dsa::DiGraph;
+    ///
+    /// let graph = DiGraph::from([
+    ///     (1, 2),
+    ///     (1, 3),
+    ///     (1, 4),
+    ///     (4, 3),
+    ///     (3, 2),
+    /// ]);
+    ///
+    /// assert_eq!(graph.count_neighbors_of(&1), 3);
+    /// ```
+    pub fn count_neighbors_of(&self, node: &N) -> usize
+    where
+        N: Hash + Eq,
+    {
+        self.inner.count_neighbors_of(node)
+    }
+
     /// Returns an iterator visiting the graph's edges in an arbitrary order.
     ///
     /// # Example
     /// ```
     /// use rust_dsa::DiGraph;
     ///
-    /// let mut graph = DiGraph::new();
-    /// graph.insert_edge(&1, &3);
-    /// graph.insert_edge(&3, &2);
+    /// let graph = DiGraph::from([(1, 3), (3, 2)]);
     ///
     /// for (from, to) in graph.edges() {
     ///     // Prints "1 -> 3" and "3 -> 2" in an arbitrary order
@@ -376,7 +423,7 @@ where
     fn from(edges: [(N, N); M]) -> DiGraph<N> {
         let mut graph = DiGraph::new();
         for (from, to) in edges {
-            graph.insert_edge(&from, &to);
+            graph.insert_edge_by_value(from, to);
         }
         graph
     }
@@ -407,9 +454,7 @@ impl<'a, N> IntoIterator for &'a DiGraph<N> {
     type IntoIter = Iter<'a, N>;
     type Item = &'a N;
     fn into_iter(self) -> Self::IntoIter {
-        Iter {
-            nodes: self.inner.node_to_id.keys().collect(),
-        }
+        (&self.inner).into_iter()
     }
 }
 

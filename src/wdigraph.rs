@@ -1,4 +1,5 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
+use std::fmt::Debug;
 use std::hash::Hash;
 
 #[allow(unused_imports)]
@@ -36,11 +37,8 @@ use crate::{DiGraph, Graph, WeightedGraph};
 /// assert_eq!(graph.get_edge(&'a', &'c'), Some(&1));
 /// assert_eq!(graph.get_edge(&'c', &'b'), Some(&4));
 ///
-/// // Missing edge nodes are automatically inserted.
-/// graph.insert_edge(&'a', &'z', -1);
-///
-/// assert!(graph.contains_node(&'z'));
-/// assert!(graph.contains_edge(&'a', &'z'));
+/// // Edges and nodes can be inserted together.
+/// graph.insert_edge_by_value('a', 'z', -1);
 ///
 /// // Edges can be removed.
 /// graph.remove_edge(&'a', &'z');
@@ -74,11 +72,12 @@ use crate::{DiGraph, Graph, WeightedGraph};
 #[derive(Clone)]
 pub struct WeightedDiGraph<N, E> {
     // first, map each node to an id
-    pub(crate) node_to_id: HashMap<N, usize>,
-    pub(crate) id_to_node: HashMap<usize, N>,
+    node_to_id: HashMap<N, usize>,
+    id_to_node: HashMap<usize, N>,
 
     // then represent the graph with adjacency lists of ids
-    pub(crate) edges: HashMap<usize, HashMap<usize, E>>,
+    edges: HashMap<usize, HashMap<usize, E>>,
+    edges_inv: HashMap<usize, HashSet<usize>>,
 
     counter: usize,
 }
@@ -87,9 +86,10 @@ impl<N, E> WeightedDiGraph<N, E> {
     /// Creates an empty graph.
     pub fn new() -> WeightedDiGraph<N, E> {
         WeightedDiGraph {
-            edges: HashMap::new(),
             node_to_id: HashMap::new(),
             id_to_node: HashMap::new(),
+            edges: HashMap::new(),
+            edges_inv: HashMap::new(),
             counter: 0,
         }
     }
@@ -113,43 +113,67 @@ impl<N, E> WeightedDiGraph<N, E> {
             self.node_to_id.insert(node.clone(), self.counter);
             self.id_to_node.insert(self.counter, node);
             self.edges.insert(self.counter, HashMap::new());
+            self.edges_inv.insert(self.counter, HashSet::new());
             self.counter += 1;
         }
     }
 
     /// Inserts an edge into the graph.
     ///
-    /// The nodes `from` and `to` will be automatically inserted if they are not already
-    /// in the graph.
+    /// # Panics
+    /// Panics if `from` or `to` is not in the graph.
+    ///
+    /// # Example
+    /// ```
+    /// use rust_dsa::WeightedDiGraph;
+    ///
+    /// let mut graph: WeightedDiGraph<_, _> = [true, false].into_iter().collect();
+    /// graph.insert_edge(&true, &false, 1);
+    ///
+    /// assert!(graph.contains_edge(&true, &false));
+    /// ```
+    pub fn insert_edge(&mut self, from: &N, to: &N, weight: E)
+    where
+        N: Hash + Eq,
+    {
+        let from_id = self
+            .node_to_id
+            .get(from)
+            .expect("node `from` is not in the graph");
+        let to_id = self
+            .node_to_id
+            .get(to)
+            .expect("node `to` is not in the graph");
+        self.edges.get_mut(from_id).unwrap().insert(*to_id, weight);
+        self.edges_inv.get_mut(to_id).unwrap().insert(*from_id);
+    }
+
+    /// Inserts an edge into the graph.
+    ///
+    /// The nodes are inserted if they are not already present in the graph.
     ///
     /// # Example
     /// ```
     /// use rust_dsa::WeightedDiGraph;
     ///
     /// let mut graph = WeightedDiGraph::new();
-    /// graph.insert_edge(&true, &false, 1);
     ///
-    /// assert!(graph.contains_edge(&true, &false));
-    /// assert!(graph.contains_node(&true));
-    /// assert!(graph.contains_node(&false));
+    /// graph.insert_edge_by_value('a', 'b', 1);
+    ///
+    /// assert_eq!(graph.get_edge(&'a', &'b'), Some(&1));
+    /// assert!(graph.contains_node(&'a'));
+    /// assert!(graph.contains_node(&'b'));
     /// ```
-    pub fn insert_edge(&mut self, from: &N, to: &N, weight: E)
+    pub fn insert_edge_by_value(&mut self, from: N, to: N, weight: E)
     where
         N: Clone + Hash + Eq,
     {
-        if !self.contains_node(from) {
-            self.insert_node(from.clone());
-        }
-        if !self.contains_node(to) {
-            self.insert_node(to.clone());
-        }
-
-        let from_id = self.node_to_id[from];
-        let to_id = self.node_to_id[to];
-        self.edges.get_mut(&from_id).unwrap().insert(to_id, weight);
+        self.insert_node(from.clone());
+        self.insert_node(to.clone());
+        self.insert_edge(&from, &to, weight);
     }
 
-    /// Removes a node from the graph. Returns whether the node was present in the graph.
+    /// Removes a node from the graph. Returns `true` if the node was present in the graph.
     ///
     /// # Example
     /// ```
@@ -170,16 +194,12 @@ impl<N, E> WeightedDiGraph<N, E> {
     where
         N: Hash + Eq,
     {
-        // We don't actually update `self.edges`, we just invalidate some
-        // of the ids contained in it. If there's an id in `self.edges` that
-        // doesn't exist in `self.id_to_node`, it can be ignored.
-        //
-        // This means that `self.edges` never decreases in size. Maybe we can
-        // write a function that removes inavlid ids from `self.edges` (sort
-        // of like Vec::shrink_to_fit).
-        if let Some(id) = self.node_to_id.get(node) {
+        if let Some(ref id) = self.node_to_id.remove(node) {
             self.id_to_node.remove(id);
-            self.node_to_id.remove(node);
+            for neighbor_id in &self.edges_inv[id] {
+                self.edges.get_mut(neighbor_id).unwrap().remove(id);
+            }
+            self.edges.remove(id);
             true
         } else {
             false
@@ -206,10 +226,9 @@ impl<N, E> WeightedDiGraph<N, E> {
     where
         N: Hash + Eq,
     {
-        if self.contains_node(from) && self.contains_node(to) {
-            let from_id = self.node_to_id[from];
-            let to_id = self.node_to_id[to];
-            self.edges.get_mut(&from_id).unwrap().remove(&to_id)
+        if let (Some(from_id), Some(to_id)) = (self.node_to_id.get(from), self.node_to_id.get(to)) {
+            self.edges_inv.get_mut(to_id).unwrap().remove(from_id);
+            self.edges.get_mut(from_id).unwrap().remove(to_id)
         } else {
             None
         }
@@ -254,10 +273,8 @@ impl<N, E> WeightedDiGraph<N, E> {
     where
         N: Hash + Eq,
     {
-        if self.contains_node(from) && self.contains_node(to) {
-            let from_id = self.node_to_id[from];
-            let to_id = self.node_to_id[to];
-            self.edges[&from_id].contains_key(&to_id)
+        if let (Some(from_id), Some(to_id)) = (self.node_to_id.get(from), self.node_to_id.get(to)) {
+            self.edges[from_id].contains_key(to_id)
         } else {
             false
         }
@@ -282,10 +299,8 @@ impl<N, E> WeightedDiGraph<N, E> {
     where
         N: Hash + Eq,
     {
-        if self.contains_node(from) && self.contains_node(to) {
-            let from_id = self.node_to_id[from];
-            let to_id = self.node_to_id[to];
-            self.edges[&from_id].get(&to_id)
+        if let (Some(from_id), Some(to_id)) = (self.node_to_id.get(from), self.node_to_id.get(to)) {
+            self.edges[from_id].get(to_id)
         } else {
             None
         }
@@ -341,6 +356,7 @@ impl<N, E> WeightedDiGraph<N, E> {
         self.node_to_id.clear();
         self.id_to_node.clear();
         self.edges.clear();
+        self.edges_inv.clear();
     }
 
     /// Returns an iterator that visits all of `node`'s neighbors.
@@ -377,10 +393,36 @@ impl<N, E> WeightedDiGraph<N, E> {
         WeightedNeighbors {
             neighbors: neighbor_ids
                 .iter()
-                .filter(|(id, _)| self.id_to_node.contains_key(id))
                 .map(|(id, edge)| (&self.id_to_node[id], edge))
                 .collect(),
         }
+    }
+
+    /// Returns the number of neighbors `node` has.
+    ///
+    /// # Panics
+    /// Panics if `node` is not present in the graph.
+    ///
+    /// # Example
+    /// ```
+    /// use rust_dsa::WeightedDiGraph;
+    ///
+    /// let graph = WeightedDiGraph::from([
+    ///     (1, 2, 'a'),
+    ///     (1, 3, 'b'),
+    ///     (1, 4, 'c'),
+    ///     (4, 3, 'd'),
+    ///     (3, 2, 'a'),
+    /// ]);
+    ///
+    /// assert_eq!(graph.count_neighbors_of(&1), 3);
+    /// ```
+    pub fn count_neighbors_of(&self, node: &N) -> usize
+    where
+        N: Hash + Eq,
+    {
+        let node_id = self.node_to_id[node];
+        self.edges[&node_id].len()
     }
 
     /// Returns an iterator visiting the graph's edges in an arbitrary order.
@@ -390,8 +432,8 @@ impl<N, E> WeightedDiGraph<N, E> {
     /// use rust_dsa::WeightedDiGraph;
     ///
     /// let mut graph = WeightedDiGraph::new();
-    /// graph.insert_edge(&1, &3, 'a');
-    /// graph.insert_edge(&3, &2, 'b');
+    /// graph.insert_edge_by_value(1, 3, 'a');
+    /// graph.insert_edge_by_value(3, 2, 'b');
     ///
     /// for (from, to, weight) in graph.edges() {
     ///     // Prints "1 -> 3 (a)" and "3 -> 2 (b)" in an arbitrary order
@@ -401,17 +443,12 @@ impl<N, E> WeightedDiGraph<N, E> {
     pub fn edges(&self) -> WeightedEdges<'_, N, E> {
         let mut edges = Vec::new();
         for (node_id, neighbor_ids) in &self.edges {
-            if !self.id_to_node.contains_key(node_id) {
-                continue;
-            }
             for (neighbor_id, weight) in neighbor_ids {
-                if self.id_to_node.contains_key(neighbor_id) {
-                    edges.push((
-                        &self.id_to_node[node_id],
-                        &self.id_to_node[neighbor_id],
-                        weight,
-                    ));
-                }
+                edges.push((
+                    &self.id_to_node[node_id],
+                    &self.id_to_node[neighbor_id],
+                    weight,
+                ));
             }
         }
         WeightedEdges { edges }
@@ -435,19 +472,21 @@ where
     /// ```
     /// use rust_dsa::WeightedDiGraph;
     ///
-    /// let mut a = WeightedDiGraph::new();
+    /// let graph: WeightedDiGraph<_, _> = [1, 2, 3].into_iter().collect();
+    ///
+    /// let mut a = graph.clone();
     /// a.insert_edge(&1, &2, 'a');
     /// a.insert_edge(&3, &2, 'b');
     /// a.insert_edge(&2, &1, 'c');
     /// a.remove_edge(&1, &2);
     ///
-    /// let mut b: WeightedDiGraph<_, _> = [1, 2, 3].into_iter().collect();
+    /// let mut b = graph.clone();
     /// b.insert_edge(&3, &2, 'b');
     /// b.insert_edge(&2, &1, 'c');
     ///
     /// assert!(a == b);
     ///
-    /// let mut c = WeightedDiGraph::new();
+    /// let mut c = graph.clone();
     /// c.insert_edge(&1, &2, 'a');
     /// c.insert_edge(&3, &2, 'b');
     /// c.insert_edge(&2, &1, 'c');
@@ -455,7 +494,7 @@ where
     /// assert!(a != c);
     /// assert!(b != c);
     ///
-    /// let mut d = WeightedDiGraph::new();
+    /// let mut d = graph.clone();
     /// d.insert_edge(&1, &2, 'a');
     /// d.insert_edge(&3, &2, 'b');
     /// d.insert_edge(&2, &1, 'z');
@@ -468,44 +507,17 @@ where
             return false;
         }
 
-        for (node, id) in &self.node_to_id {
-            if let Some(other_id) = other.node_to_id.get(node) {
-                let edges = self.edges.get(id).unwrap();
-                let other_edges = other.edges.get(other_id).unwrap();
-                if edges
-                    .iter()
-                    .filter(|(id, _)| self.id_to_node.contains_key(id))
-                    .count()
-                    != other_edges
-                        .iter()
-                        .filter(|(id, _)| other.id_to_node.contains_key(id))
-                        .count()
-                {
-                    // different number of edges out of `node`
+        for node in self {
+            if !other.contains_node(node) {
+                return false;
+            }
+            if self.count_neighbors_of(node) != other.count_neighbors_of(node) {
+                return false;
+            }
+            for (neighbor, weight) in self.neighbors_of(node) {
+                if other.get_edge(node, neighbor) != Some(weight) {
                     return false;
                 }
-                for (neighbor_id, weight) in edges {
-                    if let Some(neighbor) = self.id_to_node.get(neighbor_id) {
-                        if let Some(other_neighbor_id) = other.node_to_id.get(neighbor) {
-                            if let Some(other_weight) = other_edges.get(other_neighbor_id) {
-                                if weight != other_weight {
-                                    // weight between `node` and `neighbor` in `self` does not
-                                    // equal weight between `node` and `neighbor` in `other`
-                                    return false;
-                                }
-                            } else {
-                                // no edge between `node` and `neighbor` in `other`
-                                return false;
-                            }
-                        } else {
-                            // `neighbor` not in `other`
-                            return false;
-                        }
-                    }
-                }
-            } else {
-                // `node` not in `other`
-                return false;
             }
         }
         true
@@ -522,9 +534,17 @@ where
     fn from(edges: [(N, N, E); M]) -> WeightedDiGraph<N, E> {
         let mut graph = WeightedDiGraph::new();
         for (from, to, weight) in edges {
-            graph.insert_edge(&from, &to, weight);
+            graph.insert_edge_by_value(from, to, weight);
         }
         graph
+    }
+}
+
+impl<N: Debug, E: Debug> Debug for WeightedDiGraph<N, E> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        writeln!(f, "   id_to_node: {:?}", self.id_to_node)?;
+        writeln!(f, "   edges:      {:?}", self.edges)?;
+        write!(f, "   edges_inv:  {:?}", self.edges)
     }
 }
 
@@ -539,16 +559,19 @@ where
         let mut node_to_id = HashMap::new();
         let mut id_to_node = HashMap::new();
         let mut edges = HashMap::new();
+        let mut edges_inv = HashMap::new();
         for node in iter {
             node_to_id.insert(node.clone(), counter);
             id_to_node.insert(counter, node);
             edges.insert(counter, HashMap::new());
+            edges_inv.insert(counter, HashSet::new());
             counter += 1;
         }
         WeightedDiGraph {
             node_to_id,
             id_to_node,
             edges,
+            edges_inv,
             counter,
         }
     }
@@ -586,7 +609,7 @@ impl<N> Iterator for IntoIter<N> {
 }
 
 pub struct Iter<'a, N: 'a> {
-    pub(crate) nodes: Vec<&'a N>,
+    nodes: Vec<&'a N>,
 }
 
 impl<'a, N> Iterator for Iter<'a, N> {

@@ -37,8 +37,8 @@ use crate::{DiGraph, Graph};
 /// assert_eq!(graph.get_edge(&'a', &'c'), Some(&1));
 /// assert_eq!(graph.get_edge(&'c', &'b'), Some(&4));
 ///
-/// // Missing edge nodes are automatically inserted.
-/// graph.insert_edge(&'a', &'z', -1);
+/// // Edges and nodes can be inserted at the same time.
+/// graph.insert_edge_by_value('a', 'z', -1);
 ///
 /// assert!(graph.contains_node(&'z'));
 /// assert!(graph.contains_edge(&'a', &'z'));
@@ -112,30 +112,55 @@ impl<N, E> WeightedGraph<N, E> {
 
     /// Inserts an edge into the graph.
     ///
-    /// The nodes `from` and `to` will be automatically inserted if they are not already
-    /// in the graph.
+    /// # Panics
+    /// Panics if `u` or `v` is not in the graph.
     ///
     /// # Example
     /// ```
     /// use rust_dsa::WeightedGraph;
     ///
-    /// let mut graph = WeightedGraph::new();
+    /// let mut graph: WeightedGraph<_, _> = [true, false].into_iter().collect();
     /// graph.insert_edge(&true, &false, 'a');
     ///
     /// assert!(graph.contains_edge(&true, &false));
-    /// assert!(graph.contains_node(&true));
-    /// assert!(graph.contains_node(&false));
+    /// assert!(graph.contains_edge(&false, &true));
     /// ```
     pub fn insert_edge(&mut self, u: &N, v: &N, weight: E)
     where
-        N: Clone + Hash + Eq,
+        N: Hash + Eq,
         E: Clone,
     {
         self.inner.insert_edge(u, v, weight.clone());
         self.inner.insert_edge(v, u, weight);
     }
 
-    /// Removes a node from the graph. Returns whether the node was present in the graph.
+    /// Inserts an edge into the graph.
+    ///
+    /// The nodes are inserted if they are not already present in the graph.
+    ///
+    /// # Example
+    /// ```
+    /// use rust_dsa::WeightedGraph;
+    ///
+    /// let mut graph = WeightedGraph::new();
+    ///
+    /// graph.insert_edge_by_value('a', 'b', 1);
+    ///
+    /// assert_eq!(graph.get_edge(&'a', &'b'), Some(&1));
+    /// assert!(graph.contains_node(&'a'));
+    /// assert!(graph.contains_node(&'b'));
+    /// ```
+    pub fn insert_edge_by_value(&mut self, u: N, v: N, weight: E)
+    where
+        N: Clone + Hash + Eq,
+        E: Clone,
+    {
+        self.inner
+            .insert_edge_by_value(u.clone(), v.clone(), weight.clone());
+        self.inner.insert_edge_by_value(v, u, weight);
+    }
+
+    /// Removes a node from the graph. Returns `true` if the node was present in the graph.
     ///
     /// # Example
     /// ```
@@ -331,6 +356,32 @@ impl<N, E> WeightedGraph<N, E> {
         self.inner.neighbors_of(node)
     }
 
+    /// Returns the number of neighbors `node` has.
+    ///
+    /// # Panics
+    /// Panics if `node` is not present in the graph.
+    ///
+    /// # Example
+    /// ```
+    /// use rust_dsa::WeightedGraph;
+    ///
+    /// let graph = WeightedGraph::from([
+    ///     (1, 2, 'a'),
+    ///     (1, 3, 'b'),
+    ///     (1, 4, 'c'),
+    ///     (4, 3, 'd'),
+    ///     (3, 2, 'e'),
+    /// ]);
+    ///
+    /// assert_eq!(graph.count_neighbors_of(&1), 3);
+    /// ```
+    pub fn count_neighbors_of(&self, node: &N) -> usize
+    where
+        N: Hash + Eq,
+    {
+        self.inner.count_neighbors_of(node)
+    }
+
     /// Returns an iterator visiting the graph's edges in an arbitrary order.
     ///
     /// Each edge appears twice: once in either direction.
@@ -340,8 +391,8 @@ impl<N, E> WeightedGraph<N, E> {
     /// use rust_dsa::WeightedGraph;
     ///
     /// let mut graph = WeightedGraph::new();
-    /// graph.insert_edge(&1, &3, 'a');
-    /// graph.insert_edge(&3, &2, 'b');
+    /// graph.insert_edge_by_value(1, 3, 'a');
+    /// graph.insert_edge_by_value(3, 2, 'b');
     ///
     /// for (from, to, weight) in graph.edges() {
     ///     // Prints "1 -> 3 (a)", "3 -> 1 (a)", "3 -> 2 (b)" and
@@ -363,8 +414,8 @@ impl<N, E> WeightedGraph<N, E> {
     /// use rust_dsa::WeightedGraph;
     ///
     /// let mut graph = WeightedGraph::new();
-    /// graph.insert_edge(&1, &3, 'a');
-    /// graph.insert_edge(&3, &2, 'b');
+    /// graph.insert_edge_by_value(1, 3, 'a');
+    /// graph.insert_edge_by_value(3, 2, 'b');
     ///
     /// for (from, to, weight) in graph.edges() {
     ///     // Prints "1 -> 3 (a)" or "3 -> 1 (a)" and "3 -> 2 (b)" or "2 -> 3 (b)"
@@ -400,17 +451,19 @@ where
     /// ```
     /// use rust_dsa::WeightedGraph;
     ///
-    /// let mut a = WeightedGraph::new();
+    /// let graph: WeightedGraph<_, _> = [1, 2, 3].into_iter().collect();
+    ///
+    /// let mut a = graph.clone();
     /// a.insert_edge(&1, &2, 'a');
     /// a.insert_edge(&3, &2, 'b');
     /// a.remove_edge(&2, &1);
     ///
-    /// let mut b: WeightedGraph<_, _> = [1, 2, 3].into_iter().collect();
+    /// let mut b = graph.clone();
     /// b.insert_edge(&3, &2, 'b');
     ///
     /// assert!(a == b);
     ///
-    /// let mut c = WeightedGraph::new();
+    /// let mut c = graph.clone();
     /// c.insert_node(1);
     /// c.insert_edge(&3, &2, 'b');
     /// c.insert_node(4);
@@ -437,7 +490,7 @@ where
     fn from(edges: [(N, N, E); M]) -> WeightedGraph<N, E> {
         let mut graph = WeightedGraph::new();
         for (from, to, weight) in edges {
-            graph.insert_edge(&from, &to, weight);
+            graph.insert_edge_by_value(from, to, weight);
         }
         graph
     }
@@ -468,9 +521,7 @@ impl<'a, N, E> IntoIterator for &'a WeightedGraph<N, E> {
     type IntoIter = Iter<'a, N>;
     type Item = &'a N;
     fn into_iter(self) -> Self::IntoIter {
-        Iter {
-            nodes: self.inner.node_to_id.keys().collect(),
-        }
+        (&self.inner).into_iter()
     }
 }
 

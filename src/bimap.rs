@@ -327,7 +327,7 @@ where
     R: Hash + Eq,
 {
     fn from_iter<I: IntoIterator<Item = Item<L, R>>>(iter: I) -> BiMap<L, R> {
-        let mut iter = iter.into_iter();
+        let iter = iter.into_iter();
         let mut map = BiMap::with_capacity(iter.size_hint().0);
         for (left, right) in iter {
             map.insert(left, right);

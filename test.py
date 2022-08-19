@@ -1,15 +1,22 @@
 import os, sys
 
 def main():
-    both = "-dr" in sys.argv or "-rd" in sys.argv
-    doc = both or "--doc" in sys.argv or "-d" in sys.argv
-    release = both or "--release" in sys.argv or "-r" in sys.argv
+    argv = sys.argv
+    other = None
+    if "--" in argv:
+        i = argv.index("--")
+        argv, other = argv[:i], argv[i + 1:]
+    both = "-dr" in argv or "-rd" in argv
+    doc = both or "--doc" in argv or "-d" in argv
+    release = both or "--release" in argv or "-r" in argv
 
     if doc:
+        cmd = "cargo test --doc"
         if release:
-            os.system("cargo test --doc --release")
-        else:
-            os.system("cargo test --doc")
+            cmd += " --release"
+        if other :
+            cmd += " -- " + " ".join(other)
+        os.system(cmd)
         return
 
     cwd = os.getcwd()
@@ -39,10 +46,12 @@ def main():
     with open(src + "/lib.rs", "a") as lib:
         lib.write("\nmod tests;\n")
 
+    cmd = "cargo test"
     if release:
-        os.system("cargo test --release")
-    else:
-        os.system("cargo test")
+        cmd += " --release"
+    if other:
+        cmd += " -- " + " ".join(other)
+    os.system(cmd)
 
     with open(src + "/lib.rs", "w") as lib:
         lib.write(lib_before)

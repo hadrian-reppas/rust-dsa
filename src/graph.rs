@@ -44,8 +44,8 @@ use crate::{DiGraph, WeightedGraph};
 /// assert!(graph.contains_edge(&'c', &'a'));
 /// assert!(graph.contains_edge(&'b', &'c'));
 ///
-/// // Missing edge nodes are automatically inserted.
-/// graph.insert_edge(&'a', &'z');
+/// // Edges and nodes can be inserted together.
+/// graph.insert_edge_by_value('a', 'z');
 ///
 /// assert!(graph.contains_node(&'z'));
 /// assert!(graph.contains_edge(&'a', &'z'));
@@ -121,29 +121,55 @@ impl<N> Graph<N> {
 
     /// Inserts an edge into the graph.
     ///
-    /// The nodes `u` and `v` will be automatically inserted if they are not already
-    /// in the graph.
+    /// # Panics
+    /// Panics if `u` or `v` is not in the graph.
     ///
     /// # Example
     /// ```
     /// use rust_dsa::Graph;
     ///
     /// let mut graph = Graph::new();
+    /// graph.insert_node(true);
+    /// graph.insert_node(false);
+    ///
     /// graph.insert_edge(&true, &false);
     ///
     /// assert!(graph.contains_edge(&true, &false));
-    /// assert!(graph.contains_node(&true));
-    /// assert!(graph.contains_node(&false));
+    /// assert!(graph.contains_edge(&false, &true));
     /// ```
     pub fn insert_edge(&mut self, u: &N, v: &N)
     where
-        N: Clone + Hash + Eq,
+        N: Hash + Eq,
     {
         self.inner.insert_edge(u, v, ());
         self.inner.insert_edge(v, u, ());
     }
 
-    /// Removes a node from the graph. Returns whether the node was present in the graph.
+    /// Inserts an edge into the graph.
+    ///
+    /// The nodes are inserted if they are not already present in the graph.
+    ///
+    /// # Example
+    /// ```
+    /// use rust_dsa::Graph;
+    ///
+    /// let mut graph = Graph::new();
+    ///
+    /// graph.insert_edge_by_value('a', 'b');
+    ///
+    /// assert!(graph.contains_edge(&'a', &'b'));
+    /// assert!(graph.contains_node(&'a'));
+    /// assert!(graph.contains_node(&'b'));
+    /// ```
+    pub fn insert_edge_by_value(&mut self, u: N, v: N)
+    where
+        N: Clone + Hash + Eq,
+    {
+        self.inner.insert_edge_by_value(u.clone(), v.clone(), ());
+        self.inner.insert_edge_by_value(v, u, ());
+    }
+
+    /// Removes a node from the graph. Returns `true` if the node was present in the graph.
     ///
     /// # Example
     /// ```
@@ -158,11 +184,11 @@ impl<N> Graph<N> {
     ///
     /// assert!(graph.contains_node(&foo));
     ///
-    /// assert!(graph.remove_node(&foo));
+    /// graph.remove_node(&foo);
     ///
     /// assert!(!graph.contains_node(&foo));
     ///
-    /// assert!(!graph.remove_node(&foo));
+    /// graph.remove_node(&foo);
     /// ```
     pub fn remove_node(&mut self, node: &N) -> bool
     where
@@ -317,6 +343,32 @@ impl<N> Graph<N> {
         }
     }
 
+    /// Returns the number of neighbors `node` has.
+    ///
+    /// # Panics
+    /// Panics if `node` is not present in the graph.
+    ///
+    /// # Example
+    /// ```
+    /// use rust_dsa::Graph;
+    ///
+    /// let graph = Graph::from([
+    ///     (1, 2),
+    ///     (1, 3),
+    ///     (1, 4),
+    ///     (4, 3),
+    ///     (3, 2),
+    /// ]);
+    ///
+    /// assert_eq!(graph.count_neighbors_of(&1), 3);
+    /// ```
+    pub fn count_neighbors_of(&self, node: &N) -> usize
+    where
+        N: Hash + Eq,
+    {
+        self.inner.count_neighbors_of(node)
+    }
+
     /// Returns an iterator visiting the graph's edges in an arbitrary order.
     ///
     /// Each edge appears twice: once in either direction.
@@ -325,9 +377,7 @@ impl<N> Graph<N> {
     /// ```
     /// use rust_dsa::Graph;
     ///
-    /// let mut graph = Graph::new();
-    /// graph.insert_edge(&1, &3);
-    /// graph.insert_edge(&3, &2);
+    /// let graph = Graph::from([(1, 3), (3, 2)]);
     ///
     /// for (u, v) in graph.edges() {
     ///     // Prints "1 -> 3", "3 -> 1", "3 -> 2" and
@@ -350,9 +400,7 @@ impl<N> Graph<N> {
     /// ```
     /// use rust_dsa::Graph;
     ///
-    /// let mut graph = Graph::new();
-    /// graph.insert_edge(&1, &3);
-    /// graph.insert_edge(&3, &2);
+    /// let graph = Graph::from([(1, 3), (3, 2)]);
     ///
     /// for (u, v) in graph.unique_edges() {
     ///     // Prints "1 -> 3" or "3 -> 1" and "3 -> 2" or "2 -> 3"
@@ -390,9 +438,9 @@ where
     /// use rust_dsa::Graph;
     ///
     /// let mut a = Graph::new();
-    /// a.insert_edge(&1, &2);
-    /// a.insert_edge(&3, &2);
-    /// a.insert_edge(&1, &2);
+    /// a.insert_edge_by_value(1, 2);
+    /// a.insert_edge_by_value(3, 2);
+    /// a.insert_edge(&2, &1);
     /// a.remove_edge(&2, &1);
     ///
     /// let mut b: Graph<_> = [1, 2, 3].into_iter().collect();
@@ -415,7 +463,7 @@ where
     fn from(edges: [(N, N); M]) -> Graph<N> {
         let mut graph = Graph::new();
         for (from, to) in edges {
-            graph.insert_edge(&from, &to);
+            graph.insert_edge_by_value(from, to);
         }
         graph
     }
@@ -446,9 +494,7 @@ impl<'a, N> IntoIterator for &'a Graph<N> {
     type IntoIter = Iter<'a, N>;
     type Item = &'a N;
     fn into_iter(self) -> Self::IntoIter {
-        Iter {
-            nodes: self.inner.node_to_id.keys().collect(),
-        }
+        (&self.inner).into_iter()
     }
 }
 
