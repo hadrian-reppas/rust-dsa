@@ -107,7 +107,7 @@ impl<N, E> DiGraph<N, E> {
         self.insert_node_internal(node);
     }
 
-    fn insert_node_internal(&mut self, node: N) -> usize
+    pub(crate) fn insert_node_internal(&mut self, node: N) -> usize
     where
         N: Hash + Eq,
     {
@@ -120,6 +120,16 @@ impl<N, E> DiGraph<N, E> {
             self.counter += 1;
             self.counter - 1
         }
+    }
+
+    pub(crate) fn insert_edge_by_id(
+        &mut self,
+        from_id: usize,
+        to_id: usize,
+        weight: E,
+    ) -> Option<E> {
+        self.edges_inv.get_mut(&to_id).unwrap().insert(from_id);
+        self.edges.get_mut(&from_id).unwrap().insert(to_id, weight)
     }
 
     /// Inserts an edge into the graph.
@@ -467,6 +477,25 @@ impl<N, E> DiGraph<N, E> {
             }
         }
         Edges { edges }
+    }
+
+    /// Returns the number of edges in the graph.
+    ///
+    /// # Example
+    /// ```
+    /// use rust_dsa::DiGraph;
+    ///
+    /// let graph = DiGraph::from([(1, 2, ()), (2, 3, ()), (2, 1, ())]);
+    ///
+    /// assert_eq!(graph.count_edges(), 3);
+    /// ```
+    pub fn count_edges(&self) -> usize {
+        self.edges.iter().map(|(_, s)| s.len()).sum()
+    }
+
+    /// Returns an iterator over the nodes in the graph.
+    pub fn iter(&self) -> Iter<'_, N> {
+        self.into_iter()
     }
 }
 

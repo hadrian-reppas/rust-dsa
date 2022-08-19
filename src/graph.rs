@@ -1,5 +1,5 @@
-use crate::digraph::{DiGraph, IntoIter, Iter, Neighbors};
-use std::collections::HashSet;
+use crate::digraph::{DiGraph, IntoIter, Iter};
+use std::collections::{HashMap, HashSet};
 use std::hash::Hash;
 
 /// A weighted graph.
@@ -68,7 +68,9 @@ use std::hash::Hash;
 /// }
 /// ```
 pub struct Graph<N, E> {
-    inner: DiGraph<N, E>,
+    inner: DiGraph<N, usize>,
+    weights: HashMap<usize, E>,
+    counter: usize,
 }
 
 impl<N, E> Graph<N, E> {
@@ -76,6 +78,8 @@ impl<N, E> Graph<N, E> {
     pub fn new() -> Graph<N, E> {
         Graph {
             inner: DiGraph::new(),
+            weights: HashMap::new(),
+            counter: 0,
         }
     }
 
@@ -92,12 +96,14 @@ impl<N, E> Graph<N, E> {
     /// ```
     pub fn insert_node(&mut self, node: N)
     where
-        N: Clone + Hash + Eq,
+        N: Hash + Eq,
     {
         self.inner.insert_node(node);
     }
 
     /// Inserts an edge into the graph.
+    ///
+    /// Returns the old weight if the graph already contained the edge.
     ///
     /// # Panics
     /// Panics if `u` or `v` is not in the graph.
@@ -112,18 +118,28 @@ impl<N, E> Graph<N, E> {
     /// assert!(graph.contains_edge(&true, &false));
     /// assert!(graph.contains_edge(&false, &true));
     /// ```
-    pub fn insert_edge(&mut self, u: &N, v: &N, weight: E)
+    pub fn insert_edge(&mut self, u: &N, v: &N, weight: E) -> Option<E>
     where
         N: Hash + Eq,
-        E: Clone,
     {
-        self.inner.insert_edge(u, v, weight.clone());
-        self.inner.insert_edge(v, u, weight);
+        if !self.contains_node(u) {
+            panic!("node `u` is not in the graph");
+        }
+        if !self.contains_node(v) {
+            panic!("node `v` is not in the graph");
+        }
+
+        let old_weight_id = self.inner.insert_edge(u, v, self.counter);
+        self.inner.insert_edge(v, u, self.counter);
+        self.weights.insert(self.counter, weight);
+        self.counter += 1;
+        old_weight_id.and_then(|id| self.weights.remove(&id))
     }
 
-    /// Inserts an edge into the graph.
+    /// Inserts an edge into the graph. The nodes are inserted if they are not already
+    /// present in the graph.
     ///
-    /// The nodes are inserted if they are not already present in the graph.
+    /// Returns the old weight if the graph already contained the edge.
     ///
     /// # Example
     /// ```
@@ -137,14 +153,17 @@ impl<N, E> Graph<N, E> {
     /// assert!(graph.contains_node(&'a'));
     /// assert!(graph.contains_node(&'b'));
     /// ```
-    pub fn insert_edge_by_value(&mut self, u: N, v: N, weight: E)
+    pub fn insert_edge_by_value(&mut self, u: N, v: N, weight: E) -> Option<E>
     where
-        N: Clone + Hash + Eq,
-        E: Clone,
+        N: Hash + Eq,
     {
-        self.inner
-            .insert_edge_by_value(u.clone(), v.clone(), weight.clone());
-        self.inner.insert_edge_by_value(v, u, weight);
+        let u_id = self.inner.insert_node_internal(u);
+        let v_id = self.inner.insert_node_internal(v);
+        let old_weight_id = self.inner.insert_edge_by_id(u_id, v_id, self.counter);
+        self.inner.insert_edge_by_id(v_id, u_id, self.counter);
+        self.weights.insert(self.counter, weight);
+        self.counter += 1;
+        old_weight_id.and_then(|id| self.weights.remove(&id))
     }
 
     /// Removes a node from the graph. Returns `true` if the node was present in the graph.
@@ -194,7 +213,9 @@ impl<N, E> Graph<N, E> {
         N: Hash + Eq,
     {
         self.inner.remove_edge(u, v);
-        self.inner.remove_edge(v, u)
+        self.inner
+            .remove_edge(v, u)
+            .and_then(|id| self.weights.remove(&id))
     }
 
     /// Returns `true` if the graph contains `node`.
@@ -258,7 +279,9 @@ impl<N, E> Graph<N, E> {
     where
         N: Hash + Eq,
     {
-        self.inner.get_edge(u, v)
+        self.inner
+            .get_edge(u, v)
+            .and_then(|id| self.weights.get(id))
     }
 
     /// Returns the number of nodes in the graph.
@@ -340,7 +363,11 @@ impl<N, E> Graph<N, E> {
     where
         N: Hash + Eq,
     {
-        self.inner.neighbors_of(node)
+        let mut neighbors = Vec::new();
+        for (neighbor, weight_id) in self.inner.neighbors_of(node) {
+            neighbors.push((neighbor, self.weights.get(weight_id).unwrap()));
+        }
+        Neighbors { neighbors }
     }
 
     /// Returns the number of neighbors `node` has.
@@ -392,10 +419,35 @@ impl<N, E> Graph<N, E> {
     where
         N: Hash + Eq,
     {
-        Edges {
-            inner: self.inner.edges(),
-            seen: HashSet::new(),
+        let mut edges = Vec::new();
+        let mut seen = HashSet::new();
+        for (from, to, weight_id) in self.inner.edges() {
+            if !seen.contains(from) {
+                edges.push((from, to, self.weights.get(weight_id).unwrap()));
+                seen.insert(to);
+            }
         }
+        Edges { edges }
+    }
+
+    /// Returns the number of edges in the graph
+    ///
+    /// # Example
+    /// ```
+    /// use rust_dsa::Graph;
+    ///
+    /// let mut graph = Graph::from([
+    ///     (1, 2, ()),
+    ///     (2, 3, ()),
+    ///     (2, 1, ()),
+    ///     (3, 4, ())
+    /// ]);
+    /// graph.remove_edge(&3, &4);
+    ///
+    /// assert_eq!(graph.count_edges(), 2);
+    /// ```
+    pub fn count_edges(&self) -> usize {
+        self.weights.len()
     }
 }
 
@@ -440,7 +492,20 @@ where
     /// assert!(a == c);
     /// ```
     fn eq(&self, other: &Graph<N, E>) -> bool {
-        self.inner == other.inner
+        let self_nodes: HashSet<_> = self.inner.iter().collect();
+        let other_nodes: HashSet<_> = other.inner.iter().collect();
+        if self_nodes != other_nodes {
+            return false;
+        }
+        if self.count_edges() != other.count_edges() {
+            return false;
+        }
+        for (u, v, weight) in self.edges() {
+            if other.get_edge(u, v) != Some(weight) {
+                return false;
+            }
+        }
+        true
     }
 }
 
@@ -459,6 +524,8 @@ where
     fn clone(&self) -> Graph<N, E> {
         Graph {
             inner: self.inner.clone(),
+            weights: self.weights.clone(),
+            counter: self.counter,
         }
     }
 }
@@ -487,6 +554,8 @@ where
     fn from_iter<I: IntoIterator<Item = N>>(iter: I) -> Graph<N, E> {
         Graph {
             inner: DiGraph::from_iter(iter),
+            weights: HashMap::new(),
+            counter: 0,
         }
     }
 }
@@ -508,8 +577,7 @@ impl<'a, N, E> IntoIterator for &'a Graph<N, E> {
 }
 
 pub struct Edges<'a, N: 'a, E: 'a> {
-    inner: crate::digraph::Edges<'a, N, E>,
-    seen: HashSet<(&'a N, &'a N)>,
+    edges: Vec<(&'a N, &'a N, &'a E)>,
 }
 
 impl<'a, N, E> Iterator for Edges<'a, N, E>
@@ -518,12 +586,17 @@ where
 {
     type Item = (&'a N, &'a N, &'a E);
     fn next(&mut self) -> Option<Self::Item> {
-        for (from, to, weight) in self.inner.by_ref() {
-            if !self.seen.contains(&(to, from)) {
-                self.seen.insert((from, to));
-                return Some((from, to, weight));
-            }
-        }
-        None
+        self.edges.pop()
+    }
+}
+
+pub struct Neighbors<'a, N: 'a, E: 'a> {
+    neighbors: Vec<(&'a N, &'a E)>,
+}
+
+impl<'a, N, E> Iterator for Neighbors<'a, N, E> {
+    type Item = (&'a N, &'a E);
+    fn next(&mut self) -> Option<Self::Item> {
+        self.neighbors.pop()
     }
 }
