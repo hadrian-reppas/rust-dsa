@@ -106,15 +106,27 @@ impl<N, E> WeightedDiGraph<N, E> {
     where
         N: Hash + Eq,
     {
-        if !self.contains_node(&node) {
+        self.insert_node_internal(node);
+    }
+
+    fn insert_node_internal(&mut self, node: N) -> usize
+    where
+        N: Hash + Eq,
+    {
+        if let Some(&id) = self.map.get_by_left(&node) {
+            id
+        } else {
             self.map.insert(node, self.counter);
             self.edges.insert(self.counter, HashMap::new());
             self.edges_inv.insert(self.counter, HashSet::new());
             self.counter += 1;
+            self.counter - 1
         }
     }
 
     /// Inserts an edge into the graph.
+    ///
+    /// Returns the old weight if the graph already contained the edge.
     ///
     /// # Panics
     /// Panics if `from` or `to` is not in the graph.
@@ -128,7 +140,7 @@ impl<N, E> WeightedDiGraph<N, E> {
     ///
     /// assert!(graph.contains_edge(&true, &false));
     /// ```
-    pub fn insert_edge(&mut self, from: &N, to: &N, weight: E)
+    pub fn insert_edge(&mut self, from: &N, to: &N, weight: E) -> Option<E>
     where
         N: Hash + Eq,
     {
@@ -140,13 +152,14 @@ impl<N, E> WeightedDiGraph<N, E> {
             .map
             .get_by_left(to)
             .expect("node `to` is not in the graph");
-        self.edges.get_mut(from_id).unwrap().insert(*to_id, weight);
         self.edges_inv.get_mut(to_id).unwrap().insert(*from_id);
+        self.edges.get_mut(from_id).unwrap().insert(*to_id, weight)
     }
 
-    /// Inserts an edge into the graph.
+    /// Inserts an edge into the graph. The nodes are inserted if they are not already
+    /// present in the graph.
     ///
-    /// The nodes are inserted if they are not already present in the graph.
+    /// Returns the old weight if the graph already contained the edge.
     ///
     /// # Example
     /// ```
@@ -160,13 +173,14 @@ impl<N, E> WeightedDiGraph<N, E> {
     /// assert!(graph.contains_node(&'a'));
     /// assert!(graph.contains_node(&'b'));
     /// ```
-    pub fn insert_edge_by_value(&mut self, from: N, to: N, weight: E)
+    pub fn insert_edge_by_value(&mut self, from: N, to: N, weight: E) -> Option<E>
     where
-        N: Clone + Hash + Eq,
+        N: Hash + Eq,
     {
-        self.insert_node(from.clone());
-        self.insert_node(to.clone());
-        self.insert_edge(&from, &to, weight);
+        let from_id = self.insert_node_internal(from);
+        let to_id = self.insert_node_internal(to);
+        self.edges_inv.get_mut(&to_id).unwrap().insert(from_id);
+        self.edges.get_mut(&from_id).unwrap().insert(to_id, weight)
     }
 
     /// Removes a node from the graph. Returns `true` if the node was present in the graph.
@@ -551,7 +565,7 @@ where
 
 impl<N, E, const M: usize> From<[(N, N, E); M]> for WeightedDiGraph<N, E>
 where
-    N: Clone + Hash + Eq,
+    N: Hash + Eq,
 {
     /// Creates a graph from an edge list.
     fn from(edges: [(N, N, E); M]) -> WeightedDiGraph<N, E> {
@@ -592,6 +606,7 @@ where
 impl<N, E> IntoIterator for WeightedDiGraph<N, E> {
     type IntoIter = IntoIter<N>;
     type Item = N;
+    /// Creates an iterator over the nodes in the graph.
     fn into_iter(self) -> Self::IntoIter {
         IntoIter {
             nodes: self.map.into_lefts(),
@@ -602,6 +617,7 @@ impl<N, E> IntoIterator for WeightedDiGraph<N, E> {
 impl<'a, N, E> IntoIterator for &'a WeightedDiGraph<N, E> {
     type IntoIter = Iter<'a, N>;
     type Item = &'a N;
+    /// Creates an iterator over the nodes in the graph.
     fn into_iter(self) -> Self::IntoIter {
         Iter {
             nodes: self.map.lefts(),
