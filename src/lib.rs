@@ -21,8 +21,6 @@ mod toposort;
 mod trie;
 mod unionfind;
 mod vlist;
-mod wdigraph;
-mod wgraph;
 
 pub use bimap::{BiMap, Removed};
 pub use binomialheap::BinomialHeap;
@@ -47,5 +45,3 @@ pub use toposort::{is_topological_sort, topological_sort};
 pub use trie::{GenericTrie, Trie};
 pub use unionfind::UnionFind;
 pub use vlist::VList;
-pub use wdigraph::WeightedDiGraph;
-pub use wgraph::WeightedGraph;

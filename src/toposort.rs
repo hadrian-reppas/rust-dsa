@@ -14,7 +14,7 @@ use std::hash::Hash;
 /// //    +---+      +---+      +---+
 /// //    |'a'| ---> |'b'| ---> |'c'|
 /// //    +---+      +---+      +---+
-/// let no_cycle = DiGraph::from([('a', 'b'), ('b', 'c')]);
+/// let no_cycle = DiGraph::from([('a', 'b', ()), ('b', 'c', ())]);
 ///
 /// assert_eq!(
 ///     topological_sort(&no_cycle),
@@ -31,10 +31,10 @@ use std::hash::Hash;
 /// //      +------- | 3 | ---> | 4 |
 /// //               +---+      +---+
 /// let with_cycle = DiGraph::from([
-///     (1, 2),
-///     (2, 3),
-///     (3, 4),
-///     (3, 1),
+///     (1, 2, ()),
+///     (2, 3, ()),
+///     (3, 4, ()),
+///     (3, 1, ()),
 /// ]);
 ///
 /// // `with_cycle` contains a cycle so `topological_sort` returns `None`
@@ -46,23 +46,23 @@ use std::hash::Hash;
 /// use rust_dsa::is_topological_sort;
 ///
 /// let big_graph = DiGraph::from([
-///     (1, 2),
-///     (2, 3),
-///     (4, 3),
-///     (3, 5),
-///     (5, 6),
-///     (6, 7),
-///     (7, 8),
-///     (5, 9),
-///     (9, 10),
-///     (5, 10),
-///     (10, 11),
-///     (10, 8),
-///     (5, 12),
-///     (12, 13),
-///     (12, 14),
-///     (12, 8),
-///     (8, 15),
+///     (1, 2, ()),
+///     (2, 3, ()),
+///     (4, 3, ()),
+///     (3, 5, ()),
+///     (5, 6, ()),
+///     (6, 7, ()),
+///     (7, 8, ()),
+///     (5, 9, ()),
+///     (9, 10, ()),
+///     (5, 10, ()),
+///     (10, 11, ()),
+///     (10, 8, ()),
+///     (5, 12, ()),
+///     (12, 13, ()),
+///     (12, 14, ()),
+///     (12, 8, ()),
+///     (8, 15, ()),
 /// ]);
 ///
 /// // `big_graph` is acyclic
@@ -74,7 +74,7 @@ use std::hash::Hash;
 /// # Runtime complexity
 /// This function implements [Kahn's algorithm](https://en.wikipedia.org/wiki/Topological_sorting#Kahn's_algorithm),
 /// so it runs in *O*(*N* + *E*) time where *N* is the number of nodes and *E* is the number of edges.
-pub fn topological_sort<N>(graph: &DiGraph<N>) -> Option<Vec<&N>>
+pub fn topological_sort<N, E>(graph: &DiGraph<N, E>) -> Option<Vec<&N>>
 where
     N: Hash + Eq,
 {
@@ -105,13 +105,13 @@ where
     }
 }
 
-fn get_neighbor_map<N>(graph: &DiGraph<N>) -> HashMap<&N, HashSet<&N>>
+fn get_neighbor_map<N, E>(graph: &DiGraph<N, E>) -> HashMap<&N, HashSet<&N>>
 where
     N: Hash + Eq,
 {
     graph
         .into_iter()
-        .map(|node| (node, graph.neighbors_of(node).collect()))
+        .map(|node| (node, graph.neighbors_of(node).map(|(n, _)| n).collect()))
         .collect()
 }
 
@@ -149,7 +149,7 @@ where
 /// //    +---+      +---+      +---+
 /// //    |'a'| ---> |'b'| ---> |'c'|
 /// //    +---+      +---+      +---+
-/// let graph = DiGraph::from([('a', 'b'), ('b', 'c')]);
+/// let graph = DiGraph::from([('a', 'b', ()), ('b', 'c', ())]);
 ///
 /// assert!(is_topological_sort(
 ///     &graph,
@@ -161,7 +161,7 @@ where
 ///     vec![&'b', &'a', &'c']
 /// ));
 /// ```
-pub fn is_topological_sort<N>(graph: &DiGraph<N>, sort: Vec<&N>) -> bool
+pub fn is_topological_sort<N, E>(graph: &DiGraph<N, E>, sort: Vec<&N>) -> bool
 where
     N: Hash + Eq,
 {
@@ -174,7 +174,7 @@ where
         panic!("duplicate elemnts in `sort`");
     }
 
-    for (from, to) in graph.edges() {
+    for (from, to, _) in graph.edges() {
         if sort_inv[from] > sort_inv[to] {
             return false;
         }
