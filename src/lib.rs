@@ -1,5 +1,3 @@
-#![feature(allocator_api)]
-
 mod bimap;
 mod binomialheap;
 mod bumpalloc;
