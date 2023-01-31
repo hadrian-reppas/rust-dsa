@@ -1,5 +1,9 @@
+#![feature(allocator_api)]
+
 mod bimap;
 mod binomialheap;
+mod bumpalloc;
+mod cycle;
 mod deque;
 mod digraph;
 mod fibheap;
@@ -10,6 +14,7 @@ mod heapsort;
 mod iheap;
 mod insertion_sort;
 mod ivector;
+mod kdtree;
 mod levenshtein;
 mod minqueue;
 mod minstack;
@@ -24,6 +29,8 @@ mod vlist;
 
 pub use bimap::{BiMap, Removed};
 pub use binomialheap::BinomialHeap;
+pub use bumpalloc::BumpAlloc;
+pub use cycle::find_cycle;
 pub use deque::Deque;
 pub use digraph::DiGraph;
 pub use fibheap::FibonacciHeap;
@@ -34,6 +41,7 @@ pub use heapsort::heapsort;
 pub use iheap::IntervalHeap;
 pub use insertion_sort::insertion_sort;
 pub use ivector::ImmutableVector;
+pub use kdtree::KDTree;
 pub use levenshtein::{edit_distance, str_distance};
 pub use minqueue::MinQueue;
 pub use minstack::MinStack;

@@ -1,6 +1,7 @@
-use crate::DiGraph;
 use std::collections::{HashMap, HashSet};
 use std::hash::Hash;
+
+use crate::DiGraph;
 
 /// Returns a [topological sort](http://en.wikipedia.org/wiki/Topological_sorting)
 /// of the graph, if one exists.

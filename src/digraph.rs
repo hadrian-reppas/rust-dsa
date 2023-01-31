@@ -291,12 +291,7 @@ impl<N, E> DiGraph<N, E> {
     where
         N: Hash + Eq,
     {
-        if let (Some(from_id), Some(to_id)) = (self.map.get_by_left(from), self.map.get_by_left(to))
-        {
-            self.edges[from_id].contains_key(to_id)
-        } else {
-            false
-        }
+        self.get_edge(from, to).is_some()
     }
 
     /// Returns a reference to the edge's weight if the graph contains an edge between `from` and `to`.

@@ -320,12 +320,12 @@ impl<L, R> BiMap<L, R> {
         self.into_iter().map(|(left, _)| left).collect()
     }
 
-    /// Returns right vaalues in the map.
+    /// Returns right values in the map.
     pub fn rights(&self) -> Vec<&R> {
         self.iter().map(|(_, right)| right).collect()
     }
 
-    /// Returns right vaalues in the map.
+    /// Returns right values in the map.
     pub fn into_rights(self) -> Vec<R> {
         self.into_iter().map(|(_, right)| right).collect()
     }

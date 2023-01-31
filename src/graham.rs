@@ -1,5 +1,6 @@
-use num_traits::int::PrimInt;
 use std::cmp::Ordering;
+
+use num_traits::int::PrimInt;
 
 type Point<T> = (T, T);
 

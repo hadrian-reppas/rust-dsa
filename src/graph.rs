@@ -1,6 +1,7 @@
-use crate::digraph::{DiGraph, IntoIter, Iter};
 use std::collections::{HashMap, HashSet};
 use std::hash::Hash;
+
+use crate::digraph::{DiGraph, IntoIter, Iter};
 
 /// A weighted graph.
 ///
@@ -448,6 +449,11 @@ impl<N, E> Graph<N, E> {
     /// ```
     pub fn count_edges(&self) -> usize {
         self.weights.len()
+    }
+
+    /// Returns an iterator over the nodes in the graph.
+    pub fn iter(&self) -> Iter<'_, N> {
+        self.into_iter()
     }
 }
 
