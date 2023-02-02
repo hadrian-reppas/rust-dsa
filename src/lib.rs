@@ -1,3 +1,4 @@
+mod anystack;
 mod bimap;
 mod binomialheap;
 mod bumpalloc;
@@ -25,6 +26,7 @@ mod trie;
 mod unionfind;
 mod vlist;
 
+pub use anystack::AnyStack;
 pub use bimap::{BiMap, Removed};
 pub use binomialheap::BinomialHeap;
 pub use bumpalloc::BumpAlloc;
