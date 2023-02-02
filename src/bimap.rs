@@ -471,7 +471,7 @@ impl<'a, L, R> Iterator for Iter<'a, L, R> {
 
 pub type Item<L, R> = (L, R);
 
-/// An enum representing the items remove from a [`BiMap`].
+/// An enum representing the items removed from a [`BiMap`].
 #[derive(PartialEq, Eq, Debug)]
 pub enum Removed<L, R> {
     Nothing,

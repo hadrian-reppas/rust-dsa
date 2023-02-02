@@ -81,7 +81,7 @@ impl<T> BumpAlloc<T> {
     pub fn alloc(&mut self) -> Option<NonNull<T>> {
         let slot = self.queue.pop()?;
         self.free[slot] = false;
-        unsafe { NonNull::new(self.buffer.as_ptr().offset(slot as isize)) }
+        unsafe { NonNull::new(self.buffer.as_ptr().add(slot)) }
     }
 
     /// Frees a slot.
@@ -142,7 +142,7 @@ impl<T> BumpAlloc<T> {
     /// assert_eq!(arena.available_slots(), 100);
     /// ```
     pub fn allocations(&self) -> Allocations<'_, T> {
-        Allocations { ba: &self, n: 0 }
+        Allocations { ba: self, n: 0 }
     }
 
     /// Frees all the currently allocated pointers.
@@ -226,7 +226,7 @@ impl<'a, T> Iterator for Allocations<'a, T> {
         }
 
         if self.ba.free.get(self.n).is_some() {
-            let ptr = unsafe { self.ba.buffer.as_ptr().offset(self.n as isize) };
+            let ptr = unsafe { self.ba.buffer.as_ptr().add(self.n) };
             self.n += 1;
             NonNull::new(ptr)
         } else {
