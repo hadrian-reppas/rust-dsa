@@ -1,4 +1,3 @@
-use std::cmp::Ordering;
 use std::mem::ManuallyDrop;
 
 /// An implementation of the [mergesort](https://en.wikipedia.org/wiki/Merge_sort)
@@ -26,52 +25,65 @@ pub fn mergesort<T>(slice: &mut [T])
 where
     T: Ord,
 {
-    let indices: Vec<_> = (0..slice.len()).collect();
-    let indices = mergesort_impl(&indices, &|a, b| slice[a].cmp(&slice[b]));
-
-    let mut copies = Vec::with_capacity(slice.len());
-    unsafe {
-        for ptr in slice.iter().map(|r| r as *const T) {
-            copies.push(ManuallyDrop::new(ptr.read()));
-        }
-        for (i, index) in indices.into_iter().enumerate() {
-            let ptr = &mut slice[i] as *mut T;
-            ptr.write(ManuallyDrop::take(&mut copies[index]));
-        }
-    }
+    let copies: Vec<_> = slice.iter().map(CursedCell::new).collect();
+    let sorted = mergesort_impl(&copies);
+    unsafe { std::ptr::copy(sorted.as_ptr() as *const T, slice.as_mut_ptr(), slice.len()) }
 }
 
-fn mergesort_impl(indices: &[usize], cmp: &impl Fn(usize, usize) -> Ordering) -> Vec<usize> {
-    if indices.len() < 2 {
-        return indices.to_vec();
+fn mergesort_impl<T>(slice: &[CursedCell<T>]) -> Vec<CursedCell<T>>
+where
+    T: Ord,
+{
+    if slice.len() < 2 {
+        return slice.to_vec();
     }
 
-    let (left, right) = indices.split_at(indices.len() / 2);
-    let left = mergesort_impl(left, cmp);
-    let right = mergesort_impl(right, cmp);
+    let (left, right) = slice.split_at(slice.len() / 2);
+    let left = mergesort_impl(left);
+    let right = mergesort_impl(right);
 
-    let mut out = Vec::with_capacity(indices.len());
+    let mut out = Vec::with_capacity(slice.len());
     let (mut l, mut r) = (0, 0);
 
     while l < left.len() && r < right.len() {
-        if cmp(left[l], right[r]) == Ordering::Greater {
-            out.push(right[r]);
+        if left[l] > right[r] {
+            out.push(right[r].clone());
             r += 1;
         } else {
-            out.push(left[l]);
+            out.push(left[l].clone());
             l += 1;
         }
     }
 
     while l < left.len() {
-        out.push(left[l]);
+        out.push(left[l].clone());
         l += 1;
     }
 
     while r < right.len() {
-        out.push(right[r]);
+        out.push(right[r].clone());
         r += 1;
     }
 
     out
+}
+
+#[repr(transparent)]
+#[derive(PartialEq, Eq, PartialOrd, Ord)]
+struct CursedCell<T>(ManuallyDrop<T>);
+
+impl<T> CursedCell<T> {
+    fn new(val: &T) -> Self {
+        CursedCell(ManuallyDrop::new(unsafe {
+            std::ptr::read(val as *const T)
+        }))
+    }
+}
+
+impl<T> Clone for CursedCell<T> {
+    fn clone(&self) -> Self {
+        let val: &T = &self.0;
+        let inner = unsafe { std::ptr::read(val as *const T) };
+        CursedCell(ManuallyDrop::new(inner))
+    }
 }
