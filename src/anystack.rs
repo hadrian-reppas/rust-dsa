@@ -7,7 +7,7 @@ use std::any::{Any, TypeId};
 /// ```
 /// use rust_dsa::AnyStack;
 ///
-/// // First, we create a new deque
+/// // First, we create a new stack.
 /// let mut stack = AnyStack::new();
 ///
 /// // We can push elements of different types.
@@ -23,7 +23,7 @@ use std::any::{Any, TypeId};
 /// // We can peek the top value.
 /// assert_eq!(stack.peek::<&str>(), Some(&"str"));
 ///
-/// // If we try to peek the wrong type, we get None
+/// // If we try to peek the wrong type, we get None.
 /// assert_eq!(stack.peek::<bool>(), None);
 ///
 /// // We can also pop values.
