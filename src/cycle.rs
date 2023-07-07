@@ -71,7 +71,10 @@ where
                 queue.pop();
                 if lowlink[v] == preorder[v] {
                     let mut scc = vec![v];
-                    while let Some(k) = scc_queue.last().copied() && preorder[k] > preorder[v] {
+                    while let Some(k) = scc_queue.last().copied() {
+                        if preorder[k] <= preorder[v] {
+                            break;
+                        }
                         let k = scc_queue.pop().unwrap();
                         scc.push(k);
                     }
