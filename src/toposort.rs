@@ -38,7 +38,7 @@ use crate::DiGraph;
 ///     (3, 1, ()),
 /// ]);
 ///
-/// // `with_cycle` contains a cycle so `topological_sort` returns `None`
+/// // `with_cycle` contains a cycle so `topological_sort` returns `None`.
 /// assert_eq!(
 ///     topological_sort(&with_cycle),
 ///     None
@@ -66,10 +66,10 @@ use crate::DiGraph;
 ///     (8, 15, ()),
 /// ]);
 ///
-/// // `big_graph` is acyclic
+/// // `big_graph` is acyclic.
 /// let sort = topological_sort(&big_graph).unwrap();
 ///
-/// assert!(is_topological_sort(&big_graph, sort));
+/// assert!(is_topological_sort(&big_graph, &sort));
 /// ```
 ///
 /// # Runtime complexity
@@ -139,10 +139,6 @@ where
 ///
 /// Returns `false` if the ordering is *not* a topological sort or if the graph contains cycles.
 ///
-/// # Panics
-/// Panics if any element of `sort` is not contained in `graph` of if there are
-/// duplicate elemnts in `sort`.
-///
 /// # Example
 /// ```
 /// use rust_dsa::{DiGraph, is_topological_sort};
@@ -154,25 +150,37 @@ where
 ///
 /// assert!(is_topological_sort(
 ///     &graph,
-///     vec![&'a', &'b', &'c']
+///     &[&'a', &'b', &'c']
 /// ));
 ///
 /// assert!(!is_topological_sort(
 ///     &graph,
-///     vec![&'b', &'a', &'c']
+///     &[&'b', &'a', &'c']
+/// ));
+///
+/// assert!(!is_topological_sort(
+///     &graph,
+///     &[&'a', &'b']
 /// ));
 /// ```
-pub fn is_topological_sort<N, E>(graph: &DiGraph<N, E>, sort: Vec<&N>) -> bool
+pub fn is_topological_sort<N, E>(graph: &DiGraph<N, E>, sort: &[&N]) -> bool
 where
     N: Hash + Eq,
 {
+    if sort.len() > graph.len() {
+        return false;
+    }
+
     let sort_inv: HashMap<_, _> = sort
         .iter()
         .enumerate()
         .map(|(i, node)| (*node, i))
         .collect();
-    if sort_inv.len() < sort.len() {
-        panic!("duplicate elemnts in `sort`");
+
+    for node in graph.iter() {
+        if !sort_inv.contains_key(node) {
+            return false;
+        }
     }
 
     for (from, to, _) in graph.edges() {
