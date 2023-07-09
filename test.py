@@ -66,16 +66,20 @@ def write_tests(src, files, output):
     )
 
     for file in files:
-        in_test = False
+        status = "OUTSIDE"
         for i, line in enumerate(open(os.path.join(src, file))):
-            if "/// ```" in line:
-                if in_test:
+            if "/// ```text" in line:
+                status = "TEXT"
+            elif "/// ```" in line:
+                if status == "CODE":
                     output.write("}\n\n")
-                    in_test = False
+                    status = "OUTSIDE"
+                elif status == "TEXT":
+                    status = "OUTSIDE"
                 else:
                     output.write(f"#[test]\nfn {get_test_name(file, i + 1)}() \x7b\n")
-                    in_test = True
-            elif in_test:
+                    status = "CODE"
+            elif status == "CODE":
                 if line.startswith("/// "):
                     output.write(f"    {line[4:].replace('rust_dsa', 'crate')}")
                 elif line.startswith("///"):
