@@ -485,7 +485,7 @@ impl<N, E> DiGraph<N, E> {
     /// assert_eq!(graph.count_edges(), 3);
     /// ```
     pub fn count_edges(&self) -> usize {
-        self.edges.iter().map(|(_, s)| s.len()).sum()
+        self.edges.values().map(HashMap::len).sum()
     }
 
     /// Returns an iterator over the nodes in the graph.

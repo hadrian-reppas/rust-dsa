@@ -565,7 +565,7 @@ impl<I: PrimInt> FenwickTree<I> {
     /// assert_eq!(tree.get(3), None);
     /// ```
     pub fn get(&self, index: usize) -> Option<I> {
-        self.0.get(index).map(|&i| i)
+        self.0.get(index).copied()
     }
 
     /// Removes and returns the last value in the tree, or returns `None` if the
@@ -601,7 +601,7 @@ impl<I: PrimInt> FenwickTree<I> {
     /// assert_eq!(empty.last(), None);
     /// ```
     pub fn last(&self) -> Option<I> {
-        self.0.last().map(|&i| i)
+        self.0.last().copied()
     }
 
     /// Returns the sum of the values with indices in the range `[0, end)`.
