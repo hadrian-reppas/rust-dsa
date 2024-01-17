@@ -1,6 +1,7 @@
 mod anystack;
 mod bimap;
 mod binomialheap;
+mod bloom;
 mod bumpalloc;
 mod cycle;
 mod deque;
@@ -30,6 +31,7 @@ mod vlist;
 pub use anystack::AnyStack;
 pub use bimap::{BiMap, Removed};
 pub use binomialheap::BinomialHeap;
+pub use bloom::BloomFilter;
 pub use bumpalloc::BumpAlloc;
 pub use cycle::find_cycle;
 pub use deque::Deque;
