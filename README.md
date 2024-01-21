@@ -58,9 +58,11 @@ Most entries on this list were taken directly from Keith Schwarz's
 | &#9989;  | Min-Stack                            | [src/minstack.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/minstack.rs) | An implementation of a [LIFO stack](https://en.wikipedia.org/wiki/Stack_(abstract_data_type)) that supports O(1) push, pop and find-minimum. |
 | &#9989;  | Min-Queue                            | [src/minqueue.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/minqueue.rs) | An implementation of a [FIFO queue](https://en.wikipedia.org/wiki/Queue_(data_structure)) that supports O(1) push, pop and find-minimum. |
 | &#10060; | Suffix Automaton                     | *TODO*                             | An implementation of a [suffix automaton](https://en.wikipedia.org/wiki/Suffix_automaton). |
+| &#10060; | Fortune's Algorithm                  | *TODO*                             | [Fortune's algorithm](https://en.wikipedia.org/wiki/Fortune%27s_algorithm) for generating [Voronoi diagrams](https://en.wikipedia.org/wiki/Voronoi_diagram). |
+| &#10060; | Median Heap                          | *TODO*                             | A data structure for efficiently calculating a running median. |
 | &#10060; | Aho–Corasick Algorithm               | *TODO*                             | An implementation of the [Aho–Corasick algorithm](https://en.wikipedia.org/wiki/Aho%E2%80%93Corasick_algorithm) for string-searching. |
 | &#10060; | Soft Heap                            | *TODO*                             | A [soft heap](https://en.wikipedia.org/wiki/Soft_heap) implementation. |
-| &#10060; | Link/Cut tree                        | *TODO*                             | A [link/cut tree](https://en.wikipedia.org/wiki/Link/cut_tree) implementation. |
+| &#10060; | Link/Cut Tree                        | *TODO*                             | A [link/cut tree](https://en.wikipedia.org/wiki/Link/cut_tree) implementation. |
 | &#10060; | Rope                                 | *TODO*                             | An implementation of a [rope](https://en.wikipedia.org/wiki/Rope_(data_structure)) for efficient string manipulation. |
 | &#10060; | GADDAG                               | *TODO*                             | A [GADDAG](https://en.wikipedia.org/wiki/GADDAG) implementation. |
 | &#10060; | Burrows–Wheeler Transform            | *TODO*                             | An implementation of the [Burrows-Wheeler transform](https://en.wikipedia.org/wiki/Burrows%E2%80%93Wheeler_transform). |
@@ -72,7 +74,7 @@ Most entries on this list were taken directly from Keith Schwarz's
 | &#10060; | Christofide's Algorithm              | *TODO*                             | An implementation of [Christofide's algorithm](https://en.wikipedia.org/wiki/Chan%27s_algorithm) for approximating [TSP](https://en.wikipedia.org/wiki/Travelling_salesman_problem) solutions. |
 | &#9989;  | Trie                                 | [src/trie.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/trie.rs) | A [trie](https://en.wikipedia.org/wiki/Trie) implementation. |
 | &#10060; | Radix Tree                           | *TODO*                             | A [radix tree](https://en.wikipedia.org/wiki/Radix_tree) implementation. |
-| &#10060; | Ukkonen's algorithm                  | *TODO*                             | An implementation of [Ukkonen's algorithm](https://en.wikipedia.org/wiki/Ukkonen%27s_algorithm) for constructing [suffix trees](https://en.wikipedia.org/wiki/Suffix_tree). |
+| &#10060; | Ukkonen's Algorithm                  | *TODO*                             | An implementation of [Ukkonen's algorithm](https://en.wikipedia.org/wiki/Ukkonen%27s_algorithm) for constructing [suffix trees](https://en.wikipedia.org/wiki/Suffix_tree). |
 | &#10060; | k-d Tree                             | *TODO*                             | A [k-d tree](https://en.wikipedia.org/wiki/K-d_tree) implementation. |
 | &#10060; | Finger Tree                          | *TODO*                             | A [finger tree](https://en.wikipedia.org/wiki/Finger_tree) implementation. |
 | &#10060; | Interval Tree                        | *TODO*                             | An [interval tree](https://en.wikipedia.org/wiki/Interval_tree) implementation. |
