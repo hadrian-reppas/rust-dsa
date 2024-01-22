@@ -59,7 +59,7 @@ Most entries on this list were taken directly from Keith Schwarz's
 | &#9989;  | Min-Queue                            | [src/minqueue.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/minqueue.rs) | An implementation of a [FIFO queue](https://en.wikipedia.org/wiki/Queue_(data_structure)) that supports O(1) push, pop and find-minimum. |
 | &#10060; | Suffix Automaton                     | *TODO*                             | An implementation of a [suffix automaton](https://en.wikipedia.org/wiki/Suffix_automaton). |
 | &#10060; | Fortune's Algorithm                  | *TODO*                             | [Fortune's algorithm](https://en.wikipedia.org/wiki/Fortune%27s_algorithm) for generating [Voronoi diagrams](https://en.wikipedia.org/wiki/Voronoi_diagram). |
-| &#10060; | Median Heap                          | *TODO*                             | A data structure for efficiently calculating a running median. |
+| &#9989;  | Median Heap                          | [src/medianheap.rs](https://github.com/hadrian-reppas/rust-dsa/blob/main/src/medianheap.rs) | A data structure for efficiently calculating a running median. |
 | &#10060; | Aho–Corasick Algorithm               | *TODO*                             | An implementation of the [Aho–Corasick algorithm](https://en.wikipedia.org/wiki/Aho%E2%80%93Corasick_algorithm) for string-searching. |
 | &#10060; | Soft Heap                            | *TODO*                             | A [soft heap](https://en.wikipedia.org/wiki/Soft_heap) implementation. |
 | &#10060; | Link/Cut Tree                        | *TODO*                             | A [link/cut tree](https://en.wikipedia.org/wiki/Link/cut_tree) implementation. |
