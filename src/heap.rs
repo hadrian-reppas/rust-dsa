@@ -49,7 +49,7 @@ pub struct BinaryHeap<T> {
 }
 
 impl<T> BinaryHeap<T> {
-    /// Creates an BinaryHeap<T> heap.
+    /// Creates an empty binary heap.
     pub fn new() -> Self {
         BinaryHeap { items: Vec::new() }
     }
