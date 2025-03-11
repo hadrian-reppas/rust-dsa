@@ -1,5 +1,7 @@
 # Data Structures and Algorithms in Rust
 
+Some interesting data structures and algorithms implemented in Rust. Docs are hosted [here](https://hadrian-reppas.github.io/rust-dsa/rust_dsa/index.html).
+
 ## Testing
 
 The doctests are *very* slow, so you can run `test.py` to copy all doctests
@@ -83,7 +85,6 @@ Most entries on this list were taken directly from Keith Schwarz's
 | &#10060; | Pairing Heap                         | *TODO*                             | A [pairing heap](https://en.wikipedia.org/wiki/Pairing_heap) implementation. |
 | &#10060; | Fusion Tree                          | *TODO*                             | An [associative array](https://en.wikipedia.org/wiki/Associative_array) implementation backed by a [fusion tree](https://en.wikipedia.org/wiki/Fusion_tree). |
 | &#10060; | Push–Relabel Algorithm               | *TODO*                             | An implementation of the [push–relabel maximum flow algorithm](https://en.wikipedia.org/wiki/Push%E2%80%93relabel_maximum_flow_algorithm). |
-| &#10060; | Fenwick Tree                         | *TODO*                             | A [Fenwick tree](https://en.wikipedia.org/wiki/Fenwick_tree) implementation. |
 | &#10060; | Apostolico–Giancarlo Algorithm       | *TODO*                             | An implementation of the [Apostolico–Giancarlo algorithm](https://en.wikipedia.org/wiki/Apostolico%E2%80%93Giancarlo_algorithm). |
 | &#10060; | PQ Tree                              | *TODO*                             | A [PQ tree](https://en.wikipedia.org/wiki/PQ_tree) implementation. |
 | &#10060; | Bitap Algorithm                      | *TODO*                             | An implementation of the [bitap algorithm](https://en.wikipedia.org/wiki/Bitap_algorithm). |
